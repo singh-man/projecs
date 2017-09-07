@@ -21,7 +21,7 @@ public class DirectoryUtils {
 
     @Test
     public void testListSubDirectories() {
-        List<File> files = listSubDirectories(new File("D:\\tmp\\"));
+        List<File> files = listSubDirectories(new File("D:\\mani\\tmp\\"));
         System.out.println("Total number of sub-directories : " + files.size());
         files.forEach(System.out::println);
     }

@@ -1,3 +1,6 @@
 .idea
 */lib
 */*.iml
+bin
+*.log
+*.log.*

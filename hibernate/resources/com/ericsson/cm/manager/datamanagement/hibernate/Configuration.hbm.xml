@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.ericsson.cm.manager.datamanagement.dto">
+	<class lazy="false" name="ConfigurationDTO" table="MM_CONFIGURATION" dynamic-insert="true" dynamic-update="true">
+		<id column="CONFIGID" name="configId" type="long" unsaved-value="null">
+			<generator class="native" />
+		</id>
+		<property column="NAME" generated="never" lazy="false" name="name"
+			not-null="true" type="string" />
+		<property column="CONFIGTYPE" generated="never" lazy="false"
+			length="10" name="configType" not-null="true">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.ericsson.cm.common.constant.ConfigType</param>
+				<param name="type">12</param>
+			</type>
+		</property>
+		<property column="CHECKEDOUT" generated="never" lazy="false"
+			name="checkedOut" type="boolean" />
+		<property column="DELETED" generated="never" lazy="false"
+			name="deleted" type="boolean" />
+		<many-to-one cascade="save-update" class="ConfigCollectionDTO"
+			column="COLLECTIONID" name="configCollectDTO" not-null="true"/>
+		<set cascade="all,delete-orphan" inverse="true" lazy="false" name="configVersionDTOs"
+			sort="unsorted">
+			<key column="CONFIGID" />
+			<one-to-many class="ConfigVersionDTO" />
+		</set>
+	</class>
+</hibernate-mapping>

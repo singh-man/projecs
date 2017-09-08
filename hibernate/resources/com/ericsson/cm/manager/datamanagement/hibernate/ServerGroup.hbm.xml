@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.ericsson.cm.manager.datamanagement.dto">
+	<class dynamic-insert="true" dynamic-update="true" lazy="false" name="ServerGroupDTO" table="MM_SERVERGROUP">
+		<id column="ID" name="id" type="long">
+			<generator class="native" />
+		</id>
+		
+		<version name="version" column="VERSION" unsaved-value="negative" />
+		
+		<property column="NAME" name="name" not-null="true" type="string" />
+		
+		<bag cascade="all,delete-orphan" inverse="true" lazy="false" name="serverDTOs">
+			<key column="SERVERGROUPID" />
+			<one-to-many class="AbstractServerDTO" />
+		</bag>
+		
+	</class>
+</hibernate-mapping>

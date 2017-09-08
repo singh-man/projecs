@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.ericsson.cm.manager.datamanagement.dto">
+	<class dynamic-insert="true" dynamic-update="true" lazy="false"
+		name="IdRangeDTO" table="MM_IDRANGE">
+		<id column="NAME" name="name" type="string">
+			<generator class="assigned" />
+		</id>
+		<property column="STARTVALUE" generated="never" lazy="false"
+			name="startValue" not-null="true" type="long" />
+		<property column="RANGELENGTH" generated="never" lazy="false"
+			name="rangeLength" not-null="true" type="long" />
+	</class>
+</hibernate-mapping>

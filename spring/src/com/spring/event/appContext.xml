@@ -1,0 +1,16 @@
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd"> 
+ 
+    <!-- ApplicationEventPublisherAware: responsible to publish the event; 
+    publisher is auto-injected by the spring --> 
+    <bean id="msgEventHandler" class="com.spring.event.MsgEventHandler" />
+    
+    <!-- ApplicationListener; need to be registered in XML -->
+    <bean id="msgListener" class="com.spring.event.MsgListener"/> 
+    
+</beans>

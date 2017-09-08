@@ -1,0 +1,25 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- Advice declared; autowiring is used here -->
+	<bean id="loggingAdvice" class="com.aop.LoggingAdvice" autowire="byType" />
+	<bean id="logging" class="com.aop.LoggingImpl" />
+
+	<!-- Aspect/Advisor: Advice joined with Pointcut -->
+	<bean id="loggingAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+		<property name="advice" ref="loggingAdvice" />
+		<property name="pattern" value=".*" />
+	</bean>
+
+	<bean id="studentTarget" class="com.aop.StudentImpl"/>
+	
+	<!-- Student class is proxied -->
+	<bean id="student" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="studentTarget" />
+		<property name="interceptorNames" value="loggingAdvisor" />
+		<property name="proxyInterfaces" value="com.aop.Student" />
+	</bean>
+
+</beans>

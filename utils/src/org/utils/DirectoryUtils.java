@@ -36,7 +36,7 @@ public class DirectoryUtils {
 
     @Test
     public void testListAllSubDirectories() {
-        List<File> files = listAllSubDirectories(new File("D:\\tmp\\"));
+        List<File> files = listAllSubDirectories(new File("D:\\mani\\tmp\\"));
         System.out.println("Total number of all sub-directories : " + files.size());
         files.forEach(System.out::println);
     }
@@ -58,7 +58,7 @@ public class DirectoryUtils {
 
     @Test
     public void testListFiles() {
-        List<File> files = listFiles(new File("D:\\tmp\\"));
+        List<File> files = listFiles(new File("D:\\mani\\tmp\\"));
         System.out.println("Total number of files : " + files.size());
         files.forEach(System.out::println);
     }
@@ -72,7 +72,7 @@ public class DirectoryUtils {
 
     @Test
     public void testListAllFiles() {
-        List<File> files = listAllFiles(new File("D:\\tmp\\"));
+        List<File> files = listAllFiles(new File("D:\\mani\\tmp\\"));
         System.out.println("Total no. of files = "+ files.size());
         files.forEach(System.out::println);
     }
@@ -88,7 +88,7 @@ public class DirectoryUtils {
 
     @Test
     public void testListAllFilteredFiles() {
-        listAllFilteredFiles(new File("D:\\tmp\\"), ".mp4", ".jpg").forEach(System.out::println);
+        listAllFilteredFiles(new File("D:\\mani\\tmp\\"), ".mp4", ".jpg").forEach(System.out::println);
     }
 
     public static Map<File, List<File>> getDirectoryMap(File srcDir) {
@@ -100,6 +100,6 @@ public class DirectoryUtils {
 
     @Test
     public void testGetDirectoryMap() {
-        getDirectoryMap(new File("D:\\tmp\\")).forEach((k,v) -> System.out.println(k + " :: " + v));
+        getDirectoryMap(new File("D:\\mani\\tmp\\")).forEach((k,v) -> System.out.println(k + " :: " + v));
     }
 }

@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping
+   PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.ericsson.cm.manager.datamanagement.dto">
+	<class name="AbstractConfigurationDTO" table="MM_CONFIGURATION">
+		<id name="configId" column="CONFIGID" type="long" unsaved-value="0">
+			<generator class="com.ericsson.cm.manager.datamanagement.IdentifierGeneratorImpl" />
+		</id>
+		
+		<discriminator column="CONFIGTYPE" type="string" length="10"/>
+		
+		<property name="name" column="NAME" type="string" />
+		<property name="checkedOut" column="CHECKEDOUT" type="boolean" />
+		<property name="deleted" column="DELETED" type="boolean" />
+	
+		<many-to-one name="configCollectDTO" column="COLLECTIONID" class="ConfigCollectionDTO" cascade="save-update" />
+		
+		<set name="configVersionDTOs" inverse="true" cascade="all">
+			<key column="CONFIGID" />
+			<one-to-many class="ConfigVersionDTO" />
+		</set>
+		
+		<subclass name="FEConfigurationDTO" discriminator-value="FE">
+			
+		</subclass>
+		
+		<subclass name="OLConfigurationDTO" discriminator-value="OL">
+			
+		</subclass>
+		
+	</class>
+
+</hibernate-mapping>

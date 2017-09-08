@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 24, 2012 11:06:45 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="tr.MmConfigversion" table="MM_CONFIGVERSION" catalog="cmDb">
+        <composite-id name="id" class="tr.MmConfigversionId">
+            <key-property name="configid" type="long">
+                <column name="CONFIGID" />
+            </key-property>
+            <key-property name="versionid" type="long">
+                <column name="VERSIONID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="mmConfiguration" class="tr.MmConfiguration" update="false" insert="false" fetch="select">
+            <column name="CONFIGID" not-null="true" />
+        </many-to-one>
+        <property name="savetime" type="long">
+            <column name="SAVETIME" not-null="true" />
+        </property>
+        <property name="versiontext" type="string">
+            <column name="VERSIONTEXT" />
+        </property>
+        <property name="checkedout" type="java.lang.Boolean">
+            <column name="CHECKEDOUT" />
+        </property>
+        <property name="originalversion" type="java.lang.Long">
+            <column name="ORIGINALVERSION" />
+        </property>
+        <property name="configuser" type="string">
+            <column name="CONFIGUSER" not-null="true" />
+        </property>
+        <property name="value" type="string">
+            <column name="VALUE" />
+        </property>
+    </class>
+</hibernate-mapping>

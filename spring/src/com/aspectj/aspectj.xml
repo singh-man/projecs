@@ -1,0 +1,26 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<!-- aop:aspectj-autoproxy/-->
+	<aop:config>
+		<aop:aspect id="log" ref="logCalculatorAspect">
+			<aop:pointcut id="myPointcut" expression="execution(* *.*(..))"/>
+			
+			<aop:before method="logBefore" pointcut="execution(* *.*(..))" />
+			<aop:after method="logAfter" pointcut="execution(* *.*(..))" />
+			<aop:after-returning method="logOnSuccess_1" pointcut-ref="myPointcut" />
+			<!-- aop:after-returning method="logOnSuccess_2" pointcut="execution(* *.*(..))" /-->
+			<aop:around method="aroundAdvice" pointcut-ref="myPointcut" />
+			<aop:after-throwing method="logOnFailure" pointcut="execution(* *.*(..))" />
+		</aop:aspect>
+	</aop:config>
+	
+	<bean id="logCalculatorAspect" class="com.aspectj.LogCalculatorAspect"/>
+	<bean id="arithmaticCalculator" class="com.aspectj.ArithmaticCalculator"/>
+
+</beans>

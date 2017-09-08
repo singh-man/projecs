@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.ericsson.cm.manager.datamanagement.dto">
+	<class lazy="false" name="ConfigCollectionDTO" table="MM_CONFIGCOLL" dynamic-insert="true" dynamic-update="true">
+		<id column="COLLECTIONID" name="collectionId" type="long" unsaved-value="null">
+			<generator class="assigned" />
+		</id>
+		<property column="NAME" generated="never" lazy="false" name="name"
+			not-null="true" type="string" />
+		<property column="DESCRIPTION" generated="never" lazy="false"
+			name="description" type="string" />
+		<property column="OWNERGROUP" generated="never" lazy="false"
+			name="ownerGroup" not-null="true" type="string" />
+		<property column="DELETED" lazy="false" name="deleted" type="boolean" />
+		<set cascade="all,delete-orphan" inverse="true" lazy="false" name="configurationDTOs" sort="unsorted">
+			<key column="COLLECTIONID" />
+			<one-to-many class="ConfigurationDTO" />
+		</set>
+	</class>
+</hibernate-mapping>

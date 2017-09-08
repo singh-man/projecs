@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping
+   PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com">
+	<class name="Speaker" table="speaker">
+
+		<id name="id" column="id" type="long">
+			<generator class="native" />
+		</id>
+		<property name="name" type="string" />
+		<property name="title" type="string" />
+
+		<set name="event" table="event_speaker">
+			<key column="speaker_id" />
+			<many-to-many column="event_id" class="Event" />
+		</set>
+
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration
+   PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN"
+   "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+   <session-factory>
+      <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+      <property name="connection.url">jdbc:mysql://localhost:3306/cmDb</property>
+      <property name="connection.username">root</property>
+      <property name="connection.password"></property>
+      <property name="hibernate.connection.pool_size">0</property>
+      <property name="dialect">org.hibernate.dialect.MySQLDialect</property>      
+      <property name="show_sql">true</property>
+      <property name="format_sql">false</property>    
+	  <!--property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property-->  
+
+      <mapping resource="com/Event.hbm.xml"/>
+      <mapping resource="com/Location.hbm.xml"/>
+	  <mapping resource="com/Speaker.hbm.xml"/>
+	  
+	  <mapping resource="com/component/Event_1.hbm.xml"/>
+      <mapping resource="com/component/Location_1.hbm.xml"/>
+	    
+    </session-factory>
+</hibernate-configuration>

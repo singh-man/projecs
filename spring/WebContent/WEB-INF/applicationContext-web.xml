@@ -1,0 +1,66 @@
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd"> 
+ 
+     
+    <bean id="singletonBean" class="com.servlet.SingletonBean" >
+        <property name="singletonBean" value="10"/>
+    </bean>
+    
+    <bean id="requestBean" class="com.servlet.RequestBean" scope="request">
+        <property name="requestBean" value="100"/>
+        <!-- Must where bean scope  != singleton/prototype -->
+        <aop:scoped-proxy/>
+    </bean>
+    
+    <bean id="sessionBean" class="com.servlet.SessionBean" scope="session">
+        <property name="sessionBean" value="1000"/>
+        <!-- Must where bean scope  != singleton/prototype -->
+        <aop:scoped-proxy/>
+    </bean>
+        
+          
+    <bean class="com.processor.ProvidedAwareProcessor">
+    	<property name="providedBean" ref="providedBean"/>
+    </bean>
+    
+    <bean id="providedBean" class="com.processor.ProvidedBean" scope="session">
+    	<property name="desc" value="this is my bean"/>
+    	<!-- Must where bean scope  != singleton/prototype -->
+        <aop:scoped-proxy/>
+    </bean>
+    
+    <bean id="sessionProcessorBean" class="com.processor.SessionProcessorBean" scope="session">
+        <property name="sessionBean" value="1000"/>
+        <!-- Must where bean scope  != singleton/prototype -->
+        <aop:scoped-proxy/>
+    </bean>
+    
+    <!-- JMX Settings START -->  
+    <bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean"> 
+        <property name="locateExistingServerIfPossible" value="true" /> 
+    </bean>  
+    <!-- <bean class="junit.JmxClient" lazy-init="true">
+        <property name="adapter">
+            <bean class="com.sun.jdmk.comm.HtmlAdaptorServer"/>
+        </property>
+    </bean> 
+    <bean class="com.sun.jdmk.comm.HtmlAdaptorServer" init-method="start" >
+        <property name="port" value="8000"/>
+    </bean> -->
+    <!-- this bean must not be lazily initialized if the exporting is to happen -->
+    <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+        <property name="beans">
+            <map>
+                <entry key="bean:name=singleBean" value-ref="singletonBean"/>
+            </map>
+        </property>
+        <property name="server" ref="mbeanServer"/>
+    </bean>
+    <!-- JMX Settings STOP -->
+    
+</beans>

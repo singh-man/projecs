@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping
+   PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+   
+<hibernate-mapping package="com.component">
+	<class name="Event_1" table="event_1" >
+		<id name="id" column="id" type="long" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property name="name" type="string"/>
+		<property name="startDate" column="start_date" type="date"/>
+		<property name="duration"/>
+		<many-to-one name="location" column="location_id" class="Location_1" cascade="save-update"/>	
+								
+	</class>
+	
+	<!-- Named query need to be outside any class difination -->
+	<query name="findEventByDuration">
+		<![CDATA[from Event_1 where duration = ?]]>
+	</query>
+		
+</hibernate-mapping>

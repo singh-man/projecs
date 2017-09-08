@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping
+   PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+   
+<hibernate-mapping package="com">
+	<class name="Event" table="event" >
+		<id name="id" column="id" type="long">
+			<generator class="native"/>
+		</id>
+		
+		<!-- discriminator column need to be here -->
+		<discriminator column="event_type" type="string" length="20"/>
+		
+		<!-- useage of version tag; requies setter/getter in the class for property version
+		but no need to set it hibernate will hnadle === for each update of row 
+		the version will get incremented and very imp this tag need to come before 
+		any PROPERTY TAG -->
+		<!-- Best way for it is to extract it out as protected property -->
+		<version name="version" column="version" unsaved-value="null"/>
+		
+		<property name="name" type="string"/>
+		<property name="startDate" column="start_date" type="date"/>
+		<property name="duration" type="long"/>
+		
+		<property name="buf" length="100000" type="binary"/>
+		
+		
+		
+		<!-- many-to-one POJO this class, this column and this table; 
+			using "cascade" means session.save(event) will save location too -->
+		<many-to-one name="location" column="location_id" class="Location" cascade="save-update"/>
+		
+		<set name="speaker" table="event_speaker" inverse="true" cascade="all" >
+			<key column="event_id"/>
+			<many-to-many column="speaker_id" class="Speaker"/>
+		</set>		
+		
+		<subclass name="ConferenceEvent" discriminator-value="CONFERENCE_EVENT">
+			<property name="noOfSeats" column="num_seats"/>
+		</subclass>
+		
+		<subclass name="MassEvent" discriminator-value="MASS_EVENT">
+			<property name="noOfPeople" column="num_people"/>
+		</subclass>
+		
+	</class>
+</hibernate-mapping>

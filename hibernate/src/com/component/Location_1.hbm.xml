@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping
+   PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+   
+<hibernate-mapping package="com.component">
+	<class name="Location_1" lazy="true" table="location_1">
+		<id name="id" column="id" type="long" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property name="name" type="string"/>
+		
+		<!--
+			check the component here Address has 2 types in Location_1
+			rAddr and oAddr
+			both are mapped to same table but different columns
+		-->
+		<component name="resAddress" class="Address">
+			<property name="hno" type="integer"/>
+			<property name="city" type="string"/>
+		</component>
+		<component name="offAddress" class="Address">
+			<property name="hno" column="o_hno" type="integer"/>
+			<property name="city" column="o_city" type="string"/>
+		</component>
+		
+		<set name="event">
+			<key column="location_id"/>
+			<one-to-many class="Event_1"/>
+		</set>
+	</class>
+</hibernate-mapping>

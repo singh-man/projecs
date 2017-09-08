@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.ericsson.cm.manager.datamanagement.dto">
+	<class lazy="false" name="AbstractServerDTO" table="MM_SERVER" abstract="true" dynamic-insert="true" dynamic-update="true">
+		
+		<id column="ID" name="id" type="long" unsaved-value="null">
+			<generator class="native" />
+		</id>
+		
+		<discriminator column="SERVERTYPE" type="string" length="20" not-null="true"/>
+		
+		<version name="version" column="VERSION" unsaved-value="negative" />
+		
+		<property column="DESCRIPTION" lazy="false" name="description" type="string" />
+		
+		<property column="NAME" lazy="false" name="name" not-null="true" type="string" />
+		
+		<property column="IP" lazy="false" name="ip" not-null="true" type="string" />
+		
+		<property column="HOSTNAME" lazy="false" name="hostName" type="string" />
+		
+		<property column="PORT" lazy="false" name="port" not-null="true" type="long" />
+		
+		<property column="RESERVED" lazy="false" name="reserved" not-null="true" type="boolean" />
+		
+		<property column="INSTANCEINFO" lazy="false" name="instanceInfo" not-null="true" type="text" />
+		
+		<many-to-one cascade="save-update" class="ServerGroupDTO" column="SERVERGROUPID" 
+		name="serverGroupDTO" not-null="true" lazy="false"/>
+			
+		<bag cascade="all,delete-orphan" inverse="true" lazy="false" name="provisionServerDTOs" >
+			<key column="SERVERID" />
+			<one-to-many class="ProvisionServerDTO" />
+		</bag>
+		
+		<subclass name="OnlineServerDTO" discriminator-value="OnlineServer" lazy="false">
+			<!-- <property name="" column="" /> Class specific properties here -->
+		</subclass>
+			
+		<subclass name="FEServerDTO" discriminator-value="FEServer" lazy="false">
+			<!-- <property name="" column="" /> Class specific properties here -->
+		</subclass>
+		
+	</class>
+</hibernate-mapping>

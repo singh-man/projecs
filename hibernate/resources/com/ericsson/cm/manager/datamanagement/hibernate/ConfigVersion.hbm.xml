@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.ericsson.cm.manager.datamanagement.dto">
+	<class lazy="false" name="ConfigVersionDTO" table="MM_CONFIGVERSION" dynamic-insert="true" dynamic-update="true">
+		<composite-id class="com.ericsson.cm.manager.datamanagement.dto.ConfigVersionCompositeKey"
+			mapped="false" name="configVersionId" unsaved-value="undefined">
+			<key-many-to-one class="ConfigurationDTO" name="configurationDTO">
+				<column name="CONFIGID" />
+			</key-many-to-one>
+			<key-property column="VERSIONID" name="versionId" type="long" />
+		</composite-id>
+		<property column="SAVETIME" generated="never" lazy="false"
+			name="saveTime" not-null="true" type="long" />
+		<property column="VERSIONTEXT" generated="never" lazy="false"
+			name="versionText" type="string" />
+		<property column="CHECKEDOUT" generated="never" lazy="false"
+			name="checkedOut" type="boolean" />
+		<property column="ORIGINALVERSION" generated="never" lazy="false"
+			name="originalVersion" type="long" />
+		<property column="CONFIGUSER" generated="never" lazy="false"
+			name="configUser" not-null="true" type="string" />
+	</class>
+	<class lazy="false" name="ConfigVersionValueDTO" table="MM_CONFIGVERSION" dynamic-insert="true" dynamic-update="true">
+		<composite-id class="com.ericsson.cm.manager.datamanagement.dto.ConfigVersionCompositeKey"
+			mapped="false" name="configVersionId" unsaved-value="undefined">
+			<key-many-to-one class="ConfigurationDTO" name="configurationDTO">
+				<column name="CONFIGID" />
+			</key-many-to-one>
+			<key-property column="VERSIONID" name="versionId" type="long" />
+		</composite-id>
+		<property column="VALUE" generated="never" lazy="false" name="value"
+			type="text" />
+	</class>
+	
+	<query name="getAllConfigVersionsByConfigId">
+        <![CDATA[from ConfigVersionDTO as configVer where configVer.configVersionId.configurationDTO.configId = :configId]]>
+    </query>
+    
+</hibernate-mapping>

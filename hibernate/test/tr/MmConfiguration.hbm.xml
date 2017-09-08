@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 24, 2012 11:06:45 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="tr.MmConfiguration" table="MM_CONFIGURATION" catalog="cmDb">
+        <id name="configid" type="java.lang.Long">
+            <column name="CONFIGID" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="mmConfigcoll" class="tr.MmConfigcoll" fetch="select">
+            <column name="COLLECTIONID" not-null="true" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="NAME" not-null="true" />
+        </property>
+        <property name="configtype" type="string">
+            <column name="CONFIGTYPE" length="10" not-null="true" />
+        </property>
+        <property name="checkedout" type="java.lang.Boolean">
+            <column name="CHECKEDOUT" />
+        </property>
+        <property name="deleted" type="java.lang.Boolean">
+            <column name="DELETED" />
+        </property>
+        <set name="mmConfigversions" table="MM_CONFIGVERSION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONFIGID" not-null="true" />
+            </key>
+            <one-to-many class="tr.MmConfigversion" />
+        </set>
+    </class>
+</hibernate-mapping>

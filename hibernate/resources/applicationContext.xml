@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD//BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	
+	<bean id="Server"
+		class="com.ericsson.cm.manager.servermanager.ServerManagerBean"
+		singleton="true">
+		
+	</bean>
+		
+	<bean id="ServerProvisionConfigurationHandler"
+		class="com.ericsson.cm.manager.servermanager.commandhandler.ProvisionConfigurationHandler"
+		singleton="true" 
+		init-method="init">
+	
+		<property name="serverManager">
+			<ref local="Server" />
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="ServerStartConfigurationHandler"
+		class="com.ericsson.cm.manager.servermanager.commandhandler.StartConfigurationHandler"
+		singleton="true" 
+		init-method="init">
+	
+		<property name="serverManager">
+			<ref local="Server" />
+		</property>
+	</bean>
+	
+	<bean id="ServerListConfigurationHandler"
+		class="com.ericsson.cm.manager.servermanager.commandhandler.ListServerCommandHandler"
+		singleton="true" 
+		init-method="init">
+	
+		<property name="serverManager">
+			<ref local="Server" />
+		</property>
+	</bean>	
+	
+	<bean id="Configuration"
+		class="com.ericsson.cm.manager.configurationmanager.ConfigurationManagementImpl"
+		singleton="true"
+		init-method="init">
+		<property name="configurationDataManager">
+		<ref bean="HibernateConfigurationDAO"/>
+		</property>
+		<property name="configVersionValueDAO">
+		<ref bean="HibernateConfigVersionValueDAO"/>
+		</property>
+		<property name="onlineConfigurationManager">
+		<ref bean="OnlineConfigurationManager"/>
+		</property>
+	</bean>
+
+	<bean id="OnlineConfigurationManager"
+		class="com.ericsson.cm.manager.configurationmanager.ConfigManagerImpl"
+		singleton="true">
+		<property name="serverManager">
+		<ref bean="Server" />
+		</property>
+	</bean>
+	
+	<bean id="ConfigurationCollection"
+		class="com.ericsson.cm.manager.configurationmanager.configurationcollection.ConfigurationCollectionHandlerImpl"
+		singleton="true"
+		init-method="init">
+		<property name="configCollectionDAO">
+		<ref bean="HibernateConfigCollectionDAO"/>
+		</property>
+	</bean>
+	
+		<bean id="UserManager"
+		class="com.ericsson.cm.manager.usermanagement.model.UserManagerImpl"
+		singleton="true">
+
+	</bean>
+		
+	<!-- <bean id="ClientAuthorizer"
+		class="com.ericsson.cm.manager.authenticationmanager.ClientAuthorizer">
+	
+		<property name="userManager">
+			<ref local="UserManager" />
+		</property>
+	</bean> -->
+	
+	<bean class="com.ericsson.cm.manager.beanfactory.BeanManager"/>
+	
+	
+</beans>

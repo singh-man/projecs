@@ -1,0 +1,54 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+    <!-- For Component Scanning -->
+    <context:component-scan base-package="com.ericsson" />
+    
+    <!-- For Aspectj Autoproxy -->
+    <!-- <aop:aspectj-autoproxy/> -->
+    <bean class="com.ericsson.message.LoggingAspect"/>
+
+	<!-- Subjects -->
+	<bean id="subject1" class="com.ericsson.subject.SubjectImpl_1" >
+	   <property name="msg" ref="msg"/>
+	</bean>
+	<bean id="subject2" class="com.ericsson.subject.SubjectImpl_2" >
+       <property name="msg" ref="msg"/>
+    </bean>
+    <bean id="subject3" class="com.ericsson.subject.SubjectImpl_3" />
+
+	<!-- Listeners -->
+	<bean id="listener1" class="com.ericsson.listener.ListenerImpl_1" />
+	<bean id="listener1_1" class="com.ericsson.listener.ListenerImpl_1_1" />
+	<bean id="listener2" class="com.ericsson.listener.ListenerImpl_2" />
+	<bean id="listener3" class="com.ericsson.listener.ListenerImpl_3" />
+	<bean id="listener4" class="com.ericsson.listener.ListenerImpl_4" />
+	<bean id="listener5" class="com.ericsson.listener.ListenerImpl_5" />
+	
+	<!-- Listener6 registered as @Component; so entry doesn't matter here  -->
+	<!-- <bean id="listener6" class="com.ericsson.listener.ListenerImpl_6" /> -->
+	<bean id="listener7" class="com.ericsson.listener.ListenerImpl_7" />
+
+	<!-- Message that is transferred between Subject and Listener -->
+	<bean id="msg" class="com.ericsson.message.MessageImpl" scope="prototype"/>
+
+    <!-- Processor that registers Listeners to Subject -->
+	<bean class="com.ericsson.processor.AnnotationRegisterListenerProcessor">
+		<property name="subjectList">
+			<list>
+				<ref bean="subject1" />
+				<ref bean="subject2" />
+				<ref bean="subject3" />
+			</list>
+		</property>
+	</bean>
+
+</beans>

@@ -1,0 +1,30 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean id="loggingInterceptor" class="com.aop.beanNameAutoProxyCreator.LoggingInterceptor" />
+	<bean id="loggingInterceptor_v2" class="com.aop.beanNameAutoProxyCreator.LoggingInterceptor_v2" />
+	
+	<bean id="admin" class="com.aop.beanNameAutoProxyCreator.AdminImpl" />
+	<bean id="employee" class="com.aop.beanNameAutoProxyCreator.EmployeeImpl" />
+	<bean class="com.aop.beanNameAutoProxyCreator.StudentImpl" />
+	
+	<bean id="proxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="interceptorNames">
+			<list>
+				<value>loggingInterceptor</value>
+				<value>loggingInterceptor_v2</value>
+			</list>
+		</property>
+		<property name="beanNames">
+			<list>
+				<value>admin</value>
+				<value>employee</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>

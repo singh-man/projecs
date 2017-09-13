@@ -1,0 +1,26 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+    <!-- For Component Scanning -->
+    <!-- <context:component-scan base-package="com.empMgmt" /> -->
+    <!-- To stage a magic here use annotations at ###model### layer -->
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+    <!-- or use this instead <context:annotation-config /> -->
+    
+    
+    
+    <!-- For Aspectj Autoproxy -->
+    <!-- <aop:aspectj-autoproxy/> -->
+    <!-- <bean class="com.ericsson.message.LoggingAspect"/> -->
+
+    <!-- Subjects -->
+
+</beans>

@@ -4,3 +4,7 @@
 bin
 *.log
 *.log.*
+*.dat
+*.pyc
+*.ctrl
+*.jar

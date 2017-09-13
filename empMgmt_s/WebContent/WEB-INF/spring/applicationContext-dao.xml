@@ -1,0 +1,51 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<aop:aspectj-autoproxy/>
+	
+	<!-- Declare Aspects here #START# -->
+	<bean class="com.empMgmt.dao.DaoAspect"/>
+	<!-- #STOP# -->
+	
+    <bean id="dataSource" class="com.empMgmt.dao.GenericDataSource" init-method="setUp" destroy-method="close">
+        <!-- <property name="driverClassName" value="org.h2.Driver"/>
+        <property name="url" value="org.h2.Driver"/>
+        <property name="username" value="${db.user}"/>
+        <property name="password" value=""> -->
+        <property name="initialSize" value="2" /> <!-- initial connection size -->
+        <property name="maxActive" value="10"/> <!-- maximum active connections for the connection pool  -->
+    </bean>
+    
+    <bean id="simpleJdbcTemplate" class="org.springframework.jdbc.core.simple.SimpleJdbcTemplate">
+    	<constructor-arg index="0" ref="dataSource"/>
+    </bean>
+    
+    <bean id="loginDao" class="com.empMgmt.dao.LoginDaoImpl">
+        <property name="simpleJdbcTemplate" ref="simpleJdbcTemplate" />
+    </bean>
+    
+    <bean id="employeeDao" class="com.empMgmt.dao.EmployeeDaoImpl">
+        <property name="simpleJdbcTemplate" ref="simpleJdbcTemplate" />
+    </bean>
+     
+
+    <!-- this bean must not be lazily initialized if the exporting is to happen -->
+    <!-- <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+        <property name="beans">
+            <map>
+                <entry key="bean:name=singleBean" value-ref="singletonBean"/>
+            </map>
+        </property>
+        <property name="server" ref="mbeanServer"/>
+    </bean> -->
+    <!-- JMX Settings STOP -->
+    
+</beans>

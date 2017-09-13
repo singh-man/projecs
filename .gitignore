@@ -8,3 +8,4 @@ bin
 *.pyc
 *.ctrl
 *.jar
+service.properties

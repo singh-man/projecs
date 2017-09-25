@@ -1,0 +1,39 @@
+<licenseMapping>
+	<CxcDescList>
+			<CxcDesc id="1">
+				<cxcId>CXC4010199/1</cxcId>
+				<password>hotNE</password>
+				<description>Hot collectors</description>
+			</CxcDesc>
+			<CxcDesc id="2">
+				<cxcId>CXC4010199/51</cxcId>
+				<password>hotPPS</password>
+				<description>Hot distributors</description>
+			</CxcDesc>
+	</CxcDescList>
+
+	<FatMapList>
+			<FatMap id="1">
+				<fatNumber>FAT1020082/1</fatNumber>
+				<cxcNumberList>
+					<CXCNumber>CXC4010199/1</CXCNumber>
+					<CXCNumber>CXC4010199/2</CXCNumber>
+					<CXCNumber>CXC4010199/3</CXCNumber>
+					<CXCNumber>CXC4010199/4</CXCNumber>
+					<CXCNumber>CXC4010199/7</CXCNumber>
+					<CXCNumber>CXC4010199/51</CXCNumber>
+				</cxcNumberList>
+			</FatMap>
+			<FatMap id="2">
+				<fatNumber>FAT1020082/2</fatNumber>
+				<cxcNumberList>
+					<CXCNumber>CXC4010199/1</CXCNumber>
+					<CXCNumber>CXC4010199/2</CXCNumber>
+					<CXCNumber>CXC4010199/4</CXCNumber>
+					<CXCNumber>CXC4010199/5</CXCNumber>
+					<CXCNumber>CXC4010199/6</CXCNumber>
+					<CXCNumber>CXC4010199/61</CXCNumber>
+				</cxcNumberList>
+			</FatMap>
+	</FatMapList>				
+</licenseMapping>

@@ -1,4 +1,4 @@
-;java -cp .:classes -jar D:/mani/dev/opt/clojure-1.6.0/clojure-1.6.0.jar -i D:/mani/dev/project/z_clojure/src/avScripts/avScripts_4.clj -m avScripts.avScripts_4 3
+;java -cp .:classes -jar D:/mani/dev/opt/clojure-1.6.0/clojure-1.6.0.jar -i D:/mani/dev/project/projecs/clojure/src/avScripts/avScripts_4.clj -m avScripts.avScripts_4 3
 ;(load-file "D:/mani/dev/project/z_clojure/src/avScripts/avScripts_3.clj")
 
 (ns avScripts.avScripts_4

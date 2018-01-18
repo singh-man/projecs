@@ -14,8 +14,8 @@
 
 ;(map (fn[[a1 a2 a3]] (println (format s a1 a2 a3))))
 
-(def ffmpeg "D:/mani/dev/opt/ffmpeg-20151208-git-ff6dd58-win64-static/bin/ffmpeg.exe")
-;(def ffmpeg "D:/mani/dev/opt/ffmpeg-20160614-git-cb46b78-win32-static/bin/ffmpeg.exe")
+;(def ffmpeg "D:/mani/dev/opt/ffmpeg-20151208-git-ff6dd58-win64-static/bin/ffmpeg.exe")
+(def ffmpeg "D:/mani/dev/opt/ffmpeg-20160614-git-cb46b78-win32-static/bin/ffmpeg.exe")
 
 (def handbrake "D:/mani/dev/opt/HandBrake-0.10.5-x86_64-Win_CLI/HandBrakeCLI.exe")
 
@@ -126,6 +126,8 @@
    (def cmds {
               :1 ["Import subtitles to file"
                   (str ffmpeg " -i %s -sub_charenc CP1252 -i %s -map 0:v -map 0:a -c copy -map 1 -c:s:0 srt -metadata:s:s:0 language=en %s")]
+              :2 ["Import multiple subtitles"
+                  (str ffmpeg " -i %s -sub_charenc CP1252 -i %s -i %s -map 0:v -map 0:a -c copy -map 1 -c:s:0 srt -metadata:s:s:0 language=en -map 2 -c:s:1 srt -metadata:s:s:1 language=swe %s")]
               })
    (let [x (second (cmds :1))]
      (format x inFile srtFile outFile)))

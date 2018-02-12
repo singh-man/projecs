@@ -127,7 +127,7 @@ public class StopWatch {
     }
 
     private long getTime() {
-        return System.currentTimeMillis();
+        return System.nanoTime();
     }
 
     @Override

@@ -1,7 +1,12 @@
+.git
+.gradle
 .idea
-*/lib
-*/*.iml
 bin
+out
+*/lib
+*.iml
+*.ipr
+*.iws
 *.log
 *.log.*
 *.dat

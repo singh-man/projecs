@@ -140,8 +140,13 @@ class Mp3ToM4aConverter {
 
     @Test
     fun test() {
+        println("Hello")
         val mp3Dir = "D:\\mani\\music"
         val list = DirectoryUtils.listAllFiles(File(mp3Dir))
         list.forEach { e -> println(e.absolutePath) }
+    }
+
+    fun main(args: Array<String>) {
+        println("Hello, World!")
     }
 }

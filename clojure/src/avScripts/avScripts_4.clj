@@ -42,7 +42,7 @@
    (let [x (second (cmds :2))]
      (format x inFile crf outFile)))
   ([dirPath]
-   (println "Provide CRF : ")
+   (println "Provide CRF : [0-23-51 least]")
    (def crf (read-line))
    (def f_fileMap (fileMap dirPath "" (str "_f_x265_" crf ".mkv")))
    (loopEncode ffmpegEncodeX265 f_fileMap crf))
@@ -91,7 +91,7 @@
    (let [x (second (cmds :3))]
      (format x inFile crf outFile)))
   ([dirPath]
-   (println "Provide CRF : ")
+   (println "Provide CRF : [0-28-51 least]")
    (def crf (read-line))
    (def f_fileMap (fileMap dirPath "" (str "_f_x264_hdReadyTV_" crf ".mkv")))
    (loopEncode ffmpegEncodeForHDReadyTV f_fileMap crf))
@@ -108,7 +108,7 @@
   ([inFile outFile]
    (def cmds {
               :1 ["fast and copies only"
-                  (str ffmpeg " -ss 00:03:00 -i %s -ss 00:00:01 -t 00:24:00 -c copy %s")]
+                  (str ffmpeg " -ss 00:09:26 -i %s -ss 00:00:01 -t 00:15:00 -c copy %s")]
               :2 ["slow and transocde by syncing"
                   (str ffmpeg " -i %s -ss 00:01:00 -t 00:01:00 -async 1 -strict -2 %s")]
               })
@@ -207,20 +207,20 @@
   
   (def output (time (((cmdMap (Integer/parseInt option)) 1)) #_(((cmdMap option) 1))))
   
-  (if (vector? output) 
-    (doseq [out output]
-      (println "exec: " out))
-    (println "exec: " output))
+  (def output (if (not (vector? output)) (conj [] output) output))
+
+  (doall (map #(println "exec : " %) output))
+  ;(doseq [out output] (println "exec all: " out))
   
   (println "Should I start executing them! y/n")
   (def option (read-line))
   
   (def execOutput [])
   (if (= option "y") 
-    (if (vector? output) 
-      (doseq [out output]
-        (println "exec: " out)
-        (def execOutput (concat execOutput (executeSH (spliter out)))))))
+    (doseq [out output]
+      (println "exec: " out)
+      (def execOutput (concat execOutput (executeSH (spliter out)))))
+    (def execOutput "Chose n/N!"))
   
   (println execOutput)
   

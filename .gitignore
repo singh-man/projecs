@@ -13,7 +13,6 @@
 *.ctrl
 *.jar
 service.properties
-jetty-web.xml
 
 #ignore folders
 bin

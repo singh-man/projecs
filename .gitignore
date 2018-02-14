@@ -1,9 +1,8 @@
-.git
-.gradle
-.idea
-bin
-out
-*/lib
+# ignore all hidden files and .* files
+.*
+!.gitignore
+
+#ignore files
 *.iml
 *.ipr
 *.iws
@@ -14,3 +13,10 @@ out
 *.ctrl
 *.jar
 service.properties
+jetty-web.xml
+
+#ignore folders
+bin
+out
+build
+*/lib

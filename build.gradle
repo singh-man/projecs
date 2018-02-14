@@ -1,3 +1,19 @@
-apply plugin: 'idea'
-//and standard one
-apply plugin: 'java'
+//gradle init --type java-library run it in a folder to create a java project
+
+allprojects {
+   group = 'org.example.manish'
+   version = '1.0.0'
+}
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    // Use Maven Central for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    mavenCentral()
+}
+
+subprojects {
+   apply plugin: 'java'
+   apply plugin: 'idea'
+   apply plugin: 'eclipse'
+}

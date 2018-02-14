@@ -1,0 +1,15 @@
+//and standard one
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+   compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.0'
+   compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
+   testImplementation group: 'junit', name: 'junit', version: '4.+'
+}
+

@@ -1,0 +1,21 @@
+//and standard one
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+   compile group: 'commons-cli', name: 'commons-cli', version: '1.2'
+   compile group: 'junit', name: 'junit', version: '4.+'
+   compile group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4.9'
+   compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5'
+   compile group: 'org.eclipse', name: 'swt', version: '3.3.0-v3346'
+   compile group: 'swt', name: 'swt-win32', version: '3.0m8'
+   compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
+   // compile group: 'javax.management', name: 'jmx', version: '1.2.1'
+   // testImplementation group: 'junit', name: 'junit', version: '4.+'
+}
+

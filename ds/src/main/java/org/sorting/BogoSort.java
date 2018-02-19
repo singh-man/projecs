@@ -22,10 +22,7 @@ public class BogoSort implements ISort {
         while (!isSorted(data)) {
             for (int i = 0; i < data.length; i++) {
                 int randomPosition = generator.nextInt(data.length);
-
-                int temp = data[i];
-                data[i] = data[randomPosition];
-                data[randomPosition] = temp;
+                swap(data, i, randomPosition);
             }
         }
     }

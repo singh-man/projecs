@@ -27,6 +27,7 @@ class Mp3ToM4aConverter {
         var proc: Process? = null
         try {
             proc = Runtime.getRuntime().exec(cmds)
+            Thread.sleep(100*100)
         } catch (e: IOException) {
             log.log(Level.SEVERE, "Unable to start process for : " + cmds)
             return 0
@@ -103,6 +104,18 @@ class Mp3ToM4aConverter {
         }
 
         return 0
+    }
+
+    @Test
+    fun testMapMetaDataMp3ToM4a() {
+        val mp3Dir = "C:\\Users\\m.singh\\Downloads\\nusrat"
+        val m4aDir = "C:\\Users\\m.singh\\Downloads\\nusrat"
+
+        val files = DirectoryUtils.listAllFilteredFiles(File(mp3Dir), ".mp3", ".m4a")
+        for (f in files) {
+            val m4aFile = f.absolutePath.replace(".mp3", ".m4a").replace(mp3Dir, m4aDir)
+            mapSrcFileTagToDestFileTag(f, File(m4aFile))
+        }
     }
 
     @Test

@@ -16,12 +16,9 @@ public class BubbleSort implements ISort {
 
             for (int i = 1; i < data.length - k; i++) {
                 if (data[i] < data[i - 1]) {
-                    int tempVariable = data[i];
-                    data[i] = data[i - 1];
-                    data[i - 1] = tempVariable;
+                    swap(data, i, i-1);
 
                     isSorted = false;
-
                 }
             }
             if (isSorted)

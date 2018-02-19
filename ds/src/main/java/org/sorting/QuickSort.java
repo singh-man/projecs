@@ -28,7 +28,7 @@ public class QuickSort implements ISort {
     private void quickSort(int[] a, int lowerIndex, int higherIndex) {
         //  lowerIndex is the lower index, hi is the upper index
         //  of the region of array a that is to be sorted
-        int i = lowerIndex, j = higherIndex, h;
+        int i = lowerIndex, j = higherIndex;
 
         // comparison element x
         int pivot = a[(lowerIndex + higherIndex) / 2];
@@ -38,9 +38,7 @@ public class QuickSort implements ISort {
             while (a[i] < pivot) i++;
             while (a[j] > pivot) j--;
             if (i <= j) {
-                h = a[i];
-                a[i] = a[j];
-                a[j] = h;
+                swap(a, i, j);
                 i++;
                 j--;
             }

@@ -37,4 +37,10 @@ public interface ISort {
     default int[] run_(ISort sort) {
         return sort.sort_(data);
     }
+
+    default void swap(int[] data, int i, int j) {
+        int tempVariable = data[i];
+        data[i] = data[j];
+        data[j] = tempVariable;
+    }
 }

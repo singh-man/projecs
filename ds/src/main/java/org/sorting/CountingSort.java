@@ -13,6 +13,8 @@ import java.util.stream.IntStream;
  * Technique based on keys between a specific range.
  * It works by counting the number of objects having distinct key values (kind of hashing).
  * Then doing some arithmetic to calculate the position of each object in the output sequence.
+ *
+ * This is non-comparative sorting technique
  */
 public class CountingSort implements ISort {
 

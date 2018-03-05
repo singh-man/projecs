@@ -21,7 +21,7 @@ public class MergeSortStraightForward implements ISort {
     // Straightforward variant
     public void mergeSortStraightForward(int[] a, int lo, int m, int hi) {
         int i, j, k;
-        int[] b = null;
+        int[] b = new int[a.length];
 
         // copy both halves of a to auxiliary array b
         for (i = lo; i <= hi; i++)

@@ -2,14 +2,8 @@ package org.utils.timer;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-//import org.eclipse.swt.SWT;
-//import org.eclipse.swt.graphics.ImageData;
-//import org.eclipse.swt.graphics.ImageLoader;
+import java.text.SimpleDateFormat;
+import java.util.*;
 /**
  *
  * @author msingh
@@ -18,7 +12,7 @@ public class StopWatch {
 
     private interface Msg {
 
-        public String getMsg();
+        String getMsg();
     }
 
     private enum State implements Msg {
@@ -74,14 +68,10 @@ public class StopWatch {
         return this;
     }
 
-    /**
-     * Warning ! Will replace any existing message LOGS either from START of
-     * Watch or from Last logged statement
-     */
     public StopWatch log(String msg) {
         if (state == State.RUNNING) {
             long tmpTime = getTime();
-            logBook.put(msg, tmpTime - lastLoggedTime);
+            logBook.put(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").format(new Date(System.currentTimeMillis())) + " : " + msg, tmpTime - lastLoggedTime);
             lastLoggedTime = tmpTime;
         } else {
             System.out.println("StopWatch.log() : " + state.getMsg());

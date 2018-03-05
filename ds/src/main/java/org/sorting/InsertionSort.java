@@ -22,17 +22,13 @@ public class InsertionSort implements ISort {
         for (int i = 1; i < input.length; i++) {
             for (int j = i; j > 0; j--) {
                 if (input[j] < input[j - 1]) {
-//                    int temp = input[j];
-//                    input[j] = input[j - 1];
-//                    input[j - 1] = temp;
                     swap(input, j, j-1);
                 }
             }
         }
     }
 
-    //Using generics
-    public <T extends Comparable<? super T>> void insertionSort(T[] data) {
+    public <T extends Comparable> T[] sort(T[] data) throws Exception {
         for (int i = 1; i < data.length; i++) {
             T a = data[i];
             int j;
@@ -40,10 +36,9 @@ public class InsertionSort implements ISort {
                 data[j + 1] = data[j];
             data[j + 1] = a;
         }
+        return  data;
     }
 
     @Test
-    public void test() {
-        run(new InsertionSort());
-    }
+    public void test() { run(new InsertionSort()); }
 }

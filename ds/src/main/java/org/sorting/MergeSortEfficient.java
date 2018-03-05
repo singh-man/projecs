@@ -14,14 +14,14 @@ import org.junit.Test;
 public class MergeSortEfficient implements ISort {
     @Override
     public void sort(int[] data) throws Exception {
-        mergeSortEfficient(data, 0, 2, 3);
+        mergeSortEfficient(data, 0, data.length/2 -1, data.length-1);
     }
 
     /**/
 
     private void mergeSortEfficient(int[] a, int lo, int m, int hi) {
         int i, j, k;
-        int[] b = null;
+        int[] b = new int[a.length];
         i = 0;
         j = lo;
         // copy first half of array a to auxiliary array b

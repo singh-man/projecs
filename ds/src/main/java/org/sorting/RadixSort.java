@@ -6,6 +6,9 @@ import java.util.Arrays;
 
 /**
  * Created by M.Singh on 07/02/2018.
+ *
+ * This is non-comparative sorting technique
+ * internally uses Counting sort
  */
 public class RadixSort implements ISort {
 

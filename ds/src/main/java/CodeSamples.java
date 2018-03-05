@@ -1,8 +1,7 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import org.junit.Test;
+
+import java.util.*;
+import java.util.stream.IntStream;
 
 
 public class CodeSamples {
@@ -60,7 +59,6 @@ public class CodeSamples {
     }
 
     /**
-     *
      * @param chessBoard
      * @return
      */
@@ -82,24 +80,23 @@ public class CodeSamples {
 
     /**
      * Checks whether the passed number is prime
-     *
+     * <p>
      * Logic: based on limiting value for e.g. take 101 1. Start dividing the
      * number from 2 till the number 2. 101/2 = 50 --> check this 2, 50 are the
      * multiples of the number that means 3. next divisor range will be b/w 3
      * and 50 4. 101/3 = 33 --> signifies next divisor will be b/w 4 and 33
-     *
+     * <p>
      * narrowing is done in this way
-     *
+     * <p>
      * Note: The logic depicts that the highest multiple a number can have, is
      * its sqrt(number) or the highest number which can divide a given number is
      * its sqrt(number)
-     *
+     * <p>
      * So the number of iteration will be = Math.ceil(Math.sqrt(number)) if used
      * this mathematical formula; limitingValue check and calculation(is done to
      * make it more generic) is not required
-     *
-     *
      */
+    @Test
     public boolean isPrimeNumber(long number) {
         long limitingValue = number; // limitingValue plays a very significant role here
         for (long i = 2; i <= limitingValue; i++) {
@@ -176,15 +173,28 @@ public class CodeSamples {
         return new String(arr);
     }
 
-    /*public boolean rotatedString(String orig, String rot) {
-     Object[] origArr = orig.toCharArray();
-     char[] arr = rot.toCharArray();
-     Queue qu = new LinkedList(Arrays.asList(arr));
-     for(int i = 0; i < arr.length; i++) {
-     if(Arrays.deepEquals(origArr, qu.toArray()))
-     char c = qu.poll().charValue();
-     qu.offer(new Character(c));
-     }
-		
-     }*/
+
+    public void hanoiTowers(int n, char x, char y, char z) {
+        if (n == 1) { // basis
+            System.out.printf("Move top disk from peg %c to peg %c.%n", x, z);
+        } else {
+            hanoiTowers(n - 1, x, z, y); // recursion
+            hanoiTowers(1, x, y, z); // recursion
+            hanoiTowers(n - 1, y, x, z); // recursion
+        }
+    }
+
+    public boolean rotatedString(String orig, String rot) {
+        Character[] origArr = IntStream.range(0, orig.length()).mapToObj(e -> orig.toCharArray()[e]).toArray(Character[]::new);
+        char[] arr = rot.toCharArray();
+        Queue<Character> qu = new LinkedList(Arrays.asList(arr));
+
+        for (int i = 0; i < arr.length; i++) {
+            if (Arrays.deepEquals(origArr, qu.toArray(new Character[qu.size()]))) {
+                char c = qu.poll().charValue();
+                qu.offer(new Character(c));
+            }
+        }
+        return false;
+    }
 }

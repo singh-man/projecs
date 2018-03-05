@@ -1,5 +1,6 @@
 package org.sorting;
 
+import org.junit.Assert;
 import org.utils.timer.StopWatch;
 
 import java.util.Arrays;
@@ -9,12 +10,12 @@ import java.util.Arrays;
  */
 public interface ISort {
 
-    public int[] data = new int[]{0,5,6,3,7,0,3,7,8,9,2,5};
+    int[] data = new int[]{0, 5, 6, 3, 7, 0, 3, 7, 8, 9, 2, 5};
 
     void sort(int[] data) throws Exception;
 
-    default int[] sort_(int[] data) {
-        return new int[0];
+    default <T extends Comparable> T[] sort(T[] data) throws Exception {
+        return data;
     }
 
     default void run(ISort sort) {
@@ -29,13 +30,11 @@ public interface ISort {
             System.out.println(Arrays.toString(data));
 
             sw.printConsole();
+
+            Assert.assertTrue(isSorted(data));
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    default int[] run_(ISort sort) {
-        return sort.sort_(data);
     }
 
     default void swap(int[] data, int i, int j) {
@@ -43,4 +42,21 @@ public interface ISort {
         data[i] = data[j];
         data[j] = tempVariable;
     }
+
+    default boolean isSorted(int[] data) {
+        for (int i = 1; i < data.length; i++) {
+            if (data[i] < data[i - 1])
+                return false;
+        }
+        return true;
+    }
+
+    default <T extends Comparable> boolean isSorted(T[] data) {
+        for (int i = 1; i < data.length; i++) {
+            if (data[i].compareTo(data[i - 1]) == 0)
+                return false;
+        }
+        return true;
+    }
+
 }

@@ -1,6 +1,8 @@
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.utils.FileUtils;
+import org.utils.timer.StopWatch;
 import org.utils.timer.TimeTaken;
 import org.utils.timer.TimeTakenHelper;
 
@@ -140,31 +142,18 @@ public class CodeSamplesTest {
 
     @Test
     public void testIsPrime() {
-        TimeTakenHelper.calculateTime("Time taken for", new TimeTaken() {
 
-            @Override
-            public void calculateTimeTaken() {
-                assertTrue(cs.isPrimeNumber(32416190071l));
-            }
-        }, new TimeTaken() {
+        StopWatch sw = new StopWatch().start();
 
-            @Override
-            public void calculateTimeTaken() {
-                assertTrue(cs.isPrimeNumber(9999973));
-            }
-        }, new TimeTaken() {
-
-            @Override
-            public void calculateTimeTaken() {
-                assertFalse(cs.isPrimeNumber(999963));
-            }
-        }, new TimeTaken() {
-
-            @Override
-            public void calculateTimeTaken() {
-                assertTrue(cs.isPrimeNumber(15486101));
-            }
-        });
+        assertTrue(cs.isPrimeNumber(32416190071l));
+        sw.log("Time : ");
+        assertTrue(cs.isPrimeNumber(9999973));
+        sw.log("Time : ");
+        assertFalse(cs.isPrimeNumber(999963));
+        sw.log("Time : ");
+        assertTrue(cs.isPrimeNumber(15486101));
+        sw.log("Time : ");
+        sw.printConsole();
     }
 
     @Test
@@ -203,21 +192,14 @@ public class CodeSamplesTest {
      */
     public void testListPrimeNumbersInRange() throws IOException {
         final List<Integer> primesList = new LinkedList<Integer>();
-        TimeTakenHelper.calculateTime("", new TimeTaken() {
-
-            @Override
-            public void calculateTimeTaken() {
-                int start = 1;
-                int end = Integer.MAX_VALUE - 1000;
-                while (start <= end) {
-                    if (cs.isPrimeNumber(start)) {
-                        primesList.add(start);
-                    }
-                    start++;
-                }
+        int i = 1;
+        int end = Integer.MAX_VALUE - 1000;
+        while (i <= end) {
+            if (cs.isPrimeNumber(i)) {
+                primesList.add(i);
             }
-
-        });
+            i++;
+        }
         System.out.println("No. of primes found = " + primesList.size());
     }
 
@@ -235,8 +217,9 @@ public class CodeSamplesTest {
 
     @Test
     public void testReverseString() {
-        final String orig;
-        orig = "fetch from file sting.text";
+        final String orig = FileUtils.readFile(
+                new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toString() + "java/org/string.text"))
+                .stream().reduce(String::concat).get();
         final String reverseStringUseStack = cs.reverseStringUseStack(orig);
         System.out.println(reverseStringUseStack);
         TimeTakenHelper.calculateTime("Time by Stack way", new TimeTaken() {
@@ -266,6 +249,11 @@ public class CodeSamplesTest {
     public void testCountStringInString() {
         Assert.assertEquals(2, cs.countStringInString("isnotis", "is"));
         Assert.assertEquals(1, cs.countStringInString("isnotis", "not"));
+    }
+
+    @Test
+    public void testHanoiTowers() {
+        new CodeSamples().hanoiTowers(11, 'A', 'B', 'C');
     }
 
 //	@Test

@@ -49,7 +49,7 @@
   ([]
    (println "Provide input file : ")
    (def inFile (clojure.string/replace (read-line) #"\\" "/"))
-   (println "Provide CRF : ")
+   (println "Provide CRF : [0-23-51 least]")
    (def crf (read-line))
    (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_f_x265_" crf  ".mkv"))
    (ffmpegEncodeX265 inFile outFile crf))
@@ -98,7 +98,7 @@
   ([]
    (println "Provide input file : ")
    (def inFile (clojure.string/replace (read-line) #"\\" "/"))
-   (println "Provide CRF : ")
+   (println "Provide CRF : [0-28-51 least]")
    (def crf (read-line))
    (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_f_x264_hdReadyTV_" crf  ".mkv"))
    (ffmpegEncodeForHDReadyTV inFile outFile crf))
@@ -108,12 +108,16 @@
   ([inFile outFile]
    (def cmds {
               :1 ["fast and copies only"
-                  (str ffmpeg " -ss 00:09:26 -i %s -ss 00:00:01 -t 00:15:00 -c copy %s")]
+                  (str ffmpeg " -ss %s -i %s -ss 00:00:01 -t %s -c copy %s")]
               :2 ["slow and transocde by syncing"
                   (str ffmpeg " -i %s -ss 00:01:00 -t 00:01:00 -async 1 -strict -2 %s")]
               })
+   (println "Provide cut from : [00:00:00]")
+   (def cutFrom (read-line))
+   (println "Provide cut duration : [00:00:00]")
+   (def cutDuration (read-line))
    (let [x (second (cmds :1))]
-     (format x inFile outFile)))
+     (format x cutFrom inFile cutDuration outFile)))
   ([]
    (println "Provide input file : ")
    (def inFile (clojure.string/replace (read-line) #"\\" "/"))

@@ -4,8 +4,12 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DirectoryUtils {
 
@@ -78,10 +82,11 @@ public class DirectoryUtils {
     }
 
     public static List<File> listAllFilteredFiles(File srcDir, String... exts) {
-        List<String> extList = Arrays.asList(exts).stream().map(String::toLowerCase).collect(Collectors.toList());
+        List<String> extList = Stream.of(exts).map(String::toLowerCase).collect(Collectors.toList());
         List<File> fileList = listAllFiles(srcDir);
         fileList = fileList.stream()
-                .filter(e -> e.getName().contains(".") && extList.contains(e.getName().substring(e.getName().lastIndexOf(".")).toLowerCase()))
+                .filter(e -> e.getName().contains(".") &&
+                        extList.contains(e.getName().substring(e.getName().lastIndexOf(".")).toLowerCase()))
                 .collect(Collectors.toList());
         return fileList;
     }
@@ -92,9 +97,8 @@ public class DirectoryUtils {
     }
 
     public static Map<File, List<File>> getDirectoryMap(File srcDir) {
-        Map<File, List<File>> dirMap = new HashMap<>();
         List<File> dirList = listAllDirectoriesIncludingThis(srcDir);
-        dirList.forEach(f -> dirMap.put(f, listFiles(f)));
+        Map<File, List<File>> dirMap = dirList.stream().collect(Collectors.toMap(e -> e, DirectoryUtils::listFiles));
         return dirMap;
     }
 

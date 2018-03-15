@@ -8,6 +8,11 @@ import org.utils.timer.TimeTakenHelper;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -254,6 +259,48 @@ public class CodeSamplesTest {
     @Test
     public void testHanoiTowers() {
         new CodeSamples().hanoiTowers(11, 'A', 'B', 'C');
+    }
+
+    interface Searchable {
+        boolean test(String car);
+    }
+
+    private boolean isSuzuki(Searchable s) {
+        return s.test("Suzuki");
+    }
+
+    private Integer doFunc(long l, Function<Long, Integer> f) {
+        return f.apply(l);
+    }
+
+    private Float doFunc(long l, BiFunction<Long, Long, Float> f) {
+        return f.apply(10l, 10l);
+    }
+
+    private void doFunc(long l, Consumer<Long> f) {
+        f.accept(l);
+    }
+
+    private Float doFunc(Supplier<Float> f) {
+        return f.get();
+    }
+
+    @Test
+    public void testA() {
+        Searchable a = s -> s.equals("");
+        isSuzuki(s -> s.equals(""));
+        Searchable x = car -> car.equals("Maruti");
+        System.out.println(isSuzuki(x));
+
+        System.out.println(doFunc(10, (Function<Long, Integer>) d1 -> Integer.parseInt(d1+"")));
+
+        doFunc(100l, (Consumer<Long>) System.out::println);
+
+        System.out.println(doFunc(() -> Float.valueOf(100 +"")));
+
+        System.out.println(doFunc(10, (t1, t2) -> t1*t2*0.5f));
+
+        Stream.generate(() -> Arrays.asList(1,2,3,4)).limit(5).forEach(System.out::println);
     }
 
 //	@Test

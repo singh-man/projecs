@@ -258,7 +258,12 @@ public class CodeSamplesTest {
 
     @Test
     public void testHanoiTowers() {
-        new CodeSamples().hanoiTowers(11, 'A', 'B', 'C');
+        new CodeSamples().hanoiTowers(3, 'A', 'B', 'C');
+    }
+
+    @Test
+    public void testHanoiTowers_1() {
+        new CodeSamples().hanoiTowers_1(3, 'A', 'B', 'C');
     }
 
     interface Searchable {

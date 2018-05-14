@@ -59,6 +59,8 @@
   ([inFile outFile db]
    (def cmds {
               :1 ["inc-dec volume of audio" 
+                  (str ffmpeg " -i %s -map 0 -c copy -c:a aac -af \"volume=%sdB\" %s")]
+              :2 ["inc-dec volume of audio" 
                   (str ffmpeg " -i %s -vcodec copy -af \"volume=%sdB\" %s")]
               })
    (let [x (second (cmds :1))]
@@ -73,7 +75,7 @@
    (def inFile (clojure.string/replace (read-line) #"\\" "/"))
    (println "Provide db : ")
    (def db (read-line))
-   (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_V" db (.substring inFile (.lastIndexOf inFile "."))))
+   (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_f_v_" db (.substring inFile (.lastIndexOf inFile "."))))
    (println "outFukle dsjfasdjf" outFile)
    (ffmpegVolume inFile outFile db))
   )
@@ -86,7 +88,7 @@
               :2 ["Change progressive to interlace" 
                   (str ffmpeg " -i %s -map 0 -c copy -c:v libx264 -preset slow -crf %s -flags +ilme+ildct %s")]
               :3 ["Change to 720p" 
-                  (str ffmpeg " -i %s -s hd720 -map 0 -c copy -c:v libx264 -crf %s %s")]
+                  (str ffmpeg " -i %s -s hd720 -map 0 -c copy -c:v libx264 -crf %s -c:a aac %s")]
               })
    (let [x (second (cmds :3))]
      (format x inFile crf outFile)))
@@ -129,7 +131,7 @@
   ([inFile srtFile outFile]
    (def cmds {
               :1 ["Import subtitles to file"
-                  (str ffmpeg " -i %s -sub_charenc CP1252 -i %s -map 0:v -map 0:a -c copy -map 1 -c:s:0 srt -metadata:s:s:0 language=en %s")]
+                  (str ffmpeg " -i %s -sub_charenc UTF-8 -i %s -map 0:v -map 0:a -c copy -map 1 -c:s:0 srt -metadata:s:s:0 language=en %s")]
               :2 ["Import multiple subtitles"
                   (str ffmpeg " -i %s -sub_charenc CP1252 -i %s -i %s -map 0:v -map 0:a -c copy -map 1 -c:s:0 srt -metadata:s:s:0 language=en -map 2 -c:s:1 srt -metadata:s:s:1 language=swe %s")]
               })

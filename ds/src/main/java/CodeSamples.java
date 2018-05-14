@@ -184,6 +184,16 @@ public class CodeSamples {
         }
     }
 
+    /**
+     * May be defective
+     */
+    public void hanoiTowers_1(int n, char start, char goal, char temp) {
+        if (n == 0) return;          // Base case
+        hanoiTowers_1(n - 1, start, temp, goal); // Recursive call: n-1 rings
+        System.out.printf("Move disk from peg %c to peg %c.%n", start, goal); // Move bottom disk to goal
+        hanoiTowers_1(n - 1, temp, goal, start); // Recursive call: n-1 rings
+    }
+
     public boolean rotatedString(String orig, String rot) {
         Character[] origArr = IntStream.range(0, orig.length()).mapToObj(e -> orig.toCharArray()[e]).toArray(Character[]::new);
         char[] arr = rot.toCharArray();

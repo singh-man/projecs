@@ -9,5 +9,5 @@
 
 rootProject.name = 'projecs'
 
-//include 'clojure','downlaod','download_2','ds','empMgmt','empMgmt_2','empMgmt_s','googleMVP','music','py','spring','state','utils'
-include 'clojure','downlaod','download_2','ds','empMgmt','empMgmt_2','empMgmt_s','googleMVP','music','spring','state','thinkDataStructures','utils','guiMVC','hibernate','py','z'
+include 'clojure','downlaod','download_2','ds','empMgmt','empMgmt_2','empMgmt_s','googleMVP','music','py','spring','state','thinkDataStructures','utils'
+//include 'clojure','downlaod','download_2','ds','empMgmt','empMgmt_2','empMgmt_s','googleMVP','music','spring','state','thinkDataStructures','utils','guiMVC','hibernate','py','z'

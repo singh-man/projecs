@@ -3,7 +3,7 @@
 
 (ns utils.utils
   (use [clojure.java.shell :only [sh]])
-  (load-file "../utils/fileUtils.clj")
+  ;(load-file "src/utils/fileUtils.clj")
   (use [utils.fileUtils :exclude [-main]])
   ;(use utils.fileUtils)
   ;(use [clojure.string])

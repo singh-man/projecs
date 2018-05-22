@@ -1,0 +1,7 @@
+# ignore all hidden files and .* files
+.*
+!.gitignore
+
+#under clojure project ignore files created by leiningen!
+pom.xml
+target/*

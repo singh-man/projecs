@@ -2,20 +2,18 @@
 
 (ns avScripts.avScripts_5
     (use [clojure.java.shell :only [sh]])
-    ;(load-file "src/utils/fileUtils.clj")
     (use [utils.fileUtils :exclude [-main init]])
-    ;(load-file "src/utils/utils.clj")
     (use utils.utils)
     (use clojure.test)
-    ;(use utils.fileUtils)
-    ;(use [clojure.string])
     (:gen-class)
     )
 
 ;(map (fn[[a1 a2 a3]] (println (format s a1 a2 a3))))
 
 ;(def ffmpeg "D:/mani/dev/opt/ffmpeg-20151208-git-ff6dd58-win64-static/bin/ffmpeg.exe")
-(def ffmpeg "D:/mani/dev/opt/ffmpeg-20160614-git-cb46b78-win32-static/bin/ffmpeg.exe")
+(def ffmpeg (if (isLinux) 
+    "ffmpeg" 
+    "D:/mani/dev/opt/ffmpeg-20160614-git-cb46b78-win32-static/bin/ffmpeg.exe"))
 ;(def ffmpeg "ffmpeg")
 
 (def handbrake "D:/mani/dev/opt/HandBrake-0.10.5-x86_64-Win_CLI/HandBrakeCLI.exe")
@@ -139,9 +137,7 @@
                        (str ffmpeg " -i %s -c:a aac -vf subtitles=%s %s")]
                    })
 
-        (def option :1)
-        (if (= inFile srtFile) (def option :3))
-        ;(map (fn [[k v]] (prn k v)) cmds)
+        (def option (if (= inFile srtFile) :3 :1))
         (let [x (second (cmds option))]
              (prn x inFile srtFile outFile)
              (format x inFile srtFile outFile)))
@@ -197,7 +193,9 @@
 
 (defn init []
 
-      (def dirPath "/home/manish/mani/video/compressed/")
+      (def dirPath (if (isLinux) 
+          "/home/manish/mani/video/compressed/"
+          "D:/mani/video/compressed/"))
 
       (println "Welcome to AV Convertor\n Please provide source directory for videos - must end with / : ")
       (def dirPath #_(read-line) dirPath)

@@ -10,6 +10,8 @@
   (:gen-class)
   )
 
+;(map (fn [[k v]] (prn k v)) cmds)
+
 (defn tempSol "coverts to CamelCase as a temp sol" 
   [strin_g] (clojure.string/join (doall (map clojure.string/capitalize (.split strin_g " ")))))
 
@@ -19,6 +21,8 @@
 (defn spliter "turns the args into a vector/list" [args] 
   (def result (.split args " ")) 
   result)
+
+(defn isLinux[] (if (= (System/getProperty "os.name") "Linux") true false))
 
 #_(defn loopEncode [f fileMap crf] 
   (def output [])

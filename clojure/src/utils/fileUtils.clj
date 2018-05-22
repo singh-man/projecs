@@ -96,4 +96,4 @@
 
       (System/exit 0))
 
-(deftest testInit (init))
+(deftest testFileUtils (init))

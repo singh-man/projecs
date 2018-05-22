@@ -3,7 +3,7 @@
 (ns avScripts.avScripts_5
     (use [clojure.java.shell :only [sh]])
     ;(load-file "src/utils/fileUtils.clj")
-    (use [utils.fileUtils :exclude [-main]])
+    (use [utils.fileUtils :exclude [-main init]])
     ;(load-file "src/utils/utils.clj")
     (use utils.utils)
     (use clojure.test)
@@ -15,8 +15,8 @@
 ;(map (fn[[a1 a2 a3]] (println (format s a1 a2 a3))))
 
 ;(def ffmpeg "D:/mani/dev/opt/ffmpeg-20151208-git-ff6dd58-win64-static/bin/ffmpeg.exe")
-;(def ffmpeg "D:/mani/dev/opt/ffmpeg-20160614-git-cb46b78-win32-static/bin/ffmpeg.exe")
-(def ffmpeg "ffmpeg")
+(def ffmpeg "D:/mani/dev/opt/ffmpeg-20160614-git-cb46b78-win32-static/bin/ffmpeg.exe")
+;(def ffmpeg "ffmpeg")
 
 (def handbrake "D:/mani/dev/opt/HandBrake-0.10.5-x86_64-Win_CLI/HandBrakeCLI.exe")
 
@@ -255,7 +255,7 @@
       (System/exit 0)
       )
 
-(deftest testInit
+(deftest testAvScripts
          (init))
 
 (defn -main [args] (init))

@@ -115,8 +115,14 @@
                    })
         (println "Provide cut from : [00:00:00]")
         (def cutFrom (read-line))
-        (println "Provide cut duration : [00:00:00]")
+        (println "Provide cut till : [00:00:00]")
         (def cutDuration (read-line))
+
+        (def d1 (.parse (java.text.SimpleDateFormat. "HH:mm:ss") cutFrom))
+        (def d2 (.parse (java.text.SimpleDateFormat. "HH:mm:ss") cutDuration))
+        (def duration (- (.getTime d2) (.getTime d1) (* 60 60 1000)));60 hrs is also subtracted
+        (def cutDuration (.format (java.text.SimpleDateFormat. "HH:mm:ss") duration))
+
         (let [x (second (cmds :1))]
              (format x cutFrom inFile cutDuration outFile)))
       ([]
@@ -214,7 +220,7 @@
                    ])
 
       (def i 0)
-      (doall (map (fn [v] (println i "." (v 0)) (def i (inc i))) cmdMap))
+      (doall (map (fn [[v1 v2]] (println i "." v1) (def i (inc i))) cmdMap))
 
       #_(def cmdMap (array-map :1 [(str "ffmpeg -> x265 convert all in " dirPath) #(ffmpegEncodeX265 (fileMap dirPath fromExt "_f_x265_27.mkv") "27")] :3 [(str "ffmpeg -> x264 convert all in " dirPath) #(ffmpegEncodeX264 (fileMap dirPath fromExt "_f_x264_21.mkv") "21")] :4 [(str "ffmpeg -> x264 convert " srcFile " -> " outFile) #(ffmpegEncodeX264 srcFile outFile "21")] :5 [(str "ffmpeg -> cut " srcFile " -> " outFile) #(ffmpegCut srcFile outFile)] :6 [(str "ffmpeg -> import subtitle " srcFile " + " srtFile " -> " outFile) #(ffmpegImport srcFile srtFile outFile)] :7 [(str "ffmpeg -> concat videos in file " concatFilesIn " -> " outFile) #(ffmpegConcat concatFilesIn outFile)] :8 [(str "ffmpeg -> inc-dec volume of audio all in " dirPath) #(ffmpegVolume (fileMap dirPath fromExt "_v9") 9)] :9 [(str "ffmpeg -> inc-dec volume of audio " srcFile " -> " outFile) #(ffmpegVolume srcFile outFile 19)] :10 [(str "ffmpeg -> convert to HD ready TV " srcFile " -> " outFile) #(ffmpegEncodeForHDReadyTV srcFile outFile 19)] :11 [(str "ffmpeg -> convert to HD ready TV in " dirPath) #(ffmpegEncodeForHDReadyTV (fileMap dirPath fromExt "_f_x264_hdReady.mkv") "19")] :12 [(str "ffmpeg -> mpeg2 convert all in " dirPath) #(ffmpegEncodeMpeg2 (fileMap dirPath fromExt "_f_mpeg2_5.mpg") "5")] :13 [(str "handbrake -> x265 convert all in " dirPath) #(handbrakeEncodeX265 (fileMap dirPath fromExt "_h_x265_21.mkv") "21")] :14 [(str "handbrake -> x265 convert " srcFile " -> " outFile) #(handbrakeEncodeX265 srcFile outFile "21")]))
       #_(doseq [keyval cmdMap] (println (name (key keyval)) "-" ((val keyval) 0)))
@@ -254,6 +260,6 @@
       )
 
 (deftest testAvScripts
-         (init))
+    (init))
 
 (defn -main [args] (init))

@@ -308,6 +308,7 @@ public class CodeSamplesTest {
         Stream.generate(() -> Arrays.asList(1,2,3,4)).limit(5).forEach(System.out::println);
     }
 
+
 //	@Test
 //	public void testEricssonMail() {
 //

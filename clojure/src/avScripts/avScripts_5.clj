@@ -106,25 +106,29 @@
       )
 
 (defn ffmpegCut
-      ([inFile outFile]
+    ([inFile outFile cutFrom cutTill]
         (def cmds {
                    :1 ["fast and copies only"
                        (str ffmpeg " -ss %s -i %s -ss 00:00:01 -t %s -c copy %s")]
                    :2 ["slow and transocde by syncing"
                        (str ffmpeg " -i %s -ss 00:01:00 -t 00:01:00 -async 1 -strict -2 %s")]
                    })
-        (println "Provide cut from : [00:00:00]")
-        (def cutFrom (read-line))
-        (println "Provide cut till : [00:00:00]")
-        (def cutDuration (read-line))
 
-        (def d1 (.parse (java.text.SimpleDateFormat. "HH:mm:ss") cutFrom))
-        (def d2 (.parse (java.text.SimpleDateFormat. "HH:mm:ss") cutDuration))
-        (def duration (- (.getTime d2) (.getTime d1) (* 60 60 1000)));60 hrs is also subtracted
-        (def cutDuration (.format (java.text.SimpleDateFormat. "HH:mm:ss") duration))
+        (def cutDuration 0)
+        (let [d1 (.parse (java.text.SimpleDateFormat. "HH:mm:ss") cutFrom)
+             d2 (.parse (java.text.SimpleDateFormat. "HH:mm:ss") cutTill)
+             duration (- (.getTime d2) (.getTime d1) (* 60 60 1000))]
+             (def cutDuration (.format (java.text.SimpleDateFormat. "HH:mm:ss") duration)));60 hrs is also subtracted)
 
         (let [x (second (cmds :1))]
              (format x cutFrom inFile cutDuration outFile)))
+      ([inFile outFile]
+        (println "Provide cut from : [00:00:00]")
+        (def cutFrom (read-line))
+        (println "Provide cut till : [00:00:00]")
+        (def cutTill (read-line))
+
+        (ffmpegCut inFile outFile cutFrom cutTill))
       ([]
         (println "Provide input file : ")
         (def inFile (clojure.string/replace (read-line) #"\\" "/"))

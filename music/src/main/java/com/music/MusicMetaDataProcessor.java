@@ -272,4 +272,11 @@ public class MusicMetaDataProcessor {
         problems.forEach(System.out::println);
     }
 
+    @Test
+    public void test() throws TagException, ReadOnlyFileException, CannotReadException, InvalidAudioFrameException, IOException, CannotWriteException {
+        AudioFile destFile = AudioFileIO.read(new File("D:/mani/video/lifeStyle_sidhuMooseWala.m4a"));
+        Tag srctag = AudioFileIO.read(new File("D:/mani/video/lifeStyle_sidhuMooseWala.mp3")).getTag();
+        destFile.getTag().setField(FieldKey.TITLE, srctag.getFirst(FieldKey.TITLE));
+        AudioFileIO.write(destFile);
+    }
 }

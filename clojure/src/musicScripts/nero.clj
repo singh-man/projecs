@@ -1,37 +1,33 @@
-;lein test musicScripts.musicScript
+;lein test musicScripts.nero
 
-(ns musicScripts.musicScript
-  (use [clojure.java.shell :only [sh]])
+(ns musicScripts.nero
+  "nero encoder based and relies on jaudiotagger 3pp's for ID3 tags"
   (use [utils.fileUtils :exclude [-main init]])
   (use utils.utils)
   (use clojure.test)
-  (:import java.io.File)
-  (:import [org.jaudiotagger.audio AudioFile AudioFileIO])
-  (:import [org.jaudiotagger.tag FieldKey] )
   (:gen-class)
   )
 
-(defn wavToM4a
+(defn neroAacEnc "encrypts wav file to m4a"
   ([wavFile m4aFile] 
-   (def neroAacEnc (if (isLinux) 
-                     "/home/manish/dev/opt/NeroAACCodec-1.5.1/linux/neroAacEnc"
-                     "D:/mani/dev/opt/NeroAACCodec-1.5.1/win32/neroAacEnc.exe"))
-   (let [x (str neroAacEnc " -q 0.19 -hev2 -if %s -of %s")] (format x wavFile m4aFile)))
+   (def _neroAacEnc (if (isLinux) 
+                      "neroAacEnc"
+                      "D:/mani/dev/opt/NeroAACCodec-1.5.1/win32/neroAacEnc.exe"))
+   (let [x (str _neroAacEnc " -q 0.19 -hev2 -if %s -of %s")] (format x wavFile m4aFile)))
   ([file] 
-   (wavToM4a file (.replace file ".wav" ".m4a"))))
+   (neroAacEnc file (.replace file ".wav" ".m4a"))))
 
-(defn m4aToWav
+(defn neroAacDec "decrypts m4a file to wav"
   ([m4aFile wavFile] 
-   (def neroAacDec "/home/manish/dev/opt/NeroAACCodec-1.5.1/linux/neroAacDec")
-   (let [x (str neroAacDec " -if %s -of %s")] (format x m4aFile wavFile)))
+   (def _neroAacDec "neroAacDec")
+   (let [x (str _neroAacDec " -if %s -of %s")] (format x m4aFile wavFile)))
   ([file] 
-   (m4aToWav file (.replace file ".wav" ".m4a"))))
+   (neroAacDec file (.replace file ".wav" ".m4a"))))
 
 #_(defn neroAacTag
     ([m4aFile id3] 
      (let [x ((cmds :neroAac) :tag)]
-       (executeSH (spliter (format (second x) m4aFile (tempSol (id3 :genre)) (tempSol (id3 :title)) (tempSol (id3 :artist)) (tempSol (id3 :year)) (tempSol (id3 :album)) (tempSol (id3 :comment))))))
-     ))
+       (format (second x) m4aFile (tempSol (id3 :genre)) (tempSol (id3 :title)) (tempSol (id3 :artist)) (tempSol (id3 :year)) (tempSol (id3 :album)) (tempSol (id3 :comment))))))
 
 (defn mp3ToWav
   ([mp3file wavFile] 
@@ -56,41 +52,23 @@
 
 (defn wavToMp3 "wav to mp3" [dirPath] "lame -b 224 %s %s")
 
-(defn mapTags [srcFile destFile]
-  (def fields #{FieldKey/TITLE, FieldKey/ARTIST, FieldKey/ALBUM, FieldKey/GENRE, 
-                FieldKey/LYRICIST, FieldKey/COMPOSER, FieldKey/ALBUM_ARTIST})
-  (def srcTag (.getTag (AudioFileIO/read (File. srcFile))))
-  (let [dest_file (AudioFileIO/read (File. destFile))
-        destTag (.getTag dest_file)]
-    (doseq [f fields] (.setField destTag f (.getFirst srcTag f)))
-    (.setField destTag (.getFirstArtwork srcTag))
-    (AudioFileIO/write dest_file)
-    (prn "file done!!!!!")
-    )
-  )
-
 (defn exe [e] (executeSH (spliter e)))
 
-(defn mp3Tom4a [] 
+(defn mp3Tom4a [] "Will use jaudiotagger to copy ID3 metadata to m4a File"
   (def dirPath (if (isLinux) 
-                 "/home/manish/mani/video/"
+                 "/mnt/d/mani/video/"
                  "D:/mani/video/"))
-  
   (def files (listFilesAsString dirPath ".mp3"))
-  (prn files)
   (doall (map (fn[file] (let [wavFile (.replace file ".mp3" ".wav")
                               m4aFile (.replace file ".mp3" ".m4a")] 
                           (exe (mp3ToWav file)) 
-                          (exe (wavToM4a  wavFile m4aFile)) 
+                          (exe (neroAacEnc  wavFile m4aFile)) 
                           (removeFile wavFile))) files))
-  
-  (doall (map #((let [m4aFile (.replace %1 ".mp3" ".m4a")]
-                  (mapTags %1 m4aFile))) files))
-  )
+  (prn files)
+  (doseq [f files] (mapTags f (.replace f ".mp3" ".m4a"))))
 
-(defn init[] (mp3Tom4a))
+(deftest testMp3Tom4a (mp3Tom4a))
 
-(deftest testMusicScript
-  (init))
+(defn init[])
 
 (defn -main [args] (init))

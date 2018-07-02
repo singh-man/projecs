@@ -7,6 +7,9 @@
   (use [utils.fileUtils :exclude [-main]])
   ;(use utils.fileUtils)
   ;(use [clojure.string])
+  (:import java.io.File)
+  (:import [org.jaudiotagger.audio AudioFile AudioFileIO])
+  (:import [org.jaudiotagger.tag FieldKey] )
   (:gen-class)
   )
 
@@ -31,5 +34,16 @@
   output)
 
 (defn executeSH [args] 
-  (apply println args)
+  (apply println "utils.utils Executing: \n" args)
   (apply sh args))
+
+(defn mapTags [srcFile destFile]
+  (def fields #{FieldKey/TITLE, FieldKey/ARTIST, FieldKey/ALBUM, FieldKey/GENRE, 
+                FieldKey/LYRICIST, FieldKey/COMPOSER, FieldKey/ALBUM_ARTIST})
+  (def srcTag (.getTag (AudioFileIO/read (File. srcFile))))
+  (let [dest_file (AudioFileIO/read (File. destFile))
+        destTag (.getTag dest_file)]
+    (doseq [f fields] (.setField destTag f (.getFirst srcTag f)))
+    (.setField destTag (.getFirstArtwork srcTag))
+    (AudioFileIO/write dest_file)
+    (prn "File tagging done!!!!!")))

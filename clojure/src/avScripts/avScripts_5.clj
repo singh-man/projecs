@@ -114,10 +114,11 @@
               })
    
    (def cutDuration 0)
-   (let [d1 (.parse (java.text.SimpleDateFormat. "HH:mm:ss") cutFrom)
-         d2 (.parse (java.text.SimpleDateFormat. "HH:mm:ss") cutTill)
-         duration (- (.getTime d2) (.getTime d1) (* 60 60 1000))]
-     (def cutDuration (.format (java.text.SimpleDateFormat. "HH:mm:ss") duration)));60 hrs is also subtracted)
+   (let [dateFormat (java.time.format.DateTimeFormatter/ofPattern "HH:mm:ss")
+         d1 (java.time.LocalTime/parse cutFrom dateFormat)
+         d2 (java.time.LocalTime/parse cutTill dateFormat)
+         dur (java.time.Duration/between d1 d2)]
+     (def cutDuration (.format (java.time.LocalTime/ofNanoOfDay (.toNanos dur)) dateFormat)))
    
    (let [x (second (cmds :1))]
      (format x cutFrom inFile cutDuration outFile)))
@@ -134,6 +135,7 @@
    (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_cut" (.substring inFile (.lastIndexOf inFile "."))))
    (ffmpegCut inFile outFile))
   )
+
 
 (defn ffmpegImport
   ([inFile srtFile outFile]
@@ -203,7 +205,7 @@
 (defn init []
   
   (def dirPath (if (isLinux) 
-                 "/home/manish/mani/video/compressed/"
+                 "/mnt/d/mani/video/compressed/"
                  "D:/mani/video/compressed/"))
   
   (println "Welcome to AV Convertor\n Please provide source directory for videos - must end with / : ")
@@ -263,6 +265,6 @@
   )
 
 (deftest testAvScripts
-  (init))
+  (time (init)))
 
 (defn -main [args] (init))

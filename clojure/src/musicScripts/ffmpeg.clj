@@ -38,12 +38,29 @@
                  "/mnt/d/mani/video/"
                  "D:/mani/video/"))
   (def files (listFilesAsString dirPath ".mp3"))
-  (def output (map (fn[file] (let [m4aFile (clojure.string/replace file ".mp3" ".m4a")] 
-                               (if (isLinux)
-                                 (ffmpegToM4aWith_libfdk_aac  file m4aFile)
-                                 (ffmpegToM4aWith_builtInAAC  file m4aFile))))
-                   files))
-  (doall (map #(exe %) output)))
+  
+  (def output [])
+  
+  ; Works perfectly; can't understand how it gets ID3v2 data and album art
+  (doseq [file files] 
+    (let [m4aFile (clojure.string/replace file ".mp3" ".m4a")
+          wavFile (clojure.string/replace file ".mp3" ".wav")] 
+      (def output (conj output (exe (ffmpegToWav file wavFile))))
+      (def output (conj output (if (isLinux)
+                                 (exe (ffmpegToM4aWith_libfdk_aac wavFile m4aFile))
+                                 (exe(ffmpegToM4aWith_builtInAAC wavFile m4aFile)))))
+      (removeFile wavFile)))
+  
+  ; Was adding album art as sperate video stream
+  #_(do (def output (map (fn[file] (let [m4aFile (clojure.string/replace file ".mp3" ".m4a")] 
+                                     (if (isLinux)
+                                       (ffmpegToM4aWith_libfdk_aac file m4aFile)
+                                       (ffmpegToM4aWith_builtInAAC file m4aFile))))
+                         files))
+      (doall (map #(exe %) output)))
+  
+  (prn output))
+
 
 (deftest testMp3ToWav 
   (def dirPath (if (isLinux) 
@@ -53,7 +70,9 @@
   (def output (map (fn[file] (let [wavFile (clojure.string/replace file ".mp3" ".wav")] 
                                (ffmpegToWav file wavFile)))
                    files))
-  (doall (map #(exe %) output)))
+  (def execOutput [])
+  (doall (map #(def execOutput (concat execOutput (exe %))) output))
+  (prn execOutput))
 
 ;(deftest testMp3Tom4a (mp3Tom4a))
 

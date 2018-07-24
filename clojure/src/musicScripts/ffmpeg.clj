@@ -1,5 +1,6 @@
 ;lein test musicScripts.ffmpeg :only musicScripts.ffmpeg/testMp3ToWav
 ;lein test musicScripts.ffmpeg :only musicScripts.ffmpeg/testMp3ToM4a
+;lein test musicScripts.ffmpeg :only musicScripts.ffmpeg/testAckermann
 
 (ns musicScripts.ffmpeg
   "ffmpeg based and doesn't use jaudiotagger 3pp's"
@@ -61,6 +62,10 @@
   
   (prn output))
 
+(defn ackermann [m n] 
+  (cond (zero? m) (inc n)
+        (zero? n) (ackermann (dec m) 1)
+        :else (ackermann (dec m) (ackermann m (dec n)))))
 
 (deftest testMp3ToWav 
   (def dirPath (if (isLinux) 
@@ -75,5 +80,9 @@
   (prn execOutput))
 
 ;(deftest testMp3Tom4a (mp3Tom4a))
+
+(deftest testAckermann 
+  ; with 4 0 runs fine with below stack overflow
+  (prn (ackermann 4 1)))
 
 (defn -main [args] (prn "call some here"))

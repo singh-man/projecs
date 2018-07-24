@@ -13,9 +13,12 @@
 (def ffmpeg (if (isLinux) 
               "ffmpeg" 
               "D:/mani/dev/opt/ffmpeg-20160614-git-cb46b78-win32-static/bin/ffmpeg.exe"))
-;(def ffmpeg "ffmpeg")
 
 (def handbrake "D:/mani/dev/opt/HandBrake-0.10.5-x86_64-Win_CLI/HandBrakeCLI.exe")
+
+(def dirPath (if (isLinux) 
+               "/mnt/d/mani/video/compressed/"
+               "D:/mani/video/compressed/"))
 
 ;(:1 ["command to check the title of DVD check the titles with longest duration -- sh handbrake -i file or <VIDEO_TS folder> --title 0" (str handbrake " -i %s --title 0"))
 
@@ -39,18 +42,16 @@
               })
    (let [x (second (cmds :2))]
      (format x inFile crf outFile)))
-  ([dirPath]
-   (println "Provide CRF : [0-23-51 least]")
-   (def crf (read-line))
-   (def f_fileMap (fileMap dirPath "" (str "_f_x265_" crf ".mkv")))
-   (loopEncode ffmpegEncodeX265 f_fileMap crf))
   ([]
-   (println "Provide input file : ")
-   (def inFile (clojure.string/replace (read-line) #"\\" "/"))
+   (println "Provide input file or press enter for <" dirPath ">")
+   (def in (read-line))
    (println "Provide CRF : [0-23-51 least]")
    (def crf (read-line))
-   (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_f_x265_" crf ".mkv"))
-   (ffmpegEncodeX265 inFile outFile crf))
+   (if (clojure.string/blank? in)
+     (do (def f_fileMap (fileMap dirPath "" (str "_f_x265_" crf ".mkv")))
+       (loopEncode ffmpegEncodeX265 f_fileMap crf))
+     (do (def outFile (str (.substring in 0 (.lastIndexOf in ".")) "_f_x265_" crf ".mkv"))
+       (ffmpegEncodeX265 in outFile crf))))
   )
 
 (defn ffmpegVolume
@@ -63,20 +64,16 @@
               })
    (let [x (second (cmds :1))]
      (format x inFile db outFile)))
-  ([dirPath]
-   (println "Provide db : ")
-   (def db (read-line))
-   (def f_fileMap (fileMap dirPath "" (str "_f_v_" db)))
-   (loopEncode ffmpegVolume f_fileMap db))
   ([]
-   (println "Provide input file : ")
-   (def inFile (clojure.string/replace (read-line) #"\\" "/"))
+   (println "Provide input file or press enter for <" dirPath ">")
+   (def in (read-line))
    (println "Provide db : ")
    (def db (read-line))
-   (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_f_v_" db (.substring inFile (.lastIndexOf inFile "."))))
-   (println "outFukle dsjfasdjf" outFile)
-   (ffmpegVolume inFile outFile db))
-  )
+   (if (clojure.string/blank? in)
+     (let [f_fileMap (fileMap dirPath "" (str "_f_v_" db ".mkv"))]
+       (loopEncode ffmpegVolume f_fileMap db))
+     (let [outFile (str (.substring in 0 (.lastIndexOf in ".")) "_f_v_" db ".mkv")]
+       (ffmpegVolume in outFile db)))))
 
 (defn ffmpegEncodeForHDReadyTV
   ([inFile outFile crf]
@@ -90,18 +87,16 @@
               })
    (let [x (second (cmds :3))]
      (format x inFile crf outFile)))
-  ([dirPath]
-   (println "Provide CRF : [0-28-51 least]")
-   (def crf (read-line))
-   (def f_fileMap (fileMap dirPath "" (str "_f_x264_hdReadyTV_" crf ".mkv")))
-   (loopEncode ffmpegEncodeForHDReadyTV f_fileMap crf))
   ([]
-   (println "Provide input file : ")
-   (def inFile (clojure.string/replace (read-line) #"\\" "/"))
+   (println "Provide input file or press enter for <" dirPath ">")
+   (def in (read-line))
    (println "Provide CRF : [0-28-51 least]")
    (def crf (read-line))
-   (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_f_x264_hdReadyTV_" crf ".mkv"))
-   (ffmpegEncodeForHDReadyTV inFile outFile crf))
+   (if (clojure.string/blank? in)
+     (let [f_fileMap (fileMap dirPath "" (str "_f_x264_hdReadyTV_" crf ".mkv"))]
+       (loopEncode ffmpegEncodeForHDReadyTV f_fileMap crf))
+     (let [outFile (str (.substring in 0 (.lastIndexOf in ".")) "_f_x264_hdReadyTV_" crf ".mkv")]
+       (ffmpegEncodeForHDReadyTV in outFile crf))))
   )
 
 (defn ffmpegCut
@@ -112,14 +107,12 @@
               :2 ["slow and transocde by syncing"
                   (str ffmpeg " -i %s -ss 00:01:00 -t 00:01:00 -async 1 -strict -2 %s")]
               })
-   
    (def cutDuration 0)
    (let [dateFormat (java.time.format.DateTimeFormatter/ofPattern "HH:mm:ss")
          d1 (java.time.LocalTime/parse cutFrom dateFormat)
          d2 (java.time.LocalTime/parse cutTill dateFormat)
          dur (java.time.Duration/between d1 d2)]
      (def cutDuration (.format (java.time.LocalTime/ofNanoOfDay (.toNanos dur)) dateFormat)))
-   
    (let [x (second (cmds :1))]
      (format x cutFrom inFile cutDuration outFile)))
   ([inFile outFile]
@@ -127,7 +120,6 @@
    (def cutFrom (read-line))
    (println "Provide cut till : [00:00:00]")
    (def cutTill (read-line))
-   
    (ffmpegCut inFile outFile cutFrom cutTill))
   ([]
    (println "Provide input file : ")
@@ -135,7 +127,6 @@
    (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_cut" (.substring inFile (.lastIndexOf inFile "."))))
    (ffmpegCut inFile outFile))
   )
-
 
 (defn ffmpegImport
   ([inFile srtFile outFile]
@@ -147,7 +138,6 @@
               :3 ["Import subtitles from mkv and hardcode"
                   (str ffmpeg " -i %s -c:a aac -vf subtitles=%s %s")]
               })
-   
    (def option (if (= inFile srtFile) :3 :1))
    (let [x (second (cmds option))]
      (prn x inFile srtFile outFile)
@@ -158,9 +148,7 @@
    (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_en.mkv"))
    
    (println "Provide srt file or leave blank if same as input file: ")
-   
    (def srtFile (clojure.string/replace (read-line) #"\\" "/"))
-   
    (if (clojure.string/blank? srtFile)
      (ffmpegImport inFile inFile outFile)
      (ffmpegImport inFile srtFile outFile)))
@@ -176,18 +164,16 @@
               })
    (let [x (second (cmds :2))]
      (format x inFile outFile crf)))
-  ([dirPath]
-   (println "Provide CRF : ")
-   (def crf (read-line))
-   (def f_fileMap (fileMap dirPath "" (str "_h_x265_" crf ".mkv")))
-   (loopEncode ffmpegEncodeX265 f_fileMap crf))
   ([]
-   (println "Provide input file : ")
-   (def inFile (clojure.string/replace (read-line) #"\\" "/"))
-   (println "Provide CRF : ")
+   (println "Provide input file or press enter for <" dirPath ">")
+   (def in (read-line))
+   (println "Provide CRF : [0-28-51 least]")
    (def crf (read-line))
-   (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_h_x265_" crf ".mkv"))
-   (handbrakeEncodeX265 inFile outFile crf))
+   (if (clojure.string/blank? in)
+     (let [f_fileMap (fileMap dirPath "" (str "_h_x265_" crf ".mkv"))]
+       (loopEncode handbrakeEncodeX265 f_fileMap crf))
+     (let [outFile (str (.substring in 0 (.lastIndexOf in ".")) "_h_x265_" crf ".mkv")]
+       (handbrakeEncodeX265 in outFile crf))))
   )
 
 (defn ffmpegConcat []
@@ -204,23 +190,15 @@
 
 (defn init []
   
-  (def dirPath (if (isLinux) 
-                 "/mnt/d/mani/video/compressed/"
-                 "D:/mani/video/compressed/"))
-  
   (println "Welcome to AV Convertor\n Please provide source directory for videos - must end with / : ")
   (def dirPath #_(read-line) dirPath)
   
-  (def cmdMap [[(str "ffmpeg -> x265 convert all in " dirPath) #(ffmpegEncodeX265 dirPath)]
-               [(str "ffmpeg -> x265 convert ") #(ffmpegEncodeX265)]
-               [(str "ffmpeg -> inc-dec volume of audio all in " dirPath) #(ffmpegVolume dirPath)]
+  (def cmdMap [[(str "ffmpeg -> x265 convert ") #(ffmpegEncodeX265)]
                [(str "ffmpeg -> inc-dec volume of audio ") #(ffmpegVolume)]
                [(str "ffmpeg -> convert to HD ready TV ") #(ffmpegEncodeForHDReadyTV)]
-               [(str "ffmpeg -> convert to HD ready TV in " dirPath) #(ffmpegEncodeForHDReadyTV dirPath)]
                [(str "ffmpeg -> cut ") #(ffmpegCut)]
                [(str "ffmpeg -> import subtitle ") #(ffmpegImport)]
                [(str "ffmpeg -> concat videos in file ") #(ffmpegConcat)]
-               [(str "handbrake -> x265 convert all in " dirPath) #(handbrakeEncodeX265 dirPath)]
                [(str "handbrake -> x265 convert ") #(handbrakeEncodeX265)]
                ])
   

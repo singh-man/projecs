@@ -7,8 +7,6 @@
   (:gen-class)
   )
 
-;(map (fn[[a1 a2 a3]] (println (format s a1 a2 a3))))
-
 ;(def ffmpeg "D:/mani/dev/opt/ffmpeg-20151208-git-ff6dd58-win64-static/bin/ffmpeg.exe")
 (def ffmpeg (if (isLinux) 
               "ffmpeg" 
@@ -21,10 +19,6 @@
                "D:/mani/video/compressed/"))
 
 ;(:1 ["command to check the title of DVD check the titles with longest duration -- sh handbrake -i file or <VIDEO_TS folder> --title 0" (str handbrake " -i %s --title 0"))
-
-(defn loopEncode [f fileMap crf]
-  (def output (reduce-kv (fn [res k v] (conj res (f k v crf))) [] fileMap))
-  output)
 
 (defn ffmpegEncodeX265
   ([inFile outFile crf]
@@ -49,9 +43,9 @@
    (def crf (read-line))
    (if (clojure.string/blank? in)
      (do (def f_fileMap (fileMap dirPath "" (str "_f_x265_" crf ".mkv")))
-       (loopEncode ffmpegEncodeX265 f_fileMap crf))
+       (doall (map (fn[[k v]] (ffmpegEncodeX265 k v crf)) f_fileMap)))
      (do (def outFile (str (.substring in 0 (.lastIndexOf in ".")) "_f_x265_" crf ".mkv"))
-       (ffmpegEncodeX265 in outFile crf))))
+       [(ffmpegEncodeX265 in outFile crf)])))
   )
 
 (defn ffmpegVolume
@@ -71,9 +65,9 @@
    (def db (read-line))
    (if (clojure.string/blank? in)
      (let [f_fileMap (fileMap dirPath "" (str "_f_v_" db ".mkv"))]
-       (loopEncode ffmpegVolume f_fileMap db))
+       (doall (map (fn[[k v]] (ffmpegVolume k v db)) f_fileMap)))
      (let [outFile (str (.substring in 0 (.lastIndexOf in ".")) "_f_v_" db ".mkv")]
-       (ffmpegVolume in outFile db)))))
+       [(ffmpegVolume in outFile db)]))))
 
 (defn ffmpegEncodeForHDReadyTV
   ([inFile outFile crf]
@@ -94,9 +88,9 @@
    (def crf (read-line))
    (if (clojure.string/blank? in)
      (let [f_fileMap (fileMap dirPath "" (str "_f_x264_hdReadyTV_" crf ".mkv"))]
-       (loopEncode ffmpegEncodeForHDReadyTV f_fileMap crf))
+       (doall (map (fn[[k v]] (ffmpegEncodeForHDReadyTV k v crf)) f_fileMap)))
      (let [outFile (str (.substring in 0 (.lastIndexOf in ".")) "_f_x264_hdReadyTV_" crf ".mkv")]
-       (ffmpegEncodeForHDReadyTV in outFile crf))))
+       [(ffmpegEncodeForHDReadyTV in outFile crf)])))
   )
 
 (defn ffmpegCut
@@ -171,9 +165,9 @@
    (def crf (read-line))
    (if (clojure.string/blank? in)
      (let [f_fileMap (fileMap dirPath "" (str "_h_x265_" crf ".mkv"))]
-       (loopEncode handbrakeEncodeX265 f_fileMap crf))
+       (doall (map (fn[[k v]] (handbrakeEncodeX265 k v crf)) f_fileMap)))
      (let [outFile (str (.substring in 0 (.lastIndexOf in ".")) "_h_x265_" crf ".mkv")]
-       (handbrakeEncodeX265 in outFile crf))))
+       [(handbrakeEncodeX265 in outFile crf)])))
   )
 
 (defn ffmpegConcat []
@@ -205,18 +199,18 @@
   (def i 0)
   (doall (map (fn [[v1 v2]] (println i "." v1) (def i (inc i))) cmdMap))
   
-  #_(def cmdMap (array-map :1 [(str "ffmpeg -> x265 convert all in " dirPath) #(ffmpegEncodeX265 (fileMap dirPath fromExt "_f_x265_27.mkv") "27")] :3 [(str "ffmpeg -> x264 convert all in " dirPath) #(ffmpegEncodeX264 (fileMap dirPath fromExt "_f_x264_21.mkv") "21")] :4 [(str "ffmpeg -> x264 convert " srcFile " -> " outFile) #(ffmpegEncodeX264 srcFile outFile "21")] :5 [(str "ffmpeg -> cut " srcFile " -> " outFile) #(ffmpegCut srcFile outFile)] :6 [(str "ffmpeg -> import subtitle " srcFile " + " srtFile " -> " outFile) #(ffmpegImport srcFile srtFile outFile)] :7 [(str "ffmpeg -> concat videos in file " concatFilesIn " -> " outFile) #(ffmpegConcat concatFilesIn outFile)] :8 [(str "ffmpeg -> inc-dec volume of audio all in " dirPath) #(ffmpegVolume (fileMap dirPath fromExt "_v9") 9)] :9 [(str "ffmpeg -> inc-dec volume of audio " srcFile " -> " outFile) #(ffmpegVolume srcFile outFile 19)] :10 [(str "ffmpeg -> convert to HD ready TV " srcFile " -> " outFile) #(ffmpegEncodeForHDReadyTV srcFile outFile 19)] :11 [(str "ffmpeg -> convert to HD ready TV in " dirPath) #(ffmpegEncodeForHDReadyTV (fileMap dirPath fromExt "_f_x264_hdReady.mkv") "19")] :12 [(str "ffmpeg -> mpeg2 convert all in " dirPath) #(ffmpegEncodeMpeg2 (fileMap dirPath fromExt "_f_mpeg2_5.mpg") "5")] :13 [(str "handbrake -> x265 convert all in " dirPath) #(handbrakeEncodeX265 (fileMap dirPath fromExt "_h_x265_21.mkv") "21")] :14 [(str "handbrake -> x265 convert " srcFile " -> " outFile) #(handbrakeEncodeX265 srcFile outFile "21")]))
-  #_(doseq [keyval cmdMap] (println (name (key keyval)) "-" ((val keyval) 0)))
+  ;(def cmdMap (array-map :1 [(str "ffmpeg -> x265 convert all in " dirPath) #(ffmpegEncodeX265 (fileMap dirPath fromExt "_f_x265_27.mkv") "27")] :3 [(str "ffmpeg -> x264 convert all in " dirPath) #(ffmpegEncodeX264 (fileMap dirPath fromExt "_f_x264_21.mkv") "21")] :4 [(str "ffmpeg -> x264 convert " srcFile " -> " outFile) #(ffmpegEncodeX264 srcFile outFile "21")] :5 [(str "ffmpeg -> cut " srcFile " -> " outFile) #(ffmpegCut srcFile outFile)] :6 [(str "ffmpeg -> import subtitle " srcFile " + " srtFile " -> " outFile) #(ffmpegImport srcFile srtFile outFile)] :7 [(str "ffmpeg -> concat videos in file " concatFilesIn " -> " outFile) #(ffmpegConcat concatFilesIn outFile)] :8 [(str "ffmpeg -> inc-dec volume of audio all in " dirPath) #(ffmpegVolume (fileMap dirPath fromExt "_v9") 9)] :9 [(str "ffmpeg -> inc-dec volume of audio " srcFile " -> " outFile) #(ffmpegVolume srcFile outFile 19)] :10 [(str "ffmpeg -> convert to HD ready TV " srcFile " -> " outFile) #(ffmpegEncodeForHDReadyTV srcFile outFile 19)] :11 [(str "ffmpeg -> convert to HD ready TV in " dirPath) #(ffmpegEncodeForHDReadyTV (fileMap dirPath fromExt "_f_x264_hdReady.mkv") "19")] :12 [(str "ffmpeg -> mpeg2 convert all in " dirPath) #(ffmpegEncodeMpeg2 (fileMap dirPath fromExt "_f_mpeg2_5.mpg") "5")] :13 [(str "handbrake -> x265 convert all in " dirPath) #(handbrakeEncodeX265 (fileMap dirPath fromExt "_h_x265_21.mkv") "21")] :14 [(str "handbrake -> x265 convert " srcFile " -> " outFile) #(handbrakeEncodeX265 srcFile outFile "21")]))
+  ;(doseq [keyval cmdMap] (println (name (key keyval)) "-" ((val keyval) 0)))
   
   (println "Chose Option!")
   (def option (read-line) #_(keyword (read-line)))
   
-  (def output (time (((cmdMap (Integer/parseInt option)) 1)) #_(((cmdMap option) 1))))
+  (def output (((cmdMap (Integer/parseInt option)) 1)) #_(((cmdMap option) 1)))
   
-  (def output (if (not (vector? output)) (conj [] output) output))
-  
-  (doall (map #(println "exec : " %) output))
-  ;(doseq [out output] (println "exec all: " out))
+  ;(prn "This: " output)
+  ;(doseq [out output] (prn "myexe: " out))
+  ;(def output (if (not (vector? output)) (conj [] output) output))
+  (doseq [out output] (prn "exe: " out))
   
   (println "Should I start executing them! y/n")
   (def option (read-line))

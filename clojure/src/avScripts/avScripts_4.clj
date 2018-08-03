@@ -9,8 +9,8 @@
   (use utils.utils)
   ;(use utils.fileUtils)
   ;(use [clojure.string])
-  (:gen-class)
-  )
+  (:gen-class))
+  
 
 ;(map (fn[[a1 a2 a3]] (println (format s a1 a2 a3))))
 
@@ -37,8 +37,8 @@
               :4 ["Encodes most significant audio and video only ignoring other streams" 
                   (str ffmpeg " -i %s -c:v libx265 -preset medium -x265-params crf=%s -c:a aac -strict experimental -b:a 96k %s")]
               :5 ["Input has 4 streams 0=v, 1=s, 2=jap audio, 3=eng audio -> Output has 3 streams mapped like 0=0 encoded video 0=1 subtitle copied 0=3 eng encoded audio" 
-                  (str ffmpeg " -i %s -map 0:0 -map 0:1 -map 0:3 -c:v libx265 -preset medium -x265-params crf=%s -c:a:3 aac -strict experimental -b:a:3 96k -c:s copy %s")]
-              })
+                  (str ffmpeg " -i %s -map 0:0 -map 0:1 -map 0:3 -c:v libx265 -preset medium -x265-params crf=%s -c:a:3 aac -strict experimental -b:a:3 96k -c:s copy %s")]})
+              
    (let [x (second (cmds :2))]
      (format x inFile crf outFile)))
   ([dirPath]
@@ -52,8 +52,8 @@
    (println "Provide CRF : [0-23-51 least]")
    (def crf (read-line))
    (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_f_x265_" crf  ".mkv"))
-   (ffmpegEncodeX265 inFile outFile crf))
-  )
+   (ffmpegEncodeX265 inFile outFile crf)))
+  
 
 (defn ffmpegVolume 
   ([inFile outFile db]
@@ -61,8 +61,8 @@
               :1 ["inc-dec volume of audio" 
                   (str ffmpeg " -i %s -map 0 -c copy -c:a aac -af \"volume=%sdB\" %s")]
               :2 ["inc-dec volume of audio" 
-                  (str ffmpeg " -i %s -vcodec copy -af \"volume=%sdB\" %s")]
-              })
+                  (str ffmpeg " -i %s -vcodec copy -af \"volume=%sdB\" %s")]})
+              
    (let [x (second (cmds :1))]
      (format x inFile db outFile)))
   ([dirPath]
@@ -77,8 +77,8 @@
    (def db (read-line))
    (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_f_v_" db (.substring inFile (.lastIndexOf inFile "."))))
    (println "outFukle dsjfasdjf" outFile)
-   (ffmpegVolume inFile outFile db))
-  )
+   (ffmpegVolume inFile outFile db)))
+  
 
 (defn ffmpegEncodeForHDReadyTV 
   ([inFile outFile crf]
@@ -88,8 +88,8 @@
               :2 ["Change progressive to interlace" 
                   (str ffmpeg " -i %s -map 0 -c copy -c:v libx264 -preset slow -crf %s -flags +ilme+ildct %s")]
               :3 ["Change to 720p" 
-                  (str ffmpeg " -i %s -s hd720 -map 0 -c copy -c:v libx264 -crf %s -c:a aac %s")]
-              })
+                  (str ffmpeg " -i %s -s hd720 -map 0 -c copy -c:v libx264 -crf %s -c:a aac %s")]})
+              
    (let [x (second (cmds :3))]
      (format x inFile crf outFile)))
   ([dirPath]
@@ -103,8 +103,8 @@
    (println "Provide CRF : [0-28-51 least]")
    (def crf (read-line))
    (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_f_x264_hdReadyTV_" crf  ".mkv"))
-   (ffmpegEncodeForHDReadyTV inFile outFile crf))
-  )
+   (ffmpegEncodeForHDReadyTV inFile outFile crf)))
+  
 
 (defn ffmpegCut
   ([inFile outFile]
@@ -112,8 +112,8 @@
               :1 ["fast and copies only"
                   (str ffmpeg " -ss %s -i %s -ss 00:00:01 -t %s -c copy %s")]
               :2 ["slow and transocde by syncing"
-                  (str ffmpeg " -i %s -ss 00:01:00 -t 00:01:00 -async 1 -strict -2 %s")]
-              })
+                  (str ffmpeg " -i %s -ss 00:01:00 -t 00:01:00 -async 1 -strict -2 %s")]})
+              
    (println "Provide cut from : [00:00:00]")
    (def cutFrom (read-line))
    (println "Provide cut duration : [00:00:00]")
@@ -124,8 +124,8 @@
    (println "Provide input file : ")
    (def inFile (clojure.string/replace (read-line) #"\\" "/"))
    (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_cut" (.substring inFile (.lastIndexOf inFile "."))))
-   (ffmpegCut inFile outFile))
-  )
+   (ffmpegCut inFile outFile)))
+  
 
 (defn ffmpegImport
   ([inFile srtFile outFile]
@@ -133,8 +133,8 @@
               :1 ["Import subtitles to file"
                   (str ffmpeg " -i %s -sub_charenc UTF-8 -i %s -map 0:v -map 0:a -c copy -map 1 -c:s:0 srt -metadata:s:s:0 language=en %s")]
               :2 ["Import multiple subtitles"
-                  (str ffmpeg " -i %s -sub_charenc CP1252 -i %s -i %s -map 0:v -map 0:a -c copy -map 1 -c:s:0 srt -metadata:s:s:0 language=en -map 2 -c:s:1 srt -metadata:s:s:1 language=swe %s")]
-              })
+                  (str ffmpeg " -i %s -sub_charenc CP1252 -i %s -i %s -map 0:v -map 0:a -c copy -map 1 -c:s:0 srt -metadata:s:s:0 language=en -map 2 -c:s:1 srt -metadata:s:s:1 language=swe %s")]})
+              
    (let [x (second (cmds :1))]
      (format x inFile srtFile outFile)))
   ([]
@@ -143,8 +143,8 @@
    (println "Provide srt file : ")
    (def srtFile (clojure.string/replace (read-line) #"\\" "/"))
    (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_en.mkv"))
-   (ffmpegImport inFile srtFile outFile))
-  )
+   (ffmpegImport inFile srtFile outFile)))
+  
 
 (defn handbrakeEncodeX265 
   ([inFile outFile crf]
@@ -152,8 +152,8 @@
               :1 ["Genral purpose command to encode videos with all subtitles" 
                   (str handbrake " -i %s -o %s -e x265 -q %s -a 2 -s 1,2,3 -E av_aac --custom-anamorphic --keep-display-aspect -O")]
               :2 ["Ripping the dvd, hacker's way sh handbrake -i <folder> -o <output-file> -v -e x265 -q 33 -a 2 -s 1,2,3 -E av_aac --custom-anamorphic --keep-display-aspect -O --title <1 or 2 the biggest duration> --audio 1"
-                  (str handbrake " -i %s -o %s -v -e x265 -q %s -a 2 -s 1,2,3 -E av_aac --custom-anamorphic --keep-display-aspect -O --title 1 --audio 1")]
-              })
+                  (str handbrake " -i %s -o %s -v -e x265 -q %s -a 2 -s 1,2,3 -E av_aac --custom-anamorphic --keep-display-aspect -O --title 1 --audio 1")]})
+              
    (let [x (second (cmds :2))]
      (format x inFile outFile crf)))
   ([dirPath]
@@ -167,8 +167,8 @@
    (println "Provide CRF : ")
    (def crf (read-line))
    (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_h_x265_" crf  ".mkv"))
-   (handbrakeEncodeX265 inFile outFile crf))
-  )
+   (handbrakeEncodeX265 inFile outFile crf)))
+  
 
 (defn ffmpegConcat[]
   (println "Provide input file : ")
@@ -177,8 +177,8 @@
   (def outFile (read-line))
   (def cmds {
              :1 ["Concat all files provided in -f" 
-                 (str ffmpeg " -f concat -i %s -c copy %s")]
-             })
+                 (str ffmpeg " -f concat -i %s -c copy %s")]})
+             
   (let [x (second (cmds :1))]
     (format x inFile outFile)))
 
@@ -199,13 +199,13 @@
                [(str "ffmpeg -> import subtitle ") #(ffmpegImport)]
                [(str "ffmpeg -> concat videos in file ") #(ffmpegConcat)]
                [(str "handbrake -> x265 convert all in " dirPath) #(handbrakeEncodeX265 dirPath)]
-               [(str "handbrake -> x265 convert ") #(handbrakeEncodeX265)]
-               ])
+               [(str "handbrake -> x265 convert ") #(handbrakeEncodeX265)]])
+               
   
   (def i 0)
   (doall (map (fn[v] (println i "." (v 0)) (def i (inc i))) cmdMap))
   
-  #_(def cmdMap (array-map :1 [(str "ffmpeg -> x265 convert all in " dirPath) #(ffmpegEncodeX265 (fileMap dirPath fromExt "_f_x265_27.mkv") "27")] :3 [(str "ffmpeg -> x264 convert all in " dirPath) #(ffmpegEncodeX264 (fileMap dirPath fromExt "_f_x264_21.mkv") "21")] :4 [(str "ffmpeg -> x264 convert " srcFile " -> " outFile) #(ffmpegEncodeX264 srcFile outFile "21")] :5 [(str "ffmpeg -> cut " srcFile " -> " outFile) #(ffmpegCut srcFile outFile)] :6 [(str "ffmpeg -> import subtitle " srcFile  " + " srtFile " -> " outFile) #(ffmpegImport srcFile srtFile outFile)] :7 [(str "ffmpeg -> concat videos in file " concatFilesIn " -> " outFile) #(ffmpegConcat concatFilesIn outFile)] :8 [(str "ffmpeg -> inc-dec volume of audio all in " dirPath) #(ffmpegVolume (fileMap dirPath fromExt "_v9") 9)] :9 [(str "ffmpeg -> inc-dec volume of audio " srcFile " -> " outFile) #(ffmpegVolume srcFile outFile 19)] :10 [(str "ffmpeg -> convert to HD ready TV " srcFile " -> " outFile) #(ffmpegEncodeForHDReadyTV srcFile outFile 19)] :11 [(str "ffmpeg -> convert to HD ready TV in " dirPath) #(ffmpegEncodeForHDReadyTV (fileMap dirPath fromExt "_f_x264_hdReady.mkv") "19")] :12 [(str "ffmpeg -> mpeg2 convert all in " dirPath) #(ffmpegEncodeMpeg2 (fileMap dirPath fromExt "_f_mpeg2_5.mpg") "5")] :13 [(str "handbrake -> x265 convert all in " dirPath) #(handbrakeEncodeX265 (fileMap dirPath fromExt "_h_x265_21.mkv") "21")] :14 [(str "handbrake -> x265 convert " srcFile " -> " outFile) #(handbrakeEncodeX265 srcFile outFile "21")] ))
+  #_(def cmdMap (array-map :1 [(str "ffmpeg -> x265 convert all in " dirPath) #(ffmpegEncodeX265 (fileMap dirPath fromExt "_f_x265_27.mkv") "27")] :3 [(str "ffmpeg -> x264 convert all in " dirPath) #(ffmpegEncodeX264 (fileMap dirPath fromExt "_f_x264_21.mkv") "21")] :4 [(str "ffmpeg -> x264 convert " srcFile " -> " outFile) #(ffmpegEncodeX264 srcFile outFile "21")] :5 [(str "ffmpeg -> cut " srcFile " -> " outFile) #(ffmpegCut srcFile outFile)] :6 [(str "ffmpeg -> import subtitle " srcFile  " + " srtFile " -> " outFile) #(ffmpegImport srcFile srtFile outFile)] :7 [(str "ffmpeg -> concat videos in file " concatFilesIn " -> " outFile) #(ffmpegConcat concatFilesIn outFile)] :8 [(str "ffmpeg -> inc-dec volume of audio all in " dirPath) #(ffmpegVolume (fileMap dirPath fromExt "_v9") 9)] :9 [(str "ffmpeg -> inc-dec volume of audio " srcFile " -> " outFile) #(ffmpegVolume srcFile outFile 19)] :10 [(str "ffmpeg -> convert to HD ready TV " srcFile " -> " outFile) #(ffmpegEncodeForHDReadyTV srcFile outFile 19)] :11 [(str "ffmpeg -> convert to HD ready TV in " dirPath) #(ffmpegEncodeForHDReadyTV (fileMap dirPath fromExt "_f_x264_hdReady.mkv") "19")] :12 [(str "ffmpeg -> mpeg2 convert all in " dirPath) #(ffmpegEncodeMpeg2 (fileMap dirPath fromExt "_f_mpeg2_5.mpg") "5")] :13 [(str "handbrake -> x265 convert all in " dirPath) #(handbrakeEncodeX265 (fileMap dirPath fromExt "_h_x265_21.mkv") "21")] :14 [(str "handbrake -> x265 convert " srcFile " -> " outFile) #(handbrakeEncodeX265 srcFile outFile "21")]))
   #_(doseq [keyval cmdMap] (println (name (key keyval)) "-" ((val keyval) 0)))
   
   (println "Chose Option!")
@@ -239,5 +239,5 @@
   ;extract video and specific tracks from the video e.g. 0:0 video 0:1 audio 0:2 audio 0:3 srt 
   ;(executeSH (spliter (format (str ffmpeg " -i %s -map 0:0 -map 0:2 -c copy %s") srcFile outFile)))))
   
-  (System/exit 0)
-  )
+  (System/exit 0))
+  

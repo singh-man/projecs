@@ -13,11 +13,11 @@ def execCmd(cmd):
     #subprocess.call(cmd)
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
-    print err
+    print(err)
     
 def convertToFormat(file1, file2, cmd):
     formedCmd = cmd%(file1, file2)
-    print formedCmd
+    print(formedCmd)
     execCmd(formedCmd.split(" "))
     
 def getOutputFileName(inputFile, fExt, tExt):
@@ -76,11 +76,11 @@ class WAVConsumer(Thread):
         self.start()
 
 if __name__ == "__main__":
-    wav_m4aEnc = "D:\mani\dev\opt\NeroAACCodec-1.5.1\win32/neroAacEnc.exe -q 0.65 -hev2 -of %s -if %s"
-    mp3_wavDec = "D:\mani\dev\opt\mpg123-1.21.0-x86-64\mpg123.exe -w %s %s"
+    wav_m4aEnc = "D:/mani/dev/opt/NeroAACCodec-1.5.1/win32/neroAacEnc.exe -q 0.65 -hev2 -of %s -if %s"
+    mp3_wavDec = "D:/mani/dev/opt/mpg123-1.21.0-x86-64/mpg123.exe -w %s %s"
     wav_mp3 = "lame -b 224 %s %s"
     dirPath = raw_input('Welcome to Song Convertor\n Please provide source directory for songs - must end with / : ')
-    print "Convert : \n 1) To WAV \n 2) To M4A \n 3) Both 1 and 2 \n 4) To MP3"
+    print("Convert : \n 1) To WAV \n 2) To M4A \n 3) Both 1 and 2 \n 4) To MP3")
     choice = input("Choose your option: ")
     if choice == 1:
         fileList = directoryUtils.recursivelyFindFiles([], dirPath, ['mp3'], directoryUtils.toRecurse())

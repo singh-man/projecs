@@ -18,6 +18,9 @@
                "/mnt/d/mani/video/compressed/"
                "D:/mani/video/compressed/"))
 
+(defn promptDirPath[] 
+  (println "Provide input file or press enter for <" dirPath ">")
+  (read-line))
 ;(:1 ["command to check the title of DVD check the titles with longest duration -- sh handbrake -i file or <VIDEO_TS folder> --title 0" (str handbrake " -i %s --title 0"))
 
 (defn ffmpegEncodeX265
@@ -37,14 +40,13 @@
    (let [x (second (cmds :2))]
      (format x inFile crf outFile)))
   ([]
-   (println "Provide input file or press enter for <" dirPath ">")
-   (def in (read-line))
+   (def in (promptDirPath))
    (println "Provide CRF : [0-23-51 least]")
    (def crf (read-line))
    (if (clojure.string/blank? in)
-     (do (def f_fileMap (fileMap dirPath "" (str "_f_x265_" crf ".mkv")))
-       (doall (map (fn[[k v]] (ffmpegEncodeX265 k v crf)) f_fileMap)))
-     (do (def outFile (str (.substring in 0 (.lastIndexOf in ".")) "_f_x265_" crf ".mkv"))
+     (do (def f_fileMap (fileMap_3 dirPath "" (str "_f_x265_" crf ".mkv")))
+       (for [[k v] f_fileMap] (ffmpegEncodeX265 k v crf)))
+     (do (def outFile (str (first (getNameAndExtFromFileName in)) "_f_x265_" crf ".mkv"))
        [(ffmpegEncodeX265 in outFile crf)])))
   )
 
@@ -59,14 +61,13 @@
    (let [x (second (cmds :1))]
      (format x inFile db outFile)))
   ([]
-   (println "Provide input file or press enter for <" dirPath ">")
-   (def in (read-line))
+   (def in (promptDirPath))
    (println "Provide db : ")
    (def db (read-line))
    (if (clojure.string/blank? in)
-     (let [f_fileMap (fileMap dirPath "" (str "_f_v_" db ".mkv"))]
-       (doall (map (fn[[k v]] (ffmpegVolume k v db)) f_fileMap)))
-     (let [outFile (str (.substring in 0 (.lastIndexOf in ".")) "_f_v_" db ".mkv")]
+     (let [f_fileMap (fileMap_3 dirPath "" (str "_f_v_" db ".mkv"))]
+       (for [[k v] f_fileMap] (ffmpegVolume k v db)))
+     (let [outFile (str (first (getNameAndExtFromFileName in)) "_f_v_" db ".mkv")]
        [(ffmpegVolume in outFile db)]))))
 
 (defn ffmpegEncodeForHDReadyTV
@@ -82,14 +83,13 @@
    (let [x (second (cmds :3))]
      (format x inFile crf outFile)))
   ([]
-   (println "Provide input file or press enter for <" dirPath ">")
-   (def in (read-line))
+   (def in (promptDirPath))
    (println "Provide CRF : [0-28-51 least]")
    (def crf (read-line))
    (if (clojure.string/blank? in)
-     (let [f_fileMap (fileMap dirPath "" (str "_f_x264_hdReadyTV_" crf ".mkv"))]
-       (doall (map (fn[[k v]] (ffmpegEncodeForHDReadyTV k v crf)) f_fileMap)))
-     (let [outFile (str (.substring in 0 (.lastIndexOf in ".")) "_f_x264_hdReadyTV_" crf ".mkv")]
+     (let [f_fileMap (fileMap_3 dirPath "" (str "_f_x264_hdReadyTV_" crf ".mkv"))]
+       (for [[k v] f_fileMap] (ffmpegEncodeForHDReadyTV k v crf)))
+     (let [outFile (str (first (getNameAndExtFromFileName in)) "_f_x264_hdReadyTV_" crf ".mkv")]
        [(ffmpegEncodeForHDReadyTV in outFile crf)])))
   )
 
@@ -118,8 +118,8 @@
   ([]
    (println "Provide input file : ")
    (def inFile (clojure.string/replace (read-line) #"\\" "/"))
-   (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_cut" (.substring inFile (.lastIndexOf inFile "."))))
-   (ffmpegCut inFile outFile))
+   (def outFile (str (first (getNameAndExtFromFileName inFile)) "_cut" (.substring inFile (.lastIndexOf inFile "."))))
+   [(ffmpegCut inFile outFile)])
   )
 
 (defn ffmpegImport
@@ -134,40 +134,16 @@
               })
    (def option (if (= inFile srtFile) :3 :1))
    (let [x (second (cmds option))]
-     (prn x inFile srtFile outFile)
      (format x inFile srtFile outFile)))
   ([]
    (println "Provide input file : ")
    (def inFile (clojure.string/replace (read-line) #"\\" "/"))
-   (def outFile (str (.substring inFile 0 (.lastIndexOf inFile ".")) "_en.mkv"))
+   (def outFile (str (first (getNameAndExtFromFileName inFile)) "_en.mkv"))
    
    (println "Provide srt file or leave blank if same as input file: ")
    (def srtFile (clojure.string/replace (read-line) #"\\" "/"))
-   (if (clojure.string/blank? srtFile)
-     (ffmpegImport inFile inFile outFile)
-     (ffmpegImport inFile srtFile outFile)))
-  )
-
-(defn handbrakeEncodeX265
-  ([inFile outFile crf]
-   (def cmds {
-              :1 ["Genral purpose command to encode videos with all subtitles"
-                  (str handbrake " -i %s -o %s -e x265 -q %s -a 2 -s 1,2,3 -E av_aac --custom-anamorphic --keep-display-aspect -O")]
-              :2 ["Ripping the dvd, hacker's way sh handbrake -i <folder> -o <output-file> -v -e x265 -q 33 -a 2 -s 1,2,3 -E av_aac --custom-anamorphic --keep-display-aspect -O --title <1 or 2 the biggest duration> --audio 1"
-                  (str handbrake " -i %s -o %s -v -e x265 -q %s -a 2 -s 1,2,3 -E av_aac --custom-anamorphic --keep-display-aspect -O --title 1 --audio 1")]
-              })
-   (let [x (second (cmds :2))]
-     (format x inFile outFile crf)))
-  ([]
-   (println "Provide input file or press enter for <" dirPath ">")
-   (def in (read-line))
-   (println "Provide CRF : [0-28-51 least]")
-   (def crf (read-line))
-   (if (clojure.string/blank? in)
-     (let [f_fileMap (fileMap dirPath "" (str "_h_x265_" crf ".mkv"))]
-       (doall (map (fn[[k v]] (handbrakeEncodeX265 k v crf)) f_fileMap)))
-     (let [outFile (str (.substring in 0 (.lastIndexOf in ".")) "_h_x265_" crf ".mkv")]
-       [(handbrakeEncodeX265 in outFile crf)])))
+   (if (clojure.string/blank? srtFile) (def srtFile inFile))
+   [(ffmpegImport inFile srtFile outFile)])
   )
 
 (defn ffmpegConcat []
@@ -180,7 +156,28 @@
                  (str ffmpeg " -f concat -i %s -c copy %s")]
              })
   (let [x (second (cmds :1))]
-    (format x inFile outFile)))
+    [(format x inFile outFile)]))
+
+(defn handbrakeEncodeX265
+  ([inFile outFile crf]
+   (def cmds {
+              :1 ["Genral purpose command to encode videos with all subtitles"
+                  (str handbrake " -i %s -o %s -e x265 -q %s -a 2 -s 1,2,3 -E av_aac --custom-anamorphic --keep-display-aspect -O")]
+              :2 ["Ripping the dvd, hacker's way sh handbrake -i <folder> -o <output-file> -v -e x265 -q 33 -a 2 -s 1,2,3 -E av_aac --custom-anamorphic --keep-display-aspect -O --title <1 or 2 the biggest duration> --audio 1"
+                  (str handbrake " -i %s -o %s -v -e x265 -q %s -a 2 -s 1,2,3 -E av_aac --custom-anamorphic --keep-display-aspect -O --title 1 --audio 1")]
+              })
+   (let [x (second (cmds :2))]
+     (format x inFile outFile crf)))
+  ([]
+   (def in (promptDirPath))
+   (println "Provide CRF : [0-28-51 least]")
+   (def crf (read-line))
+   (if (clojure.string/blank? in)
+     (let [f_fileMap (fileMap_3 dirPath "" (str "_h_x265_" crf ".mkv"))]
+       (for [[k v] f_fileMap] (handbrakeEncodeX265 k v crf)))
+     (let [outFile (str (first (getNameAndExtFromFileName in)) "_h_x265_" crf ".mkv")]
+       [(handbrakeEncodeX265 in outFile crf)])))
+  )
 
 (defn init []
   
@@ -207,28 +204,33 @@
   
   (def output (((cmdMap (Integer/parseInt option)) 1)) #_(((cmdMap option) 1)))
   
-  ;(prn "This: " output)
+  ; (prn "This: " output)
   ;(doseq [out output] (prn "myexe: " out))
   ;(def output (if (not (vector? output)) (conj [] output) output))
-  (doseq [out output] (prn "exe: " out))
+  (doseq [out output] (prn "exe -> " out))
   
   (println "Should I start executing them! y/n")
   (def option (read-line))
   
-  (def execOutput [])
-  (if (= option "y")
-    (doseq [out output]
-      (println "exec: " out)
-      (def execOutput (concat execOutput (executeSH (spliter out)))))
-    (def execOutput "Chose n/N!"))
+  ;Dump everything to a shell file for easier execution.
+  (if (= option "y") 
+    (do (with-open [w (clojure.java.io/writer  "../../ffmpeg.sh" :write true)]
+    (doseq [out output] (.write w (str "\n" out))))
+    (prn "Execute:-> " "../../ffmpeg.sh")))
+
+  ; (def execOutput [])
+  ; (if (= option "y")
+  ;   (doseq [out output]
+  ;     (println "exec: " out)
+  ;     (def execOutput (concat execOutput (executeSH (spliter out)))))
+  ;   (def execOutput "Chose n/N!"))
+  ; (println execOutput)
   
-  (println execOutput)
-  
-  #_(if (vector? execOutput)
-      (doseq [out execOutput]
-        (clojure.string/blank? (out :err))
-        (println (out :err)))
-      (println (execOutput :err)))
+  ; (if (vector? execOutput)
+  ;     (doseq [out execOutput]
+  ;       (clojure.string/blank? (out :err))
+  ;       (println (out :err)))
+  ;     (println (execOutput :err)))
   
   ;extract video and specific tracks from the video e.g. 0:0 video 0:1 audio 0:2 audio 0:3 srt
   ;(executeSH (spliter (format (str ffmpeg " -i %s -map 0:0 -map 0:2 -c copy %s") srcFile outFile)))))

@@ -1,6 +1,6 @@
 ;java -cp .:classes -jar D:\mani\dev\opt\clojure-1.6.0\clojure-1.6.0.jar -i D:\mani\dev\project\z_clojure\src\man\man.clj -m man.man 3
 ;(load-file "D:/mani/dev/project/z_clojure/src/man/man.clj")
-;(man.man/-main 1)
+;lein run -m man.man 4
 
 (ns man.man
   ;  (:gen-class)
@@ -28,6 +28,7 @@
   (println (.toString (java.util.Date.)) (printName "Manish.P.Singh" (* 11 108)))
   )
 
-(do (println "Failure :"))
+; THis is treated like static block code in java will be executed before -main
+(println "Failure :")
 
 

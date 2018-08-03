@@ -1,10 +1,14 @@
 ;java -cp .:classes -jar D:/mani/dev/opt/clojure-1.6.0/clojure-1.6.0.jar -i D:/mani/dev/project/z_clojure/src/utils/fileUtils.clj -m utils.fileUtils 3
+;lein test utils.fileUtils :only utils.fileUtils/test_fileMap3
 (ns utils.fileUtils
     (:import java.io.File)
     (use [clojure.java.shell :only [sh]])
     (use clojure.test)
     ;(:gen-class)
     )
+
+(defn getNameAndExtFromFileName "takes a fully qualified file name and return a list of (fileName ext)" 
+  [file] (for [f (.split file "\\.(?=[^\\.]+$)")] f))
 
 (defn convertToUnixFormat "clojure's replace calls .toString i.e. java.io.File.toString"
       [fileName] (clojure.string/replace fileName #"\\" "/"))
@@ -33,7 +37,7 @@
 
 (defn makeDir [dirPath] (clojure.java.io/make-parents dirPath))
 
-(defn fileMap "generates a hash-map between --from file <-> to file--"
+(defn fileMap "generates a hash-map between --from file <-> to file-- using map"
       [dirPath ext to]
       (def fMap {})
       (doall (map (fn [file]
@@ -45,14 +49,21 @@
                   (listFilesAsString dirPath ext)))
       fMap)
 
-(defn fileMap_2 "generates a hash-map between --from file <-> to file--"
+(defn fileMap_2 "generates a hash-map between --from file <-> to file-- using reduce"
       [dirPath ext to]
       (reduce (fn [m file]
-                  (let [fName (.substring file 0 (.lastIndexOf file "."))
-                        fExt (.substring file (.lastIndexOf file "."))
-                        oFile (str fName to (if (not (.contains to ".")) fExt))]
-                       (assoc m file oFile)) {} (listFilesAsString dirPath ext))
-              )
+                  (let [fl (.split file "\\.(?=[^\\.]+$)")
+                        fName (first fl)
+                        oFile (str fName to)]
+                       (assoc m file oFile))) {} (listFilesAsString dirPath ext))
+      )
+
+(defn fileMap_3 "generates a hash-map between --from file <-> to file-- using list comprehension and regex"
+      [dirPath ext to]
+      (into {} (for [f (listFilesAsString dirPath ext) 
+                  :let [[f_name e_name] (getNameAndExtFromFileName f)
+                        oFile (str f_name to)]] 
+              [f oFile]))
       )
 
 (defn readFileLineByLine "takes func->fn(to execute for each line) and file(to read from)"
@@ -82,6 +93,17 @@
                 (def myLine [])))) rFile)
       )
 
+(deftest test_fileMap
+  (prn (fileMap "/mnt/d/mani/video/" "" ".test")))
+
+(deftest test_fileMap2
+  (assert (= (fileMap_2 "/mnt/d/mani/video/" "" ".test") (fileMap "/mnt/d/mani/video/" "" ".test")))
+  #_(prn (fileMap_2 "/mnt/d/mani/video/" "" ".test")))
+
+(deftest test_fileMap3
+  (assert (= (fileMap_3 "/mnt/d/mani/video/" "" ".test") (fileMap "/mnt/d/mani/video/" "" ".test")))
+  #_(prn (fileMap_3 "/mnt/d/mani/video/" "" ".test")))
+
 (defn init []
       (def direPath "/home/manish/")
 
@@ -96,4 +118,4 @@
 
       (System/exit 0))
 
-(deftest testFileUtils (init))
+#_(deftest testFileUtils (init))

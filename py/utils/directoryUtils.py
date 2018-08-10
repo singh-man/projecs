@@ -1,28 +1,21 @@
 #pytest -s directoryUtils.py -k test_printFiles
 
 import sys
-print(*sys.path, sep = "\nPYTHONPATH:- ")
+# print(*sys.path, sep = "\nPYTHONPATH:- ")
 
 import os
 #import pytest
-
-def execCmd(cmd):
-    import subprocess
-    # subprocess.call(cmd.split(" "))
-    p = subprocess.Popen(cmd.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = p.communicate()
-    print(err)
 
 def toRecurse():
     recurse = input('Include Subdirectories Y/N : ')
     choice = {"Y" : True, "y" : True}
     return choice.__contains__(recurse)
 
-def dumpCmdToScript(cmdList):
-    script = "../../ffmpeg" + ".sh" if "linux" in sys.platform else ".bat"
+def dumpCmdToScript(cmdList, toPath):
+    script = toPath + "ffmpeg" + (".sh" if "linux" in sys.platform else ".bat")
     fo = open(script, "w")
-    for c in cmdList: fo.write("%s\n" % c)
-    print("Run this in shell: " + "../../ffmpeg.sh")
+    for c in cmdList: fo.write("{0}\n".format(c))
+    print("Run this in shell: " + script)
 
 def removeFile(f): os.remove(f)
     
@@ -49,7 +42,8 @@ def findFiles(dirPath, ext=""):
     return recursivelyFindFiles([], dirPath, ext.split(" "), True)
 
 def printList(fileList):
-    print('\n --> '.join(fileList))
+    print("Printing list below::->")
+    print('\n'.join(fileList))
         
 def test_findFiles():
     print("test_printList")

@@ -40,7 +40,8 @@ def mp3ToM4a_ffmpeg_libfdk_aac():
     [directoryUtils.execCmd(cmd) for cmd in cmdList]
 
 def mp3ToM4a_ffmpeg():
-    filesList = directoryUtils.findFiles(getPath(), "mp3")
+    folder = input("Enter foler path <"+getPath()+"> : ")
+    filesList = directoryUtils.findFiles(folder, "mp3")
     cmdList = []
     for f in filesList:
         wavFile = replaceFileExt(f, ".wav")
@@ -49,9 +50,16 @@ def mp3ToM4a_ffmpeg():
         cmdList.append(ffmpeg_toM4a_libfdk_aac(wavFile, m4aFile))
     directoryUtils.printList(cmdList)
     print([utils.execCmd(cmd) for cmd in cmdList])
+    [directoryUtils.removeFile(replaceFileExt(f, ".wav")) for f in filesList]
 
 def incrementVolume_ffmpeg():
-    filesList = directoryUtils.findFiles(getPath() + "compressed/", "")
+    fileOrFolder = input("Enter file or folder path <"+getPath() + "compressed/"+"> : ")
+    if not fileOrFolder:
+        fileOrFolder = getPath() + "compressed/"
+    if directoryUtils.isDir(fileOrFolder):
+        filesList = directoryUtils.findFiles(fileOrFolder, "")
+    else:
+        filesList = [fileOrFolder]
     db = input("Provide db: ")
     fileMap = {f: replaceFileExt(f, "_f_v_" + db + ".mkv") for f in filesList}
     cmdList = [ffmpeg_incVolume(f1, f2, db) for f1, f2 in fileMap.items()]

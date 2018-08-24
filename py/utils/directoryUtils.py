@@ -30,7 +30,7 @@ def recursivelyFindFiles(fileList, dirPath, exts, toRecurse=False):
     dirlist = os.listdir(dirPath)
     for f in dirlist:
         inputFilePath = dirPath+f
-        if toRecurse and os.path.isdir(inputFilePath):
+        if toRecurse and isDir(inputFilePath):
             recursivelyFindFiles(fileList, inputFilePath+"/", exts, toRecurse)
         elif os.path.isfile(inputFilePath):
             fName, fExt = os.path.splitext(inputFilePath) # fExt is like .wav, .mp3; hence removing .
@@ -40,6 +40,9 @@ def recursivelyFindFiles(fileList, dirPath, exts, toRecurse=False):
 
 def findFiles(dirPath, ext=""):
     return recursivelyFindFiles([], dirPath, ext.split(" "), True)
+
+def isDir(path):
+    return os.path.isdir(path)
 
 def printList(fileList):
     print("Printing list below::->")

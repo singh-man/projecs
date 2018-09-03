@@ -71,26 +71,33 @@
        [(ffmpegVolume in outFile db)]))))
 
 (defn ffmpegEncodeForHDReadyTV
-  ([inFile outFile crf]
+  ([inFile outFile crf v_res]
    (def cmds {
               :1 ["Change the fps to 24 of 1080 video"
                   (str ffmpeg " -i %s -r 24 -map 0 -c copy -c:v libx264 -preset slow -crf %s %s")]
               :2 ["Change progressive to interlace"
                   (str ffmpeg " -i %s -map 0 -c copy -c:v libx264 -preset slow -crf %s -flags +ilme+ildct %s")]
-              :3 ["Change to 720p"
+              :3 ["Change to 720p. -s can have hd480, hd720 or WxH like 852*480 etc."
                   (str ffmpeg " -i %s -s hd720 -map 0 -c copy -c:v libx264 -crf %s -c:a aac %s")]
+              :4 ["Change the resolution of the video try to keep the aspect ratio. -vf scale=852:480 or -vf scale=-1:720"
+                  (str ffmpeg " -i %s -vf scale=%s -map 0 -c copy -c:v libx264 -crf %s -c:a aac %s")]
               })
-   (let [x (second (cmds :3))]
-     (format x inFile crf outFile)))
+   (let [x (second (cmds :4))]
+     (format x inFile v_res crf outFile)))
   ([]
    (def in (promptDirPath))
    (println "Provide CRF : [0-28-51 least]")
    (def crf (read-line))
+   (def ratios {:240 "426:240" :360 "-1:360" :480 "852:480" :720 "-1:720"})
+   (println "Provide vertical resolution : " (for [[k v] ratios] (name k)))
+   (def reso (read-line))
+   (def v_res (ratios (keyword reso)))
+   
    (if (clojure.string/blank? in)
-     (let [f_fileMap (fileMap_3 dirPath "" (str "_f_x264_hdReadyTV_" crf ".mkv"))]
-       (for [[k v] f_fileMap] (ffmpegEncodeForHDReadyTV k v crf)))
-     (let [outFile (str (first (getNameAndExtFromFileName in)) "_f_x264_hdReadyTV_" crf ".mkv")]
-       [(ffmpegEncodeForHDReadyTV in outFile crf)])))
+     (let [f_fileMap (fileMap_3 dirPath "" (str "_f_x264_" reso "_" crf ".mkv"))]
+       (for [[k v] f_fileMap] (ffmpegEncodeForHDReadyTV k v crf v_res)))
+     (let [outFile (str (first (getNameAndExtFromFileName in)) "_f_x264_" reso "_" crf ".mkv")]
+       [(ffmpegEncodeForHDReadyTV in outFile crf v_res)])))
   )
 
 (defn ffmpegCut
@@ -186,7 +193,7 @@
   
   (def cmdMap [[(str "ffmpeg -> x265 convert ") #(ffmpegEncodeX265)]
                [(str "ffmpeg -> inc-dec volume of audio ") #(ffmpegVolume)]
-               [(str "ffmpeg -> convert to HD ready TV ") #(ffmpegEncodeForHDReadyTV)]
+               [(str "ffmpeg -> x264 convert and change resolution ") #(ffmpegEncodeForHDReadyTV)]
                [(str "ffmpeg -> cut ") #(ffmpegCut)]
                [(str "ffmpeg -> import subtitle ") #(ffmpegImport)]
                [(str "ffmpeg -> concat videos in file ") #(ffmpegConcat)]
@@ -215,9 +222,9 @@
   ;Dump everything to a shell file for easier execution.
   (if (= option "y") 
     (do (with-open [w (clojure.java.io/writer  "../../ffmpeg.sh" :write true)]
-    (doseq [out output] (.write w (str "\n" out))))
-    (prn "Execute:-> " "../../ffmpeg.sh")))
-
+          (doseq [out output] (.write w (str "\n" out))))
+      (prn "Execute:-> " "../../ffmpeg.sh")))
+  
   ; (def execOutput [])
   ; (if (= option "y")
   ;   (doseq [out output]

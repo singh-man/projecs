@@ -4,6 +4,9 @@ import sys
 from ffmpeg import av
 
 
-# av.mp3ToM4a_ffmpeg_libfdk_aac()
-av.mp3ToM4a_ffmpeg()
-# av.incrementVolume_ffmpeg()
+selection = input("1. For music \n2. For Video")
+
+options = {1 : av.mp3ToM4a_ffmpeg(), 
+           2 : av.incrementVolume_ffmpeg()}
+
+options.get(selection)

@@ -91,7 +91,7 @@
    (def ratios {:240 "426:240" :360 "-1:360" :480 "852:480" :720 "-1:720"})
    (println "Provide vertical resolution : " (for [[k v] ratios] (name k)))
    (def reso (read-line))
-   (def v_res (ratios (keyword reso)))
+   (def v_res (if (contains? ratios (keyword reso)) (get ratios (keyword reso)) reso))
    
    (if (clojure.string/blank? in)
      (let [f_fileMap (fileMap_3 dirPath "" (str "_f_x264_" reso "_" crf ".mkv"))]

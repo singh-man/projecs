@@ -1,17 +1,21 @@
 import sys
 
+
 def replaceFileExt(inputFile, tExt):
     import re
     name, ext = re.split("\\.(?=[^\\.]+$)", inputFile)
-    outputFile = name+tExt
-    #print(outputFile, inputFile)
+    outputFile = name + tExt
+    # print(outputFile, inputFile)
     return outputFile
+
 
 def isLinux():
     return "linux" in sys.platform
 
+
 def printList(myList, decorator):
-    print(*list, sep = "\n{0}: ".format(decorator))
+    print(*list, sep="\n{0}: ".format(decorator))
+
 
 def execCmd(cmd):
     import subprocess
@@ -20,8 +24,9 @@ def execCmd(cmd):
     out, err = p.communicate()
     print(err)
 
+
 def ackermann(m, n):
-    #I assume that you check that n and m are non-negative before you run this
+    # I assume that you check that n and m are non-negative before you run this
     if m == 0:
         return n + 1
     elif n == 0:
@@ -31,4 +36,4 @@ def ackermann(m, n):
 
 
 def test_ackermann():
-    print(ackermann(4,0))
+    print(ackermann(4, 0))

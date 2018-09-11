@@ -207,6 +207,26 @@ public class CodeSamples {
         return false;
     }
 
+    public String generateRandomStrings() {
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 70;
+        Random random = new Random();
+        StringBuilder buffer = new StringBuilder(targetStringLength);
+        for (int i = 0; i < targetStringLength; i++) {
+            int randomLimitedInt = leftLimit + (int)
+                    (random.nextFloat() * (rightLimit - leftLimit + 1));
+            buffer.append((char) randomLimitedInt);
+        }
+        return buffer.toString();
+    }
+
+    @Test
+    public void testGenerateRandomStrings() {
+        String generatedString = generateRandomStrings();
+        System.out.println(generatedString);
+    }
+
     @Test
     public void testSpiral() {
         int n = 4;

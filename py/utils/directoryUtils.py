@@ -15,10 +15,12 @@ def toRecurse():
 
 
 def dumpCmdToScript(cmdList, toPath):
-    script = toPath + "ffmpeg" + (".sh" if "linux" in sys.platform else ".bat")
-    fo = open(script, "w")
-    for c in cmdList: fo.write("{0}\n".format(c))
-    print("Run this in shell: " + script)
+    option = input("Should i execute them!...")
+    if option == "y":
+        script = toPath + "ffmpeg" + (".sh" if "linux" in sys.platform else ".bat")
+        fo = open(script, "w")
+        for c in cmdList: fo.write("{0}\n".format(c))
+        print("Run this in shell: " + script)
 
 
 def removeFile(f): os.remove(f)

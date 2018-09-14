@@ -32,8 +32,7 @@
    (def encoders {:1 "libx264" :2 "libx265" :3 "libaom-av1" :4 "libvpx-vp9"})
    (println "Chose the encoders : " (for [[k v] encoders] (str "\n" (name k) " : " v)))
    (def encoder (encoders (keyword (read-line))))
-   (println "Provide CRF : [0-23-51 least]")
-   (def crf (read-line))
+   (def crf (do (println "Provide CRF : [0-23-51 least]") (read-line)))
    (def ratios ["-1:-1" "426:240" "-1:360" "852:480" "-1:720" "-1:1080"])
    (println "Provide vertical resolution : " (for [o ratios] (str "\n" (.indexOf ratios o) " : " o)))
    (def resolution (nth ratios (Integer/parseInt (read-line))))
@@ -56,8 +55,7 @@
      (format x inFile db outFile)))
   ([]
    (def in (promptDirPath))
-   (println "Provide db : ")
-   (def db (read-line))
+   (def db (do (println "Provide db : ") (read-line)))
    (if (clojure.string/blank? in)
      (let [f_fileMap (fileMap_3 dirPath "" (str "_f_v_" db ".mkv"))]
        (for [[k v] f_fileMap] (ffmpegVolume k v db)))
@@ -81,10 +79,8 @@
    (let [x (second (cmds :1))]
      (format x cutFrom inFile cutDuration outFile)))
   ([inFile outFile]
-   (println "Provide cut from : [00:00:00]")
-   (def cutFrom (read-line))
-   (println "Provide cut till : [00:00:00]")
-   (def cutTill (read-line))
+   (def cutFrom (do (println "Provide cut from : [00:00:00]") (read-line)))
+   (def cutTill (do (println "Provide cut till : [00:00:00]") (read-line)))
    (ffmpegCut inFile outFile cutFrom cutTill))
   ([]
    (println "Provide input file : ")

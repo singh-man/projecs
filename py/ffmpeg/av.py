@@ -21,7 +21,7 @@ def getFFmpeg():
     if isLinux():
         return "ffmpeg"
     else:
-        return "D:/mani/dev/opt/ffmpeg-20160614-git-cb46b78-win32-static/bin/ffmpeg.exe"
+        return "D:/mani/dev/opt/ffmpeg-20180912-b69ea74-win64-static/bin/ffmpeg.exe"
 
 
 def ffmpeg_toM4a_libfdk_aac(inFile, outFile):
@@ -38,6 +38,12 @@ def ffmpeg_toWav(inFile, outFile):
 
 def ffmpeg_incVolume(inFile, outFile, db):
     return getFFmpeg() + " -i %s -map 0 -c copy -c:a aac -af \"volume=%sdB\" %s" % (inFile, db, outFile)
+
+
+def ffmpeg_encode(inFile, outFile, encoder, crf, resolution):
+    return getFFmpeg() + \
+           " -i %s -vf scale=%s -map 0 -c copy -c:v %s -preset medium -crf %s -c:a aac -strict experimental -b:a 96k %s" \
+           % (inFile, resolution, encoder, crf, outFile)
 
 
 def mp3ToM4a_ffmpeg_libfdk_aac():
@@ -81,6 +87,27 @@ def incrementVolume_ffmpeg():
     # map(lambda cmd:directoryUtils.execCmd(cmd), cmdList)
     directoryUtils.dumpCmdToScript(cmdList, "../../")
 
+
+def ffmpegEncode():
+    fileOrFolder = input("Enter file or folder path <" + getPath() + "compressed/" + "> : ")
+    if directoryUtils.isDir(fileOrFolder):
+        filesList = directoryUtils.findFiles(fileOrFolder, "")
+    else:
+        filesList = [fileOrFolder]
+
+    encoders = {1: "libx264", 2: "libx265", 3: "libaom-av1", 4: "libvpx-vp9"}
+    [print(k, v) for k, v in encoders.items()]
+    encoder = encoders[int(input("Provide encoder: "))]
+    crf = input("Provide CRF : [0-23-51 least]:")
+    ratios = ["-1:-1", "426:240", "-1:360", "852:480", "-1:720", "-1:1080"]
+    [print(idx, " : ", v) for idx, v in enumerate(ratios)]
+    resolution = ratios[int(input("Provide vertical resolution : "))]
+
+    fileMap = {f: replaceFileExt(f, "_" + encoder + ".mkv") for f in filesList}
+    cmdList = [ffmpeg_encode(f1, f2, encoder, crf, resolution) for f1, f2 in fileMap.items()]
+    directoryUtils.printList(cmdList)
+    # map(lambda cmd:directoryUtils.execCmd(cmd), cmdList)
+    directoryUtils.dumpCmdToScript(cmdList, "../../")
 
 def test_mp3TpM4a():
     mp3ToM4a_ffmpeg()

@@ -3,6 +3,7 @@
 (ns avScripts.avScripts_6
   (use [utils.fileUtils :exclude [-main init]])
   (use utils.utils)
+  (require [clojure.java.io :as io] )
   (use clojure.test)
   (:gen-class)
   )
@@ -19,8 +20,8 @@
                "D:/mani/video/compressed/"))
 
 (defn promptDirPath[] 
-  (println "Provide input file or press enter for <" dirPath ">")
-  (read-line))
+  (def in (do (println "Provide input file or press enter for <" dirPath ">") (read-line)))
+  (if (not (clojure.string/blank? in)) (def dirPath in)))
 ;(:1 ["command to check the title of DVD check the titles with longest duration -- sh handbrake -i file or <VIDEO_TS folder> --title 0" (str handbrake " -i %s --title 0"))
 
 (defn ffmpegEncode
@@ -28,7 +29,7 @@
    (def cmd (str ffmpeg " -i %s -vf scale=%s -map 0 -c copy -c:v %s -preset medium -crf %s -c:a aac -strict experimental -b:a 96k %s"))
    (format cmd inFile resolution encoder crf outFile))
   ([]
-   (def in (promptDirPath))
+   (promptDirPath)
    (def encoders {:1 "libx264" :2 "libx265" :3 "libaom-av1" :4 "libvpx-vp9"})
    (println "Chose the encoders : " (for [[k v] encoders] (str "\n" (name k) " : " v)))
    (def encoder (encoders (keyword (read-line))))
@@ -36,12 +37,11 @@
    (def ratios ["-1:-1" "426:240" "-1:360" "852:480" "-1:720" "-1:1080"])
    (println "Provide vertical resolution : " (for [o ratios] (str "\n" (.indexOf ratios o) " : " o)))
    (def resolution (nth ratios (Integer/parseInt (read-line))))
-   (if (clojure.string/blank? in)
+   (if (.isDirectory (io/as-file dirPath))
      (do (def f_fileMap (fileMap_3 dirPath "" (str "_" encoder "_" crf ".mkv")))
        (for [[k v] f_fileMap] (ffmpegEncode k v crf encoder resolution)))
-     (do (def outFile (str (first (getNameAndExtFromFileName in)) "_" encoder "_" crf ".mkv"))
-       [(ffmpegEncode in outFile crf encoder resolution)])))
-  )
+     (do (def outFile (str (first (getNameAndExtFromFileName dirPath)) "_" encoder "_" crf ".mkv"))
+       [(ffmpegEncode in outFile crf encoder resolution)]))))
 
 (defn ffmpegVolume
   ([inFile outFile db]
@@ -54,12 +54,12 @@
    (let [x (second (cmds :1))]
      (format x inFile db outFile)))
   ([]
-   (def in (promptDirPath))
+   (promptDirPath)
    (def db (do (println "Provide db : ") (read-line)))
-   (if (clojure.string/blank? in)
+   (if (.isDirectory (io/as-file dirPath))
      (let [f_fileMap (fileMap_3 dirPath "" (str "_f_v_" db ".mkv"))]
        (for [[k v] f_fileMap] (ffmpegVolume k v db)))
-     (let [outFile (str (first (getNameAndExtFromFileName in)) "_f_v_" db ".mkv")]
+     (let [outFile (str (first (getNameAndExtFromFileName dirPath)) "_f_v_" db ".mkv")]
        [(ffmpegVolume in outFile db)]))))
 
 (defn ffmpegCut
@@ -136,13 +136,12 @@
    (let [x (second (cmds :2))]
      (format x inFile outFile crf)))
   ([]
-   (def in (promptDirPath))
    (println "Provide CRF : [0-28-51 least]")
    (def crf (read-line))
-   (if (clojure.string/blank? in)
+   (if (.isDirectory (io/as-file dirPath))
      (let [f_fileMap (fileMap_3 dirPath "" (str "_h_x265_" crf ".mkv"))]
        (for [[k v] f_fileMap] (handbrakeEncodeX265 k v crf)))
-     (let [outFile (str (first (getNameAndExtFromFileName in)) "_h_x265_" crf ".mkv")]
+     (let [outFile (str (first (getNameAndExtFromFileName dirPath)) "_h_x265_" crf ".mkv")]
        [(handbrakeEncodeX265 in outFile crf)])))
   )
 

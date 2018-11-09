@@ -6,8 +6,8 @@ import sys
 
 import pytest
 
-from utils import directoryUtils, utils
-from utils.utils import *
+from utils import directoryUtils
+from utils.utils import execCmd, isLinux, replaceFileExt
 
 
 def getPath():
@@ -70,7 +70,7 @@ def mp3ToM4a_ffmpeg():
         cmdList.append(ffmpeg_toWav(f, wavFile))
         cmdList.append(ffmpeg_toM4a_libfdk_aac(wavFile, m4aFile))
     directoryUtils.printList(cmdList)
-    print([utils.execCmd(cmd) for cmd in cmdList])
+    print([execCmd(cmd) for cmd in cmdList])
     [directoryUtils.removeFile(replaceFileExt(f, ".wav")) for f in filesList]
 
 

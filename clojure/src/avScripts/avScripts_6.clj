@@ -1,4 +1,5 @@
 ;lein test avScripts.avScripts_6
+;lein run -m avScripts.avScripts_6 3
 ;;Try using avScripts_5 for finner control of encoding
 (ns avScripts.avScripts_6
   (use [utils.fileUtils :exclude [-main init]])

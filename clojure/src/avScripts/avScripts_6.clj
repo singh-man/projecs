@@ -179,9 +179,10 @@
   
   ;Dump everything to a shell file for easier execution.
   (if (= option "y") 
-    (do (with-open [w (clojure.java.io/writer  "../../ffmpeg.sh" :write true)]
+    (do (def runFile (if (isLinux) "../../ffmpeg.sh" "..\\..\\ffmpeg.bat"))
+      (with-open [w (clojure.java.io/writer runFile :write true)]
           (doseq [out output] (.write w (str "\n" out))))
-      (prn "Execute:-> " "../../ffmpeg.sh")))
+      (prn "Execute:-> " runFile)))
   
   ; (def execOutput [])
   ; (if (= option "y")

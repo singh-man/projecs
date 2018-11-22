@@ -7,7 +7,7 @@ import ffmpeg.av as av
 
 options = {1: av.mp3ToM4a_ffmpeg,
            2: av.incrementVolume_ffmpeg,
-           3: av.ffmpegEncode}
+           3: av.encode_ffmpeg}
 
 [print(k, v.__name__) for k, v in options.items()]
 

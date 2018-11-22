@@ -88,7 +88,7 @@ def incrementVolume_ffmpeg():
     directoryUtils.dumpCmdToScript(cmdList, "../../")
 
 
-def ffmpegEncode():
+def encode_ffmpeg():
     fileOrFolder = input("Enter file or folder path <" + getPath() + "compressed/" + "> : ")
     if directoryUtils.isDir(fileOrFolder):
         filesList = directoryUtils.findFiles(fileOrFolder, "")

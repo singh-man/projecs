@@ -46,6 +46,16 @@ def ffmpeg_encode(inFile, outFile, encoder, crf, resolution):
            % (inFile, resolution, encoder, crf, outFile)
 
 
+def ffmpeg_cut(inFile, outFile, startTime, endTime):
+    import datetime, time, re
+    sh, sm, ss = re.split(":", startTime)
+    sSeconds = int(datetime.timedelta(hours=int(sh), minutes=int(sm), seconds=int(ss)).total_seconds())
+    eh, em, es = re.split(":", endTime)
+    eSeconds = int(datetime.timedelta(hours=int(eh), minutes=int(em), seconds=int(es)).total_seconds())
+    duration = time.strftime('%H:%M:%S', time.gmtime(eSeconds - sSeconds))
+    return getFFmpeg() + " -ss %s -i %s -ss 00:00:01 -t %s -c copy %s" % (startTime, inFile, duration, outFile)
+
+
 def mp3ToM4a_ffmpeg_libfdk_aac():
     filesList = directoryUtils.findFiles(getPath(), "mp3")
     fileMap = {f: replaceFileExt(f, ".m4a") for f in filesList}
@@ -108,6 +118,17 @@ def encode_ffmpeg():
     directoryUtils.printList(cmdList)
     # map(lambda cmd:directoryUtils.execCmd(cmd), cmdList)
     directoryUtils.dumpCmdToScript(cmdList, "../../")
+
+
+def cut_ffmpeg():
+    inFile = input("Enter file <" + getPath() + "compressed/" + "> : ")
+    outFile, ext = inFile.rsplit('.', 1)
+    sTime = input("Enter start time: ")
+    eTime = input("Enter end time: ")
+    cmd = ffmpeg_cut(inFile, outFile + "_cut." + ext, sTime, eTime);
+    directoryUtils.printList([cmd])
+    directoryUtils.dumpCmdToScript([cmd], "../../")
+
 
 def test_mp3TpM4a():
     mp3ToM4a_ffmpeg()

@@ -15,7 +15,7 @@ def toRecurse():
 
 
 def dumpCmdToScript(cmdList, toPath):
-    option = input("Should i execute them!...")
+    option = input("Should i execute them!... (y/n) : ")
     if option == "y":
         script = toPath + "ffmpeg" + (".sh" if "linux" in sys.platform else ".bat")
         fo = open(script, "w")

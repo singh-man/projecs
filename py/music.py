@@ -7,11 +7,12 @@ import ffmpeg.av as av
 
 options = {1: av.mp3ToM4a_ffmpeg,
            2: av.incrementVolume_ffmpeg,
-           3: av.encode_ffmpeg}
+           3: av.encode_ffmpeg,
+           4: av.cut_ffmpeg}
 
 [print(k, v.__name__) for k, v in options.items()]
 
-selection = input("What u want!")
+selection = input("What u want! : ")
 
 # options.get(selection) doesn't work
 options[int(selection)]()

@@ -18,7 +18,7 @@ def dumpCmdToScript(cmdList, toPath):
     option = input("Should i execute them!... (y/n) : ")
     if option == "y":
         script = toPath + "ffmpeg" + (".sh" if "linux" in sys.platform else ".bat")
-        fo = open(script, "w")
+        fo = open(script, "a+")
         for c in cmdList: fo.write("{0}\n".format(c))
         print("Run this in shell: " + script)
 

@@ -104,7 +104,7 @@
    (let [x (second (cmds option))]
      (format x inFile srtFile outFile)))
   ([]
-   (println "Provide input file : ")
+   (println "Provide input file : <" dirPath ">")
    (def inFile (clojure.string/replace (read-line) #"\\" "/"))
    (def outFile (str (first (getNameAndExtFromFileName inFile)) "_en.mkv"))
    
@@ -180,7 +180,7 @@
   ;Dump everything to a shell file for easier execution.
   (if (= option "y") 
     (do (def runFile (if (isLinux) "../../ffmpeg.sh" "..\\..\\ffmpeg.bat"))
-      (with-open [w (clojure.java.io/writer runFile :write true)]
+      (with-open [w (clojure.java.io/writer runFile :append true)]
           (doseq [out output] (.write w (str "\n" out))))
       (prn "Execute:-> " runFile)))
   

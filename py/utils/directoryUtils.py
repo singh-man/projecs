@@ -15,12 +15,16 @@ def toRecurse():
 
 
 def dumpCmdToScript(cmdList, toPath):
-    option = input("Should i execute them!... (y/n) : ")
+    option = input("Should i execute them - yes, append, no - !... (y/a/n) : ")
+    script = toPath + "ffmpeg" + (".sh" if "linux" in sys.platform else ".bat")
     if option == "y":
-        script = toPath + "ffmpeg" + (".sh" if "linux" in sys.platform else ".bat")
+        fo = open(script, "w")
+    if option == "a":
         fo = open(script, "a+")
-        for c in cmdList: fo.write("{0}\n".format(c))
-        print("Run this in shell: " + script)
+    if option == "n":
+        return
+    for c in cmdList: fo.write("{0}\n".format(c))
+    print("Run this in shell: " + script)
 
 
 def removeFile(f): os.remove(f)
@@ -30,7 +34,6 @@ def removeFilesFromDir(dirPath):
     ext = input('File extension(s) (space seperated) to remove or press enter if you want to remove all files. : ')
     exts = ext.split(" ")
     fileList = recursivelyFindFiles([], dirPath, exts, toRecurse())
-
     map(lambda f: removeFile(f), fileList)
 
 

@@ -12,7 +12,7 @@ from utils.utils import execCmd, isLinux, replaceFileExt
 
 def getPath():
     if isLinux():
-        return "/mnt/d/mani/video/"
+        return "/d/mani/video/"
     else:
         return "D:/mani/video/"
 
@@ -21,7 +21,7 @@ def getFFmpeg():
     if isLinux():
         return "ffmpeg"
     else:
-        return "D:/mani/dev/opt/ffmpeg-20180912-b69ea74-win64-static/bin/ffmpeg.exe"
+        return "C:/mani/dev/opt/ffmpeg-20190219-ff03418-win64-static/bin/ffmpeg.exe"
 
 
 def ffmpeg_toM4a_libfdk_aac(inFile, outFile):
@@ -44,6 +44,19 @@ def ffmpeg_encode(inFile, outFile, encoder, crf, resolution):
     return getFFmpeg() + \
            " -i %s -vf scale=%s -map 0 -c copy -c:v %s -preset medium -crf %s -c:a aac -strict experimental -b:a 96k %s" \
            % (inFile, resolution, encoder, crf, outFile)
+
+
+def ffmpeg_concat(inFile, outFile, encoder, crf, resolution):
+    return getFFmpeg() + " -f concat -i %s -c copy %s" % (inFile, outFile)
+
+def ffmpeg_import(inFile, outFile, srtFile):
+    options = {1: getFFmpeg() + " -i %s -sub_charenc UTF-8 -i %s -map 0:v -map 0:a -c copy -map 1 -c:s:0 srt -metadata:s:s:0 language=en %s",
+               2: getFFmpeg() + " -i %s -c:a aac -vf subtitles=%s %s"}
+    if inFile == srtFile or srtFile == "":
+        cmd = options[2] % (inFile, inFile, outFile)
+    else:
+        cmd = options[1] % (inFile, srtFile, outFile)
+    return cmd
 
 
 def ffmpeg_cut(inFile, outFile, startTime, endTime):
@@ -126,6 +139,23 @@ def cut_ffmpeg():
     sTime = input("Enter start time: ")
     eTime = input("Enter end time: ")
     cmd = ffmpeg_cut(inFile, outFile + "_cut." + ext, sTime, eTime);
+    directoryUtils.printList([cmd])
+    directoryUtils.dumpCmdToScript([cmd], "../../")
+
+
+def concat_ffmpeg():
+    inFile = input("Enter txt file <" + getPath() + "compressed/" + "> : ")
+    outFile = input("Enter ouput file <" + getPath() + "compressed/" + "> : ")
+    cmd = ffmpeg_cut(inFile, outFile + "_cut." + ext, sTime, eTime);
+    directoryUtils.printList([cmd])
+    directoryUtils.dumpCmdToScript([cmd], "../../")
+
+
+def import_ffmpeg():
+    inFile = input("Enter file <" + getPath() + "compressed/" + "> : ")
+    srtFile = input("Provide srt file or leave blank if same as input file: ")
+    outFile = replaceFileExt(inFile, "_en.mkv")
+    cmd = ffmpeg_import(inFile, outFile, srtFile)
     directoryUtils.printList([cmd])
     directoryUtils.dumpCmdToScript([cmd], "../../")
 

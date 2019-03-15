@@ -7,7 +7,7 @@ import sys
 import pytest
 
 from utils import directoryUtils
-from utils.utils import execCmd, isLinux, replaceFileExt
+from utils.utils import execCmd, isLinux, replaceFileExt, dealWithSpacesInFilePathNames
 
 
 def getPath():
@@ -25,37 +25,39 @@ def getFFmpeg():
 
 
 def ffmpeg_toM4a_libfdk_aac(inFile, outFile):
-    return getFFmpeg() + " -i %s -c:a libfdk_aac -profile:a aac_he_v2 -b:a 48k %s" % (inFile, outFile)
+    return getFFmpeg() + " -i %s -c:a libfdk_aac -profile:a aac_he_v2 -b:a 48k %s" % (dealWithSpacesInFilePathNames(inFile), dealWithSpacesInFilePathNames(outFile))
 
 
 def ffmpeg_toM4aWith_builtInAAC(inFile, outFile):
-    return getFFmpeg() + " -i %s -c:a aac -b:a 48k %s" % (inFile, outFile)
+    return getFFmpeg() + " -i %s -c:a aac -b:a 48k %s" % (dealWithSpacesInFilePathNames(inFile), dealWithSpacesInFilePathNames(outFile))
 
 
 def ffmpeg_toWav(inFile, outFile):
-    return getFFmpeg() + " -i %s %s" % (inFile, outFile)
+    return getFFmpeg() + " -i %s %s" % (dealWithSpacesInFilePathNames(inFile), dealWithSpacesInFilePathNames(outFile))
 
 
 def ffmpeg_incVolume(inFile, outFile, db):
-    return getFFmpeg() + " -i %s -map 0 -c copy -c:a aac -af \"volume=%sdB\" %s" % (inFile, db, outFile)
+    return getFFmpeg() + " -i %s -map 0 -c copy -c:a aac -af \"volume=%sdB\" %s" % (dealWithSpacesInFilePathNames(inFile), db, dealWithSpacesInFilePathNames(outFile))
 
 
 def ffmpeg_encode(inFile, outFile, encoder, crf, resolution):
     return getFFmpeg() + \
            " -i %s -vf scale=%s -map 0 -c copy -c:v %s -preset medium -crf %s -c:a aac -strict experimental -b:a 96k %s" \
-           % (inFile, resolution, encoder, crf, outFile)
+           % (dealWithSpacesInFilePathNames(inFile), resolution, encoder, crf, dealWithSpacesInFilePathNames(outFile))
 
 
 def ffmpeg_concat(inFile, outFile, encoder, crf, resolution):
-    return getFFmpeg() + " -f concat -i %s -c copy %s" % (inFile, outFile)
+    return getFFmpeg() + " -f concat -i %s -c copy %s" % (dealWithSpacesInFilePathNames(inFile), dealWithSpacesInFilePathNames(outFile))
 
 def ffmpeg_import(inFile, outFile, srtFile):
+    inFile = dealWithSpacesInFilePathNames(inFile)
+    outFile = dealWithSpacesInFilePathNames(outFile)
     options = {1: getFFmpeg() + " -i %s -sub_charenc UTF-8 -i %s -map 0:v -map 0:a -c copy -map 1 -c:s:0 srt -metadata:s:s:0 language=en %s",
                2: getFFmpeg() + " -i %s -c:a aac -vf subtitles=%s %s"}
     if inFile == srtFile or srtFile == "":
         cmd = options[2] % (inFile, inFile, outFile)
     else:
-        cmd = options[1] % (inFile, srtFile, outFile)
+        cmd = options[1] % (inFile, dealWithSpacesInFilePathNames(srtFile), outFile)
     return cmd
 
 

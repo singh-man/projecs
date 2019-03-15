@@ -25,6 +25,10 @@ def execCmd(cmd):
     print(err)
 
 
+def dealWithSpacesInFilePathNames(name):
+    return "".join(["\"", name, "\""])
+    
+
 def ackermann(m, n):
     # I assume that you check that n and m are non-negative before you run this
     if m == 0:

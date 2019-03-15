@@ -15,6 +15,7 @@ def toRecurse():
 
 
 def dumpCmdToScript(cmdList, toPath):
+    # toPath = toPath.replace("/", ("/" if "linux" in sys.platform else "\\"))
     option = input("Should i execute them - yes, append, no - !... (y/a/n) : ")
     script = toPath + "ffmpeg" + (".sh" if "linux" in sys.platform else ".bat")
     if option == "y":
@@ -40,7 +41,7 @@ def removeFilesFromDir(dirPath):
 def recursivelyFindFiles(fileList, dirPath, exts, toRecurse=False):
     dirlist = os.listdir(dirPath)
     for f in dirlist:
-        inputFilePath = dirPath + f
+        inputFilePath = dirPath + "/" + f
         if toRecurse and isDir(inputFilePath):
             recursivelyFindFiles(fileList, inputFilePath + "/", exts, toRecurse)
         elif os.path.isfile(inputFilePath):

@@ -10,7 +10,8 @@ options = {1: av.mp3ToM4a_ffmpeg,
            3: av.encode_ffmpeg,
            4: av.cut_ffmpeg,
            5: av.concat_ffmpeg,
-           6: av.import_ffmpeg}
+           6: av.concat_ffmpeg_2,
+           7: av.import_ffmpeg}
 
 [print(k, v.__name__) for k, v in options.items()]
 

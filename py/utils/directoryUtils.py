@@ -18,14 +18,18 @@ def dumpCmdToScript(cmdList, toPath):
     # toPath = toPath.replace("/", ("/" if "linux" in sys.platform else "\\"))
     option = input("Should i execute them - yes, append, no - !... (y/a/n) : ")
     script = toPath + "ffmpeg" + (".sh" if "linux" in sys.platform else ".bat")
-    if option == "y":
-        fo = open(script, "w")
-    if option == "a":
-        fo = open(script, "a+")
-    if option == "n":
+    options = {"y" : "w",
+                "a" : "a+"}
+    if option in options:
+        writeToFile(cmdList, script, options[option])
+    else:
         return
-    for c in cmdList: fo.write("{0}\n".format(c))
     print("Run this in shell: " + script)
+
+
+def writeToFile(data, toFile, mode):
+    fo = open(toFile, mode)
+    for c in data: fo.write("{0}\n".format(c))
 
 
 def removeFile(f): os.remove(f)

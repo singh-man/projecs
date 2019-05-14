@@ -46,8 +46,8 @@ def ffmpeg_encode(inFile, outFile, encoder, crf, resolution):
            % (dealWithSpacesInFilePathNames(inFile), resolution, encoder, crf, dealWithSpacesInFilePathNames(outFile))
 
 
-def ffmpeg_concat(inFile, outFile, encoder, crf, resolution):
-    return getFFmpeg() + " -f concat -i %s -c copy %s" % (dealWithSpacesInFilePathNames(inFile), dealWithSpacesInFilePathNames(outFile))
+def ffmpeg_concat(inFile, outFile):
+    return getFFmpeg() + " -f concat -i %s -c copy %s" % (inFile, outFile)
 
 def ffmpeg_import(inFile, outFile, srtFile):
     inFile = dealWithSpacesInFilePathNames(inFile)
@@ -148,9 +148,25 @@ def cut_ffmpeg():
 def concat_ffmpeg():
     inFile = input("Enter txt file <" + getPath() + "compressed/" + "> : ")
     outFile = input("Enter ouput file <" + getPath() + "compressed/" + "> : ")
-    cmd = ffmpeg_cut(inFile, outFile + "_cut." + ext, sTime, eTime);
+    cmd = ffmpeg_concat(inFile, outFile);
     directoryUtils.printList([cmd])
     directoryUtils.dumpCmdToScript([cmd], "../../")
+
+
+def concat_ffmpeg_2():
+    """ffmpeg concat used here doesn't take absolute path in the file so run in the same directory.
+    also it removes the generated file.txt i.e. it prints the command to run but run the command as well
+    Note: execCmd doesn't like cmds array in ".
+    """
+    temp_file = "file.txt"
+    inFiles = input("Enter space seperated input files name only! <" + getPath() + "compressed/" + "> : ").split(" ")
+    inFiles = ["file \'" + e + "\'" for e in inFiles]
+    directoryUtils.writeToFile(inFiles, temp_file, "w")
+    outFile = input("Enter ouput file <" + getPath() + "compressed/" + "> : ")
+    cmd = ffmpeg_concat(temp_file, outFile)
+    directoryUtils.printList([cmd])
+    execCmd(cmd)
+    directoryUtils.removeFile(temp_file)
 
 
 def import_ffmpeg():

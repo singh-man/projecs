@@ -172,6 +172,8 @@ def concat_ffmpeg_2():
 def import_ffmpeg():
     inFile = input("Enter file <" + getPath() + "compressed/" + "> : ")
     srtFile = input("Provide srt file or leave blank if same as input file: ")
+    if srtFile == "" and directoryUtils.isFile(replaceFileExt(inFile, ".srt")):
+        srtFile = replaceFileExt(inFile, ".srt")
     outFile = replaceFileExt(inFile, "_en.mkv")
     cmd = ffmpeg_import(inFile, outFile, srtFile)
     directoryUtils.printList([cmd])

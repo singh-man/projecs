@@ -63,6 +63,10 @@ def isDir(path):
     return os.path.isdir(path)
 
 
+def isFile(path):
+    return os.path.isfile(path)
+
+
 def printList(fileList):
     print("Printing list below::->")
     print('\n'.join(fileList))

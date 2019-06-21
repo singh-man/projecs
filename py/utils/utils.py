@@ -9,8 +9,7 @@ def replaceFileExt(inputFile, tExt):
     return outputFile
 
 
-def isLinux():
-    return "linux" in sys.platform
+def isLinux(): return "linux" in sys.platform
 
 
 def printList(myList, decorator):
@@ -23,6 +22,13 @@ def execCmd(cmd):
     p = subprocess.Popen(cmd.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
     print(err)
+
+
+def execCmd_2(cmd):
+    import subprocess
+    p = subprocess.run(cmd.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    print("Err: " + p.stderr.decode('utf-8'))
+    print("Out: " + p.stdout.decode('utf-8'))
 
 
 def dealWithSpacesInFilePathNames(name):

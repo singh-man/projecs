@@ -7,99 +7,90 @@ import sys
 import pytest
 
 from utils import directoryUtils
-from utils.utils import execCmd, isLinux, replaceFileExt, dealWithSpacesInFilePathNames
+from utils.utils import execCmd, execCmd_2, isLinux, replaceFileExt, dealWithSpacesInFilePathNames
 
 
-def getPath():
-    if isLinux():
-        return "/d/mani/video/"
-    else:
-        return "D:/mani/video/"
+def getPath(): return "/d/mani/video/" if isLinux() else "D:/mani/video/"
 
 
-def getFFmpeg():
-    if isLinux():
-        return "ffmpeg"
-    else:
-        return "C:/mani/dev/opt/ffmpeg-20190219-ff03418-win64-static/bin/ffmpeg.exe"
+def getFFmpeg(): return "ffmpeg" if isLinux() else "C:/mani/dev/opt/ffmpeg-20190219-ff03418-win64-static/bin/ffmpeg.exe"
 
 
-def ffmpeg_toM4a_libfdk_aac(inFile, outFile):
-    return getFFmpeg() + " -i %s -c:a libfdk_aac -profile:a aac_he_v2 -b:a 48k %s" % (dealWithSpacesInFilePathNames(inFile), dealWithSpacesInFilePathNames(outFile))
+def toM4aWithLibfdkAAC(inFile, outFile):
+    return getFFmpeg() + " -i {} -c:a libfdk_aac -profile:a aac_he_v2 -b:a 48k {}".format(dealWithSpacesInFilePathNames(inFile), dealWithSpacesInFilePathNames(outFile))
 
 
-def ffmpeg_toM4aWith_builtInAAC(inFile, outFile):
-    return getFFmpeg() + " -i %s -c:a aac -b:a 48k %s" % (dealWithSpacesInFilePathNames(inFile), dealWithSpacesInFilePathNames(outFile))
+def toM4aWithBuildInAACFfmpeg(inFile, outFile):
+    return getFFmpeg() + " -i {} -c:a aac -b:a 48k {}".format(dealWithSpacesInFilePathNames(inFile), dealWithSpacesInFilePathNames(outFile))
 
 
-def ffmpeg_toWav(inFile, outFile):
-    return getFFmpeg() + " -i %s %s" % (dealWithSpacesInFilePathNames(inFile), dealWithSpacesInFilePathNames(outFile))
+def toWavFfmpeg(inFile, outFile):
+    return getFFmpeg() + " -i {} {}".format(dealWithSpacesInFilePathNames(inFile), dealWithSpacesInFilePathNames(outFile))
 
 
-def ffmpeg_incVolume(inFile, outFile, db):
-    return getFFmpeg() + " -i %s -map 0 -c copy -c:a aac -af \"volume=%sdB\" %s" % (dealWithSpacesInFilePathNames(inFile), db, dealWithSpacesInFilePathNames(outFile))
+def incVolumeFfmpeg(inFile, outFile, db):
+    return getFFmpeg() + " -i {} -map 0 -c copy -c:a aac -af \"volume={}dB\" {}".format(dealWithSpacesInFilePathNames(inFile), db, dealWithSpacesInFilePathNames(outFile))
 
 
-def ffmpeg_encode(inFile, outFile, encoder, crf, resolution):
+def encodeFfmpeg(inFile, outFile, encoder, crf, resolution):
     return getFFmpeg() + \
-           " -i %s -vf scale=%s -map 0 -c copy -c:v %s -preset medium -crf %s -c:a aac -strict experimental -b:a 96k %s" \
-           % (dealWithSpacesInFilePathNames(inFile), resolution, encoder, crf, dealWithSpacesInFilePathNames(outFile))
+           " -i {} -vf scale={} -map 0 -c copy -c:v {} -preset medium -crf {} -c:a aac -strict experimental -b:a 96k {}" \
+          .format(dealWithSpacesInFilePathNames(inFile), resolution, encoder, crf, dealWithSpacesInFilePathNames(outFile))
 
 
-def ffmpeg_concat(inFile, outFile):
-    return getFFmpeg() + " -f concat -i %s -c copy %s" % (inFile, outFile)
+def concatFfmpeg(inFile, outFile):
+    return getFFmpeg() + " -f concat -i {} -c copy {}".format(inFile, outFile)
 
-def ffmpeg_import(inFile, outFile, srtFile):
+
+def importFfmpeg(inFile, outFile, srtFile):
     inFile = dealWithSpacesInFilePathNames(inFile)
     outFile = dealWithSpacesInFilePathNames(outFile)
-    options = {1: getFFmpeg() + " -i %s -sub_charenc UTF-8 -i %s -map 0:v -map 0:a -c copy -map 1 -c:s:0 srt -metadata:s:s:0 language=en %s",
-               2: getFFmpeg() + " -i %s -c:a aac -vf subtitles=%s %s"}
+    options = {1: getFFmpeg() + " -i {} -sub_charenc UTF-8 -i {} -map 0:v -map 0:a -c copy -map 1 -c:s:0 srt -metadata:s:s:0 language=en {}",
+               2: getFFmpeg() + " -i {} -c:a aac -vf subtitles={} {}"}
     if inFile == srtFile or srtFile == "":
-        cmd = options[2] % (inFile, inFile, outFile)
+        cmd = options[2].format(inFile, inFile, outFile)
     else:
-        cmd = options[1] % (inFile, dealWithSpacesInFilePathNames(srtFile), outFile)
+        cmd = options[1].format(inFile, dealWithSpacesInFilePathNames(srtFile), outFile)
     return cmd
 
 
-def ffmpeg_cut(inFile, outFile, startTime, endTime):
+def cutFfmpeg(inFile, outFile, startTime, endTime):
     import datetime, time, re
     sh, sm, ss = re.split(":", startTime)
     sSeconds = int(datetime.timedelta(hours=int(sh), minutes=int(sm), seconds=int(ss)).total_seconds())
     eh, em, es = re.split(":", endTime)
     eSeconds = int(datetime.timedelta(hours=int(eh), minutes=int(em), seconds=int(es)).total_seconds())
     duration = time.strftime('%H:%M:%S', time.gmtime(eSeconds - sSeconds))
-    return getFFmpeg() + " -ss %s -i %s -ss 00:00:01 -t %s -c copy %s" % (startTime, inFile, duration, outFile)
+    return getFFmpeg() + " -ss {} -i {} -ss 00:00:01 -t {} -c copy {}".format(startTime, inFile, duration, outFile)
 
 
-def mp3ToM4a_ffmpeg_libfdk_aac():
-    filesList = directoryUtils.findFiles(getPath(), "mp3")
+def ffmpeg_mp3ToM4a_libfdk_aac():
+    fileOrFolder = input("Enter file or folder path <" + getPath() + "> : ")
+    filesList = directoryUtils.findFiles(fileOrFolder, "mp3") if directoryUtils.isDir(fileOrFolder) else [fileOrFolder]
     fileMap = {f: replaceFileExt(f, ".m4a") for f in filesList}
     # for f in filesList: fileMap[f] = getOutputFileName(f, "mp3", "m4a") # assigning value to a key
 
-    cmdList = [ffmpeg_toM4a_libfdk_aac(f1, f2) for f1, f2 in fileMap.items()]
+    cmdList = [toM4aWithLibfdkAAC(f1, f2) for f1, f2 in fileMap.items()]
     directoryUtils.printList(cmdList)
     # map(lambda cmd:directoryUtils.execCmd(cmd), cmdList)
-    [directoryUtils.execCmd(cmd) for cmd in cmdList]
+    [execCmd_2(cmd) for cmd in cmdList]
 
 
-def mp3ToM4a_ffmpeg():
+def ffmpeg_mp3ToM4a():
     fileOrFolder = input("Enter file or folder path <" + getPath() + "> : ")
-    if directoryUtils.isDir(fileOrFolder):
-        filesList = directoryUtils.findFiles(fileOrFolder, "mp3")
-    else:
-        filesList = [fileOrFolder]
+    filesList = directoryUtils.findFiles(fileOrFolder, "mp3") if directoryUtils.isDir(fileOrFolder) else [fileOrFolder]
     cmdList = []
     for f in filesList:
         wavFile = replaceFileExt(f, ".wav")
         m4aFile = replaceFileExt(f, ".m4a")
-        cmdList.append(ffmpeg_toWav(f, wavFile))
-        cmdList.append(ffmpeg_toM4a_libfdk_aac(wavFile, m4aFile))
+        cmdList.append(toWavFfmpeg(f, wavFile))
+        cmdList.append(toM4aWithBuildInAACFfmpeg(wavFile, m4aFile))
     directoryUtils.printList(cmdList)
     print([execCmd(cmd) for cmd in cmdList])
     [directoryUtils.removeFile(replaceFileExt(f, ".wav")) for f in filesList]
 
 
-def incrementVolume_ffmpeg():
+def ffmpeg_incVolume():
     fileOrFolder = input("Enter file or folder path <" + getPath() + "compressed/" + "> : ")
     if directoryUtils.isDir(fileOrFolder):
         filesList = directoryUtils.findFiles(fileOrFolder, "")
@@ -107,13 +98,13 @@ def incrementVolume_ffmpeg():
         filesList = [fileOrFolder]
     db = input("Provide db: ")
     fileMap = {f: replaceFileExt(f, "_f_v_" + db + ".mkv") for f in filesList}
-    cmdList = [ffmpeg_incVolume(f1, f2, db) for f1, f2 in fileMap.items()]
+    cmdList = [incVolumeFfmpeg(f1, f2, db) for f1, f2 in fileMap.items()]
     directoryUtils.printList(cmdList)
     # map(lambda cmd:directoryUtils.execCmd(cmd), cmdList)
     directoryUtils.dumpCmdToScript(cmdList, "../../")
 
 
-def encode_ffmpeg():
+def ffmpeg_encode():
     fileOrFolder = input("Enter file or folder path <" + getPath() + "compressed/" + "> : ")
     if directoryUtils.isDir(fileOrFolder):
         filesList = directoryUtils.findFiles(fileOrFolder, "")
@@ -129,31 +120,31 @@ def encode_ffmpeg():
     resolution = ratios[int(input("Provide vertical resolution : "))]
 
     fileMap = {f: replaceFileExt(f, "_" + encoder + ".mkv") for f in filesList}
-    cmdList = [ffmpeg_encode(f1, f2, encoder, crf, resolution) for f1, f2 in fileMap.items()]
+    cmdList = [encodeFfmpeg(f1, f2, encoder, crf, resolution) for f1, f2 in fileMap.items()]
     directoryUtils.printList(cmdList)
     # map(lambda cmd:directoryUtils.execCmd(cmd), cmdList)
     directoryUtils.dumpCmdToScript(cmdList, "../../")
 
 
-def cut_ffmpeg():
+def ffmpeg_cut():
     inFile = input("Enter file <" + getPath() + "compressed/" + "> : ")
     outFile, ext = inFile.rsplit('.', 1)
     sTime = input("Enter start time: ")
     eTime = input("Enter end time: ")
-    cmd = ffmpeg_cut(inFile, outFile + "_cut." + ext, sTime, eTime);
+    cmd = cutFfmpeg(inFile, outFile + "_cut." + ext, sTime, eTime);
     directoryUtils.printList([cmd])
     directoryUtils.dumpCmdToScript([cmd], "../../")
 
 
-def concat_ffmpeg():
+def ffmpeg_concat():
     inFile = input("Enter txt file <" + getPath() + "compressed/" + "> : ")
     outFile = input("Enter ouput file <" + getPath() + "compressed/" + "> : ")
-    cmd = ffmpeg_concat(inFile, outFile);
+    cmd = concatFfmpeg(inFile, outFile);
     directoryUtils.printList([cmd])
     directoryUtils.dumpCmdToScript([cmd], "../../")
 
 
-def concat_ffmpeg_2():
+def ffmpeg_concat2():
     """ffmpeg concat used here doesn't take absolute path in the file so run in the same directory.
     also it removes the generated file.txt i.e. it prints the command to run but run the command as well
     Note: execCmd doesn't like cmds array in ".
@@ -163,25 +154,35 @@ def concat_ffmpeg_2():
     inFiles = ["file \'" + e + "\'" for e in inFiles]
     directoryUtils.writeToFile(inFiles, temp_file, "w")
     outFile = input("Enter ouput file <" + getPath() + "compressed/" + "> : ")
-    cmd = ffmpeg_concat(temp_file, outFile)
+    cmd = concatFfmpeg(temp_file, outFile)
     directoryUtils.printList([cmd])
     execCmd(cmd)
     directoryUtils.removeFile(temp_file)
 
 
-def import_ffmpeg():
+def ffmpeg_import():
     inFile = input("Enter file <" + getPath() + "compressed/" + "> : ")
     srtFile = input("Provide srt file or leave blank if same as input file: ")
     if srtFile == "" and directoryUtils.isFile(replaceFileExt(inFile, ".srt")):
         srtFile = replaceFileExt(inFile, ".srt")
     outFile = replaceFileExt(inFile, "_en.mkv")
-    cmd = ffmpeg_import(inFile, outFile, srtFile)
+    cmd = importFfmpeg(inFile, outFile, srtFile)
     directoryUtils.printList([cmd])
     directoryUtils.dumpCmdToScript([cmd], "../../")
 
 
 def test_mp3TpM4a():
-    mp3ToM4a_ffmpeg()
+    ffmpeg_mp3ToM4a()
+
+
+def listAllUsefullFunctions():
+    import inspect, sys
+    all_functions = inspect.getmembers(sys.modules[__name__], inspect.isfunction)
+    # print(all_functions)
+    all_functions = [e for e in all_functions if e[0].find("_") >= 0]
+    # print(all_functions)
+    funcMap = {all_functions.index(e): e for e in all_functions}
+    return funcMap
 
 
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ import sys
 
 import os
 
+from utils.utils import execCmd_2
 
 # import pytest
 
@@ -16,12 +17,14 @@ def toRecurse():
 
 def dumpCmdToScript(cmdList, toPath):
     # toPath = toPath.replace("/", ("/" if "linux" in sys.platform else "\\"))
-    option = input("Should i execute them - yes, append, no - !... (y/a/n) : ")
+    option = input("Should I write to file or execute them - yes, append, no, execute - !... (y/a/n/e) : ")
     script = toPath + "ffmpeg" + (".sh" if "linux" in sys.platform else ".bat")
     options = {"y" : "w",
                 "a" : "a+"}
     if option in options:
         writeToFile(cmdList, script, options[option])
+    elif option == "e":
+        for c in cmdList: execCmd_2(c)
     else:
         return
     print("Run this in shell: " + script)

@@ -10,9 +10,6 @@ from utils import directoryUtils
 from utils.utils import execCmd, execCmd_2, isLinux, replaceFileExt, dealWithSpacesInFilePathNames
 
 
-def getPath(): return "/d/mani/video/" if isLinux() else "D:/mani/video/"
-
-
 def getFFmpeg(): return "ffmpeg" if isLinux() else "C:/mani/dev/opt/ffmpeg-20190219-ff03418-win64-static/bin/ffmpeg.exe"
 
 
@@ -65,7 +62,7 @@ def cutFfmpeg(inFile, outFile, startTime, endTime):
 
 
 def ffmpeg_mp3ToM4a_libfdk_aac():
-    fileOrFolder = input("Enter file or folder path <" + getPath() + "> : ")
+    fileOrFolder = input("Enter file or folder path: ")
     filesList = directoryUtils.findFiles(fileOrFolder, "mp3") if directoryUtils.isDir(fileOrFolder) else [fileOrFolder]
     fileMap = {f: replaceFileExt(f, ".m4a") for f in filesList}
     # for f in filesList: fileMap[f] = getOutputFileName(f, "mp3", "m4a") # assigning value to a key
@@ -77,7 +74,7 @@ def ffmpeg_mp3ToM4a_libfdk_aac():
 
 
 def ffmpeg_mp3ToM4a():
-    fileOrFolder = input("Enter file or folder path <" + getPath() + "> : ")
+    fileOrFolder = input("Enter file or folder path: ")
     filesList = directoryUtils.findFiles(fileOrFolder, "mp3") if directoryUtils.isDir(fileOrFolder) else [fileOrFolder]
     cmdList = []
     for f in filesList:
@@ -91,7 +88,7 @@ def ffmpeg_mp3ToM4a():
 
 
 def ffmpeg_incVolume():
-    fileOrFolder = input("Enter file or folder path <" + getPath() + "compressed/" + "> : ")
+    fileOrFolder = input("Enter file or folder path: ")
     if directoryUtils.isDir(fileOrFolder):
         filesList = directoryUtils.findFiles(fileOrFolder, "")
     else:
@@ -105,7 +102,7 @@ def ffmpeg_incVolume():
 
 
 def ffmpeg_encode():
-    fileOrFolder = input("Enter file or folder path <" + getPath() + "compressed/" + "> : ")
+    fileOrFolder = input("Enter file or folder path: ")
     if directoryUtils.isDir(fileOrFolder):
         filesList = directoryUtils.findFiles(fileOrFolder, "")
     else:
@@ -127,7 +124,7 @@ def ffmpeg_encode():
 
 
 def ffmpeg_cut():
-    inFile = input("Enter file <" + getPath() + "compressed/" + "> : ")
+    inFile = input("Enter file: ")
     outFile, ext = inFile.rsplit('.', 1)
     sTime = input("Enter start time: ")
     eTime = input("Enter end time: ")
@@ -137,8 +134,8 @@ def ffmpeg_cut():
 
 
 def ffmpeg_concat():
-    inFile = input("Enter txt file <" + getPath() + "compressed/" + "> : ")
-    outFile = input("Enter ouput file <" + getPath() + "compressed/" + "> : ")
+    inFile = input("Enter txt file: ")
+    outFile = input("Enter ouput file: ")
     cmd = concatFfmpeg(inFile, outFile);
     directoryUtils.printList([cmd])
     directoryUtils.dumpCmdToScript([cmd], "../../")
@@ -150,10 +147,10 @@ def ffmpeg_concat2():
     Note: execCmd doesn't like cmds array in ".
     """
     temp_file = "file.txt"
-    inFiles = input("Enter space seperated input files name only! <" + getPath() + "compressed/" + "> : ").split(" ")
+    inFiles = input("Enter space seperated input files name only!: ").split(" ")
     inFiles = ["file \'" + e + "\'" for e in inFiles]
     directoryUtils.writeToFile(inFiles, temp_file, "w")
-    outFile = input("Enter ouput file <" + getPath() + "compressed/" + "> : ")
+    outFile = input("Enter ouput file: ")
     cmd = concatFfmpeg(temp_file, outFile)
     directoryUtils.printList([cmd])
     execCmd(cmd)
@@ -161,7 +158,7 @@ def ffmpeg_concat2():
 
 
 def ffmpeg_import():
-    inFile = input("Enter file <" + getPath() + "compressed/" + "> : ")
+    inFile = input("Enter file: ")
     srtFile = input("Provide srt file or leave blank if same as input file: ")
     if srtFile == "" and directoryUtils.isFile(replaceFileExt(inFile, ".srt")):
         srtFile = replaceFileExt(inFile, ".srt")
@@ -179,11 +176,11 @@ def listAllUsefullFunctions():
     import inspect, sys
     all_functions = inspect.getmembers(sys.modules[__name__], inspect.isfunction)
     # print(all_functions)
-    all_functions = [e for e in all_functions if e[0].find("_") >= 0]
+    all_functions = [e for e in all_functions if e[0].find("ffmpeg_") >= 0 or e[0].find("handbrake_") >= 0]
     # print(all_functions)
     funcMap = {all_functions.index(e): e for e in all_functions}
     return funcMap
 
 
 if __name__ == "__main__":
-    filesList = directoryUtils.findFiles(getPath(), ".mp3")
+    filesList = directoryUtils.findFiles("./", ".mp3")

@@ -98,7 +98,7 @@ def ffmpeg_incVolume():
     cmdList = [incVolumeFfmpeg(f1, f2, db) for f1, f2 in fileMap.items()]
     directoryUtils.printList(cmdList)
     # map(lambda cmd:directoryUtils.execCmd(cmd), cmdList)
-    directoryUtils.dumpCmdToScript(cmdList, "../../")
+    directoryUtils.dumpCmdToScript(cmdList, "./")
 
 
 def ffmpeg_encode():
@@ -120,7 +120,7 @@ def ffmpeg_encode():
     cmdList = [encodeFfmpeg(f1, f2, encoder, crf, resolution) for f1, f2 in fileMap.items()]
     directoryUtils.printList(cmdList)
     # map(lambda cmd:directoryUtils.execCmd(cmd), cmdList)
-    directoryUtils.dumpCmdToScript(cmdList, "../../")
+    directoryUtils.dumpCmdToScript(cmdList, "./")
 
 
 def ffmpeg_cut():
@@ -130,7 +130,7 @@ def ffmpeg_cut():
     eTime = input("Enter end time: ")
     cmd = cutFfmpeg(inFile, outFile + "_cut." + ext, sTime, eTime);
     directoryUtils.printList([cmd])
-    directoryUtils.dumpCmdToScript([cmd], "../../")
+    directoryUtils.dumpCmdToScript([cmd], "./")
 
 
 def ffmpeg_concat():
@@ -138,7 +138,7 @@ def ffmpeg_concat():
     outFile = input("Enter ouput file: ")
     cmd = concatFfmpeg(inFile, outFile);
     directoryUtils.printList([cmd])
-    directoryUtils.dumpCmdToScript([cmd], "../../")
+    directoryUtils.dumpCmdToScript([cmd], "./")
 
 
 def ffmpeg_concat2():
@@ -165,7 +165,7 @@ def ffmpeg_import():
     outFile = replaceFileExt(inFile, "_en.mkv")
     cmd = importFfmpeg(inFile, outFile, srtFile)
     directoryUtils.printList([cmd])
-    directoryUtils.dumpCmdToScript([cmd], "../../")
+    directoryUtils.dumpCmdToScript([cmd], "./")
 
 
 def test_mp3TpM4a():

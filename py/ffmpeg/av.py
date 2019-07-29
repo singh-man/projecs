@@ -66,11 +66,8 @@ def ffmpeg_mp3ToM4a_libfdk_aac():
     filesList = directoryUtils.findFiles(fileOrFolder, "mp3") if directoryUtils.isDir(fileOrFolder) else [fileOrFolder]
     fileMap = {f: replaceFileExt(f, ".m4a") for f in filesList}
     # for f in filesList: fileMap[f] = getOutputFileName(f, "mp3", "m4a") # assigning value to a key
-
     cmdList = [toM4aWithLibfdkAAC(f1, f2) for f1, f2 in fileMap.items()]
-    directoryUtils.printList(cmdList)
-    # map(lambda cmd:directoryUtils.execCmd(cmd), cmdList)
-    [execCmd_2(cmd) for cmd in cmdList]
+    return cmdList
 
 
 def ffmpeg_mp3ToM4a():
@@ -96,9 +93,7 @@ def ffmpeg_incVolume():
     db = input("Provide db: ")
     fileMap = {f: replaceFileExt(f, "_f_v_" + db + ".mkv") for f in filesList}
     cmdList = [incVolumeFfmpeg(f1, f2, db) for f1, f2 in fileMap.items()]
-    directoryUtils.printList(cmdList)
-    # map(lambda cmd:directoryUtils.execCmd(cmd), cmdList)
-    directoryUtils.dumpCmdToScript(cmdList, "./")
+    return cmdList
 
 
 def ffmpeg_encode():
@@ -118,9 +113,7 @@ def ffmpeg_encode():
 
     fileMap = {f: replaceFileExt(f, "_" + encoder + ".mkv") for f in filesList}
     cmdList = [encodeFfmpeg(f1, f2, encoder, crf, resolution) for f1, f2 in fileMap.items()]
-    directoryUtils.printList(cmdList)
-    # map(lambda cmd:directoryUtils.execCmd(cmd), cmdList)
-    directoryUtils.dumpCmdToScript(cmdList, "./")
+    return cmdList
 
 
 def ffmpeg_cut():
@@ -129,16 +122,14 @@ def ffmpeg_cut():
     sTime = input("Enter start time: ")
     eTime = input("Enter end time: ")
     cmd = cutFfmpeg(inFile, outFile + "_cut." + ext, sTime, eTime);
-    directoryUtils.printList([cmd])
-    directoryUtils.dumpCmdToScript([cmd], "./")
+    return cmd
 
 
 def ffmpeg_concat():
     inFile = input("Enter txt file: ")
     outFile = input("Enter ouput file: ")
     cmd = concatFfmpeg(inFile, outFile);
-    directoryUtils.printList([cmd])
-    directoryUtils.dumpCmdToScript([cmd], "./")
+    return cmd
 
 
 def ffmpeg_concat2():
@@ -164,8 +155,7 @@ def ffmpeg_import():
         srtFile = replaceFileExt(inFile, ".srt")
     outFile = replaceFileExt(inFile, "_en.mkv")
     cmd = importFfmpeg(inFile, outFile, srtFile)
-    directoryUtils.printList([cmd])
-    directoryUtils.dumpCmdToScript([cmd], "./")
+    return cmd
 
 
 def test_mp3TpM4a():
@@ -173,6 +163,10 @@ def test_mp3TpM4a():
 
 
 def listAllUsefullFunctions():
+    """
+    works on tuple like (func_name, actual_funtion)
+    returns <index of the funtion>:<tuple consisting of (function name and actual funtion)>
+    """
     import inspect, sys
     all_functions = inspect.getmembers(sys.modules[__name__], inspect.isfunction)
     # print(all_functions)

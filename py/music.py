@@ -8,6 +8,7 @@ import utils.directoryUtils as directoryUtils
 
 def finishNow():
     directoryUtils.dumpCmdToScript(finalCmd, "./")
+    sys.exit("Exiting the program")
 
 # [print(k, v.__name__) for k, v in options.items()]
 # options[int(selection)]()

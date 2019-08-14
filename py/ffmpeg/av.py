@@ -10,7 +10,8 @@ from utils import directoryUtils
 from utils.utils import execCmd, execCmd_2, isLinux, replaceFileExt, dealWithSpacesInFilePathNames
 
 
-def getFFmpeg(): return "ffmpeg" if isLinux() else "C:/mani/dev/opt/ffmpeg-20190219-ff03418-win64-static/bin/ffmpeg.exe"
+# def getFFmpeg(): return "ffmpeg" if isLinux() else "C:/mani/dev/opt/ffmpeg-20190219-ff03418-win64-static/bin/ffmpeg.exe"
+def getFFmpeg(): return "ffmpeg"
 
 
 def toM4aWithLibfdkAAC(inFile, outFile):

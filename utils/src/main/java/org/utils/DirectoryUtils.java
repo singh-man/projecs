@@ -13,6 +13,8 @@ import java.util.stream.Stream;
 
 public class DirectoryUtils {
 
+    public static final String MANI_TMP = "C:\\mani\\tmp\\";
+
     private static List<File> listFileFilter(File srcDir, FileFilter filter) {
         if (!srcDir.isDirectory()) throw new IllegalArgumentException("Given path is not a directory : " + srcDir.getAbsolutePath());
         File[] files = srcDir.listFiles(filter);
@@ -25,7 +27,7 @@ public class DirectoryUtils {
 
     @Test
     public void testListSubDirectories() {
-        List<File> files = listSubDirectories(new File("D:\\mani\\tmp\\"));
+        List<File> files = listSubDirectories(new File(MANI_TMP));
         System.out.println("Total number of sub-directories : " + files.size());
         files.forEach(System.out::println);
     }
@@ -40,7 +42,7 @@ public class DirectoryUtils {
 
     @Test
     public void testListAllSubDirectories() {
-        List<File> files = listAllSubDirectories(new File("D:\\mani\\tmp\\"));
+        List<File> files = listAllSubDirectories(new File(MANI_TMP));
         System.out.println("Total number of all sub-directories : " + files.size());
         files.forEach(System.out::println);
     }
@@ -53,7 +55,7 @@ public class DirectoryUtils {
 
     @Test
     public void testListAllDirectoriesIncludingThis() {
-        listAllDirectoriesIncludingThis(new File("D:\\tmp\\")).forEach(System.out::println);
+        listAllDirectoriesIncludingThis(new File(MANI_TMP)).forEach(System.out::println);
     }
 
     public static List<File> listFiles(File srcDir) {
@@ -62,7 +64,7 @@ public class DirectoryUtils {
 
     @Test
     public void testListFiles() {
-        List<File> files = listFiles(new File("D:\\mani\\tmp\\"));
+        List<File> files = listFiles(new File(MANI_TMP));
         System.out.println("Total number of files : " + files.size());
         files.forEach(System.out::println);
     }
@@ -76,7 +78,7 @@ public class DirectoryUtils {
 
     @Test
     public void testListAllFiles() {
-        List<File> files = listAllFiles(new File("D:\\mani\\tmp\\"));
+        List<File> files = listAllFiles(new File(MANI_TMP));
         System.out.println("Total no. of files = "+ files.size());
         files.forEach(System.out::println);
     }
@@ -93,7 +95,7 @@ public class DirectoryUtils {
 
     @Test
     public void testListAllFilteredFiles() {
-        listAllFilteredFiles(new File("D:\\mani\\tmp\\"), ".mp4", ".jpg").forEach(System.out::println);
+        listAllFilteredFiles(new File(MANI_TMP), ".mp4", ".jpg").forEach(System.out::println);
     }
 
     public static Map<File, List<File>> getDirectoryMap(File srcDir) {
@@ -104,6 +106,6 @@ public class DirectoryUtils {
 
     @Test
     public void testGetDirectoryMap() {
-        getDirectoryMap(new File("D:\\mani\\tmp\\")).forEach((k,v) -> System.out.println(k + " :: " + v));
+        getDirectoryMap(new File(MANI_TMP)).forEach((k, v) -> System.out.println(k + " :: " + v));
     }
 }

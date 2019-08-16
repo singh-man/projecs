@@ -59,7 +59,7 @@ def cutFfmpeg(inFile, outFile, startTime, endTime):
     eh, em, es = re.split(":", endTime)
     eSeconds = int(datetime.timedelta(hours=int(eh), minutes=int(em), seconds=int(es)).total_seconds())
     duration = time.strftime('%H:%M:%S', time.gmtime(eSeconds - sSeconds))
-    return getFFmpeg() + " -ss {} -i {} -ss 00:00:01 -t {} -c copy {}".format(startTime, inFile, duration, outFile)
+    return getFFmpeg() + " -ss {} -i {} -t {} -c copy -avoid_negative_ts make_zero {}".format(startTime, inFile, duration, outFile)
 
 
 def ffmpeg_mp3ToM4a_libfdk_aac():

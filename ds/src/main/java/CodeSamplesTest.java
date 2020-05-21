@@ -308,6 +308,17 @@ public class CodeSamplesTest {
         Stream.generate(() -> Arrays.asList(1,2,3,4)).limit(5).forEach(System.out::println);
     }
 
+    @Test
+    public void fibonacci() {
+        Function<Integer, Integer> f = new Function<Integer, Integer>() {
+            @Override
+            public Integer apply(Integer n) {
+                if(n < 2) return n;
+                return apply(n-1) + apply(n-2);
+            }
+        };
+        System.out.println(f.apply(10));
+    }
 
 //	@Test
 //	public void testEricssonMail() {

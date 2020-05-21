@@ -31,8 +31,9 @@ def incVolumeFfmpeg(inFile, outFile, db):
 
 
 def encodeFfmpeg(inFile, outFile, encoder, crf, resolution):
+    #" -i {} -vf scale={} -map 0 -c copy -c:v {} -preset medium -crf {} -c:a aac -strict experimental -b:a 96k {}"
     return getFFmpeg() + \
-           " -i {} -vf scale={} -map 0 -c copy -c:v {} -preset medium -crf {} -c:a aac -strict experimental -b:a 96k {}" \
+           " -i {} -vf scale={} -map 0 -c copy -c:v {} -preset medium -crf {} {}" \
           .format(dealWithSpacesInFilePathNames(inFile), resolution, encoder, crf, dealWithSpacesInFilePathNames(outFile))
 
 
@@ -60,6 +61,10 @@ def cutFfmpeg(inFile, outFile, startTime, endTime):
     eSeconds = int(datetime.timedelta(hours=int(eh), minutes=int(em), seconds=int(es)).total_seconds())
     duration = time.strftime('%H:%M:%S', time.gmtime(eSeconds - sSeconds))
     return getFFmpeg() + " -ss {} -i {} -t {} -c copy -avoid_negative_ts make_zero {}".format(startTime, inFile, duration, outFile)
+
+
+def toGifFfmpeg(inFile, outFile):
+    return getFFmpeg() + " -i {} -f gif {}".format(inFile, outFile)
 
 
 def ffmpeg_mp3ToM4a_libfdk_aac():
@@ -157,6 +162,17 @@ def ffmpeg_import():
     outFile = replaceFileExt(inFile, "_en.mkv")
     cmd = importFfmpeg(inFile, outFile, srtFile)
     return cmd
+
+
+def ffmpeg_toGif():
+    fileOrFolder = input("Enter file or folder path: ")
+    if directoryUtils.isDir(fileOrFolder):
+        filesList = directoryUtils.findFiles(fileOrFolder, "")
+    else:
+        filesList = [fileOrFolder]
+    fileMap = {f: replaceFileExt(f, ".gif") for f in filesList}
+    cmdList = [toGifFfmpeg(f1, f2) for f1, f2 in fileMap.items()]
+    return cmdList
 
 
 def test_mp3TpM4a():

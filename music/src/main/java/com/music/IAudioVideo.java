@@ -3,11 +3,9 @@ package com.music;
 import java.io.File;
 import java.time.Duration;
 import java.time.LocalTime;
-import java.time.Period;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -18,23 +16,17 @@ public interface IAudioVideo {
 
     List<String> videoFileExtensions = Collections.unmodifiableList(Arrays.asList(".mkv", ".avi", ".mp4", ".xvid", ".divx"));
 
-    List<String> audioFileExtensions = Collections.unmodifiableList(Arrays.asList(".wav", ".mp3", ".m4a"));
+    List<String> videoEncoders = Collections.unmodifiableList(Arrays.asList("libx264", "libx265", "libaom-av1", "libvpx-vp9"));
 
-    String volume(File in, File out, int db);
+    String volume(String in, String out, int db);
 
-    String mp3toM4a(File in, File out);
+    String encode(String in, String out, int crf, String encoder, String resolution);
 
-    String encode(File in, File out, int crf, String encoder, String resolution);
+    String importSubtitles(String in, String out, Subtitles... subtitles);
 
-    String cut(File in, File out, String startTime, String duration);
+    String importSubtitles(String in, String out, Subtitles subtitle);
 
-    String concat(File in, File out);
-
-    String importSubtitles(File in, File out, Subtitles subtitle);
-
-    String importSubtitles(File in, File out, Subtitles... subtitles);
-
-    static class Subtitles {
+    class Subtitles {
         File file;
         String language;
 
@@ -44,12 +36,8 @@ public interface IAudioVideo {
         }
     }
 
-    static boolean isValidAudioFileExtension(File file) {
-        String ext = file.getName().substring(file.getName().lastIndexOf('.'));
-        return audioFileExtensions.contains(ext);
-    }
-
     static boolean isValidVideoFileExtension(File file) {
+        if (!file.getName().contains(".")) return false;
         String ext = file.getName().substring(file.getName().lastIndexOf('.'));
         return videoFileExtensions.contains(ext);
     }
@@ -82,7 +70,7 @@ public interface IAudioVideo {
     }
 
     /**
-     * Way to call is ====>  replaceExtension().apply("abc.mp4","_.mkv")
+     * Way to call is ====>  replaceExtension().apply(File, "_.mkv")
      * @return abc_.mkv
      */
     static BiFunction<File, String, File> replaceExtension() {
@@ -93,8 +81,14 @@ public interface IAudioVideo {
     }
 
     default File replaceExtension(File f, String newExt) {
-        String ext = f.getName().substring(f.getName().lastIndexOf('.'));
-        return new File(f.getAbsolutePath().replace(ext, newExt));
+//        String ext = f.getName().substring(f.getName().lastIndexOf('.'));
+//        return new File(f.getAbsolutePath().replace(ext, newExt));
+        return new File(replaceExtension(f.getAbsolutePath(), newExt));
+    }
+
+    static String replaceExtension(String f, String newExt) {
+        String ext = f.substring(f.lastIndexOf('.'));
+        return f.replace(ext, newExt);
     }
 
     static String timeDIff(String startTime, String endTime) {
@@ -108,5 +102,4 @@ public interface IAudioVideo {
         System.out.print("\n");
         return p2 + ":" + p3 + ":" + p1;
     }
-
 }

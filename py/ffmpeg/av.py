@@ -14,6 +14,23 @@ from utils.utils import execCmd, execCmd_2, isLinux, replaceFileExt, dealWithSpa
 def getFFmpeg(): return "ffmpeg"
 
 
+def userInput(x, *y):
+    [print(idx, " : ", v) for idx, v in enumerate(y)]
+    x1 = input(x + ": ")
+    if not y:
+        return x1
+    return y[int(x1)]
+
+
+def getFileOrFolderList(ext):
+    fileOrFolder = input("Enter file or folder path: ")
+    if directoryUtils.isDir(fileOrFolder):
+        filesList = directoryUtils.findFiles(fileOrFolder, ext)
+    else:
+        filesList = [fileOrFolder]
+    return filesList
+
+
 def toM4aWithLibfdkAAC(inFile, outFile):
     return getFFmpeg() + " -i {} -c:a libfdk_aac -profile:a aac_he_v2 -b:a 48k {}".format(dealWithSpacesInFilePathNames(inFile), dealWithSpacesInFilePathNames(outFile))
 
@@ -68,8 +85,7 @@ def toGifFfmpeg(inFile, outFile):
 
 
 def ffmpeg_mp3ToM4a_libfdk_aac():
-    fileOrFolder = input("Enter file or folder path: ")
-    filesList = directoryUtils.findFiles(fileOrFolder, "mp3") if directoryUtils.isDir(fileOrFolder) else [fileOrFolder]
+    filesList = getFileOrFolderList("mp3")
     fileMap = {f: replaceFileExt(f, ".m4a") for f in filesList}
     # for f in filesList: fileMap[f] = getOutputFileName(f, "mp3", "m4a") # assigning value to a key
     cmdList = [toM4aWithLibfdkAAC(f1, f2) for f1, f2 in fileMap.items()]
@@ -77,8 +93,7 @@ def ffmpeg_mp3ToM4a_libfdk_aac():
 
 
 def ffmpeg_mp3ToM4a():
-    fileOrFolder = input("Enter file or folder path: ")
-    filesList = directoryUtils.findFiles(fileOrFolder, "mp3") if directoryUtils.isDir(fileOrFolder) else [fileOrFolder]
+    filesList = getFileOrFolderList("mp3")
     cmdList = []
     for f in filesList:
         wavFile = replaceFileExt(f, ".wav")
@@ -91,11 +106,7 @@ def ffmpeg_mp3ToM4a():
 
 
 def ffmpeg_incVolume():
-    fileOrFolder = input("Enter file or folder path: ")
-    if directoryUtils.isDir(fileOrFolder):
-        filesList = directoryUtils.findFiles(fileOrFolder, "")
-    else:
-        filesList = [fileOrFolder]
+    filesList = getFileOrFolderList("")
     db = input("Provide db: ")
     fileMap = {f: replaceFileExt(f, "_f_v_" + db + ".mkv") for f in filesList}
     cmdList = [incVolumeFfmpeg(f1, f2, db) for f1, f2 in fileMap.items()]
@@ -103,20 +114,13 @@ def ffmpeg_incVolume():
 
 
 def ffmpeg_encode():
-    fileOrFolder = input("Enter file or folder path: ")
-    if directoryUtils.isDir(fileOrFolder):
-        filesList = directoryUtils.findFiles(fileOrFolder, "")
-    else:
-        filesList = [fileOrFolder]
-
-    encoders = {1: "libx264", 2: "libx265", 3: "libaom-av1", 4: "libvpx-vp9"}
-    [print(k, v) for k, v in encoders.items()]
-    encoder = encoders[int(input("Provide encoder: "))]
-    crf = input("Provide CRF : [0-23-51 least]:")
-    ratios = ["-1:-1", "426:240", "-1:360", "852:480", "-1:720", "-1:1080"]
-    [print(idx, " : ", v) for idx, v in enumerate(ratios)]
-    resolution = ratios[int(input("Provide vertical resolution : "))]
-
+    filesList = getFileOrFolderList("")
+    # encoders = {1: "libx264", 2: "libx265", 3: "libaom-av1", 4: "libvpx-vp9"}
+    # [print(k, v) for k, v in encoders.items()]
+    # encoder = encoders[int(input("Provide encoder: "))]
+    encoder = userInput("Provide encoder", "libx264", "libx265", "libaom-av1", "libvpx-vp9")
+    crf = userInput("Provide CRF : [0-23-51 least]")
+    resolution = userInput("Provide vertical resolution", "-1:-1", "426:240", "-1:360", "852:480", "-1:720", "-1:1080")
     fileMap = {f: replaceFileExt(f, "_" + encoder + ".mkv") for f in filesList}
     cmdList = [encodeFfmpeg(f1, f2, encoder, crf, resolution) for f1, f2 in fileMap.items()]
     return cmdList
@@ -165,11 +169,7 @@ def ffmpeg_import():
 
 
 def ffmpeg_toGif():
-    fileOrFolder = input("Enter file or folder path: ")
-    if directoryUtils.isDir(fileOrFolder):
-        filesList = directoryUtils.findFiles(fileOrFolder, "")
-    else:
-        filesList = [fileOrFolder]
+    filesList = getFileOrFolderList("")
     fileMap = {f: replaceFileExt(f, ".gif") for f in filesList}
     cmdList = [toGifFfmpeg(f1, f2) for f1, f2 in fileMap.items()]
     return cmdList

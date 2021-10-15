@@ -24,7 +24,7 @@ def execCmd(cmd):
     print(err)
 
 
-def execCmd_2(cmd):
+def execCmd2(cmd):
     import subprocess
     p = subprocess.run(cmd.split(" "), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     print("Err: " + p.stderr.decode('utf-8'))
@@ -34,6 +34,22 @@ def execCmd_2(cmd):
 def dealWithSpacesInFilePathNames(name):
     return "".join(["\"", name, "\""])
     
+
+'''
+@params file path in string format
+Get file modifie date-time from file metadata in 
+YYYYMMDD_HHMMSS format.
+'''
+def getModifiedTimeStampFromFile(file):
+    # import pathlib, datetime
+    # file = pathlib.Path(file)
+    # assert file.exists(), f'No such file: {file}'
+    # mtime = datetime.datetime.fromtimestamp(file.stat().st_mtime)
+    # return mtime.strftime(("%Y%m%d_%H%M%S"))
+    import os, time
+    assert os.path.exists(file)
+    modificationTime = time.strftime('%Y%m%d_%H%M%S', time.localtime(os.path.getmtime(file)))
+    return modificationTime
 
 def ackermann(m, n):
     # I assume that you check that n and m are non-negative before you run this

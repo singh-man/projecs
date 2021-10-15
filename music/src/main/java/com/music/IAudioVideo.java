@@ -12,7 +12,8 @@ import java.util.function.Predicate;
 
 public interface IAudioVideo {
 
-    List<String> videoResolution = Collections.unmodifiableList(Arrays.asList("-1:-1", "426:240", "-1:360", "852:480", "-1:720", "-1:1080"));
+    List<String> videoResolution = Collections.unmodifiableList(Arrays.asList("-1:-1", "426:240", "-1:360", "852:480",
+            "-1:720", "-1:1080"));
 
     List<String> videoFileExtensions = Collections.unmodifiableList(Arrays.asList(".mkv", ".avi", ".mp4", ".xvid", ".divx"));
 

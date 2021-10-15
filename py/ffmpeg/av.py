@@ -7,7 +7,7 @@ import sys
 import pytest
 
 from utils import directoryUtils
-from utils.utils import execCmd, execCmd_2, isLinux, replaceFileExt, dealWithSpacesInFilePathNames
+from utils.utils import execCmd, execCmd, isLinux, replaceFileExt, dealWithSpacesInFilePathNames, getModifiedTimeStampFromFile
 
 
 # def getFFmpeg(): return "ffmpeg" if isLinux() else "C:/mani/dev/opt/ffmpeg-20190219-ff03418-win64-static/bin/ffmpeg.exe"
@@ -15,7 +15,8 @@ def getFFmpeg(): return "ffmpeg"
 
 
 def userInput(x, *y):
-    [print(idx, " : ", v) for idx, v in enumerate(y)]
+    # [print(idx, " : ", v) for idx, v in enumerate(y)]
+    [print("{idx:<3} : {v:>3}".format(idx=idx, v=v)) for idx, v in enumerate(y)]
     x1 = input(x + ": ")
     if not y:
         return x1
@@ -174,8 +175,28 @@ def ffmpeg_toGif():
     cmdList = [toGifFfmpeg(f1, f2) for f1, f2 in fileMap.items()]
     return cmdList
 
+def rename_filesAsPerModifiedTimestamp():
+    """"Mainly to be used to rename the iOS camera image and video filenames."""
+    files = getFileOrFolderList("jpg JPG MOV HEIC mov heic mp4")
+    import os
+    cmdList = []
+    mSecs = "000"
+    previousUsedFileName = {}
+    for f in files:
+        fname, ext = directoryUtils.getFileNameAndExt(f)
+        newFileName = "IMG" + "_" + getModifiedTimeStampFromFile(f) + mSecs
+        count = 0
+        if newFileName in previousUsedFileName:
+            count = int(previousUsedFileName[newFileName]) + 1
+        previousUsedFileName[newFileName] = count
+        newFileName = newFileName[0:-1] + str(count)
+        newFileName = newFileName + ext
+        cmdList.append(f + " -> renamed -> " + newFileName)
+        # os.rename(f, newFileName)
+    return cmdList
 
-def test_mp3TpM4a():
+
+def testMp3TpM4a():
     ffmpeg_mp3ToM4a()
 
 
@@ -187,7 +208,8 @@ def listAllUsefullFunctions():
     import inspect, sys
     all_functions = inspect.getmembers(sys.modules[__name__], inspect.isfunction)
     # print(all_functions)
-    all_functions = [e for e in all_functions if e[0].find("ffmpeg_") >= 0 or e[0].find("handbrake_") >= 0]
+    # all_functions = [e for e in all_functions if e[0].find("ffmpeg_") >= 0 or e[0].find("handbrake_") >= 0]
+    all_functions = [e for e in all_functions if e[0].find("_") >= 0]
     # print(all_functions)
     funcMap = {all_functions.index(e): e for e in all_functions}
     return funcMap

@@ -18,7 +18,7 @@ public class AVCurses {
     public static void main(String[] args) throws IOException {
 
         String dir = "C:\\mani\\video\\x\\thePromisedNeverland";
-        FFmpegController controller = new FFmpegController();
+        AVController controller = new AVController();
         List<String> libx265 = controller.encode(dir, 21, "libx265", "-1:-1");
 //        libx265.forEach(System.out::println);
 
@@ -46,7 +46,7 @@ public class AVCurses {
 
     }
 
-    private static Panel panelFile(String dir, FFmpegController controller) {
+    private static Panel panelFile(String dir, AVController controller) {
         Panel leftPanel = new Panel();
         leftPanel.setLayoutManager(new GridLayout(2));
         List<String> files = controller.getFilteredFiles(dir, IAudioVideo::isValidVideoFileExtension).stream()

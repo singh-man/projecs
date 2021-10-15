@@ -19,7 +19,8 @@ finalCmd = []
 doit = True;
 while doit:
     directoryUtils.printList(finalCmd)
-    [print(str(k) + ": ", v[0]) for k, v in funcs.items()]
+    # [print(str(k) + ": ", v[0]) for k, v in funcs.items()]
+    [print("{0:<3} : {1:>3}".format(str(k), v[0])) for k, v in funcs.items()]
     selection = input("What u want! : ")
     # options.get(selection) doesn't work
     cmd = funcs[int(selection)][1]()

@@ -5,9 +5,14 @@ import sys
 
 import os
 
-from utils.utils import execCmd_2
+from utils.utils import execCmd
 
 # import pytest
+
+def getFileNameAndExt(fName):
+    fileName, fileExtension = os.path.splitext(fName)
+    return fileName, fileExtension
+
 
 def toRecurse():
     recurse = input('Include Subdirectories Y/N : ')
@@ -24,7 +29,7 @@ def dumpCmdToScript(cmdList, toPath):
     if option in options:
         writeToFile(cmdList, script, options[option])
     elif option == "e":
-        for c in cmdList: execCmd_2(c)
+        for c in cmdList: execCmd2(c)
     else:
         return
     print("Run this in shell: " + script)

@@ -68,7 +68,7 @@ public enum AVTerminalViewModel {
         String file = input("Enter file", null);
         String subtitle = input("Enter subtitle file", null);
         if (subtitle.isEmpty()) subtitle = IAudioVideo.replaceExtension(file, ".srt");
-        String subtitles = new FFmpegController().importSubtitles(file, subtitle, "en");
+        String subtitles = new AVController().importSubtitles(file, subtitle, "en");
         return Arrays.asList(subtitles);
     }
 

@@ -172,7 +172,7 @@ public class CodeSamplesTest {
         long start = 1;
         long end = 1000000L;
         long t1 = System.currentTimeMillis();
-        File file = new File("D:\\toBeDeleted\\primeNumberList.txt");
+        File file = new File("primeNumberList.txt");
         file.createNewFile();
         PrintWriter pw = new PrintWriter(file);
         while (start <= end) {

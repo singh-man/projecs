@@ -151,6 +151,7 @@ def ffmpeg_concat2():
     temp_file = "file.txt"
     inFiles = input("Enter space seperated input files name only!: ").split(" ")
     inFiles = ["file \'" + e + "\'" for e in inFiles]
+    print(inFiles) 
     directoryUtils.writeToFile(inFiles, temp_file, "w")
     outFile = input("Enter ouput file: ")
     cmd = concatFfmpeg(temp_file, outFile)

@@ -1,7 +1,6 @@
 import org.junit.Test;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
 
 public class CodeSamples {
@@ -194,16 +193,7 @@ public class CodeSamples {
     }
 
     public boolean rotatedString(String orig, String rot) {
-        Character[] origArr = IntStream.range(0, orig.length()).mapToObj(e -> orig.toCharArray()[e]).toArray(Character[]::new);
-        char[] arr = rot.toCharArray();
-        Queue<Character> qu = new LinkedList(Arrays.asList(arr));
-
-        for (int i = 0; i < arr.length; i++) {
-            if (Arrays.deepEquals(origArr, qu.toArray(new Character[qu.size()]))) {
-                char c = qu.poll().charValue();
-                qu.offer(new Character(c));
-            }
-        }
+        if ((orig + orig).contains(rot)) return true;
         return false;
     }
 
@@ -235,7 +225,7 @@ public class CodeSamples {
         int[][] a = new int[n][n];
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
-                a[i][j] = 1 + n*i + j;
+                a[i][j] = 1 + n * i + j;
 
         // print n-by-n array of integers 1 through n
         for (int i = 0; i < n; i++) {
@@ -247,7 +237,7 @@ public class CodeSamples {
         System.out.println();
 
         // spiral
-        for (int i = n-1, j = 0; i > 0; i--, j++) {
+        for (int i = n - 1, j = 0; i > 0; i--, j++) {
             for (int k = j; k < i; k++)
                 System.out.println(a[j][k]);
             for (int k = j; k < i; k++)
@@ -259,8 +249,49 @@ public class CodeSamples {
         }
 
         // special case for middle element if n is odd
-        if (n % 2 != 0)
-            System.out.println(a[(n-1)/2][(n-1)/2]);
+        if (n % 2 != 0) System.out.println(a[(n - 1) / 2][(n - 1) / 2]);
+    }
+
+    private String swap(String a, int i, int j) {
+        char temp;
+        char[] charArray = a.toCharArray();
+        temp = charArray[i];
+        charArray[i] = charArray[j];
+        charArray[j] = temp;
+        return String.valueOf(charArray);
+    }
+
+    public void stringPermutations(String str, int l, int r) {
+        if (l == r)
+            System.out.println(str);
+        else {
+            for (int i = l; i <= r; i++) {
+                str = swap(str, l, i);
+                stringPermutations(str, l + 1, r);
+                str = swap(str, l, i);
+            }
+        }
+    }
+
+    public void generateParenthesis(int n, int open, int close, String s, ArrayList<String> ans) {
+        // if the count of both open and close parentheses reaches n, it means we have generated a valid parentheses.
+        // So, we add the currently generated string s to the final ans and return.
+        if (open == n && close == n) {
+            ans.add(s);
+            return;
+        }
+
+        // At any index i in the generation of the string s, we can put an open parentheses only if its count
+        // until that time is less than n.
+        if (open < n) {
+            generateParenthesis(n, open + 1, close, s + "{", ans);
+        }
+
+        // At any index i in the generation of the string s, we can put a closed parentheses only if its count
+        // until that time is less than the count of open parentheses.
+        if (close < open) {
+            generateParenthesis(n, open, close + 1, s + "}", ans);
+        }
     }
 
 }

@@ -5,7 +5,7 @@ import sys
 
 import os
 
-from utils.utils import execCmd
+from utils.utils import execCmd, execCmd2
 
 # import pytest
 

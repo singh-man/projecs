@@ -320,6 +320,19 @@ public class CodeSamplesTest {
         System.out.println(f.apply(10));
     }
 
+    @Test
+    public void rotatedString() {
+        Assert.assertTrue(new CodeSamples().rotatedString("Manish", "nishMa"));
+        Assert.assertFalse(new CodeSamples().rotatedString("Manish", "nishma"));
+    }
+
+    @Test
+    public void stringPermu() {
+        ArrayList<String> ans = new ArrayList<>();
+        new CodeSamples().generateParenthesis(2, 0, 0, "", ans);
+        ans.forEach(System.out::println);
+    }
+
 //	@Test
 //	public void testEricssonMail() {
 //

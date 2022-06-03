@@ -3,7 +3,7 @@ import time
 import random
 from Queue import Queue
 from Queue import Empty
-import directoryUtils
+import utils.directoryUtils
 
 queue = Queue(10)
 producerFinished = False

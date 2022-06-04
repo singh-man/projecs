@@ -223,7 +223,7 @@ public class CodeSamplesTest {
     @Test
     public void testReverseString() {
         final String orig = FileUtils.readFile(
-                new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toString() + "java/org/string.text"))
+                        new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toString() + "java/org/string.text"))
                 .stream().reduce(String::concat).get();
         final String reverseStringUseStack = cs.reverseStringUseStack(orig);
         System.out.println(reverseStringUseStack);
@@ -256,15 +256,6 @@ public class CodeSamplesTest {
         Assert.assertEquals(1, cs.countStringInString("isnotis", "not"));
     }
 
-    @Test
-    public void testHanoiTowers() {
-        new CodeSamples().hanoiTowers(3, 'A', 'B', 'C');
-    }
-
-    @Test
-    public void testHanoiTowers_1() {
-        new CodeSamples().hanoiTowers_1(3, 'A', 'B', 'C');
-    }
 
     interface Searchable {
         boolean test(String car);
@@ -297,15 +288,15 @@ public class CodeSamplesTest {
         Searchable x = car -> car.equals("Maruti");
         System.out.println(isSuzuki(x));
 
-        System.out.println(doFunc(10, (Function<Long, Integer>) d1 -> Integer.parseInt(d1+"")));
+        System.out.println(doFunc(10, (Function<Long, Integer>) d1 -> Integer.parseInt(d1 + "")));
 
         doFunc(100l, (Consumer<Long>) System.out::println);
 
-        System.out.println(doFunc(() -> Float.valueOf(100 +"")));
+        System.out.println(doFunc(() -> Float.valueOf(100 + "")));
 
-        System.out.println(doFunc(10, (t1, t2) -> t1*t2*0.5f));
+        System.out.println(doFunc(10, (t1, t2) -> t1 * t2 * 0.5f));
 
-        Stream.generate(() -> Arrays.asList(1,2,3,4)).limit(5).forEach(System.out::println);
+        Stream.generate(() -> Arrays.asList(1, 2, 3, 4)).limit(5).forEach(System.out::println);
     }
 
     @Test
@@ -313,8 +304,8 @@ public class CodeSamplesTest {
         Function<Integer, Integer> f = new Function<Integer, Integer>() {
             @Override
             public Integer apply(Integer n) {
-                if(n < 2) return n;
-                return apply(n-1) + apply(n-2);
+                if (n < 2) return n;
+                return apply(n - 1) + apply(n - 2);
             }
         };
         System.out.println(f.apply(10));
@@ -326,12 +317,6 @@ public class CodeSamplesTest {
         Assert.assertFalse(new CodeSamples().rotatedString("Manish", "nishma"));
     }
 
-    @Test
-    public void stringPermu() {
-        ArrayList<String> ans = new ArrayList<>();
-        new CodeSamples().generateParenthesis(2, 0, 0, "", ans);
-        ans.forEach(System.out::println);
-    }
 
 //	@Test
 //	public void testEricssonMail() {

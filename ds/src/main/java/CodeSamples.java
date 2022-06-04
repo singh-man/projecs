@@ -172,25 +172,7 @@ public class CodeSamples {
     }
 
 
-    public void hanoiTowers(int n, char x, char y, char z) {
-        if (n == 1) { // basis
-            System.out.printf("Move top disk from peg %c to peg %c.%n", x, z);
-        } else {
-            hanoiTowers(n - 1, x, z, y); // recursion
-            hanoiTowers(1, x, y, z); // recursion
-            hanoiTowers(n - 1, y, x, z); // recursion
-        }
-    }
 
-    /**
-     * May be defective
-     */
-    public void hanoiTowers_1(int n, char start, char goal, char temp) {
-        if (n == 0) return;          // Base case
-        hanoiTowers_1(n - 1, start, temp, goal); // Recursive call: n-1 rings
-        System.out.printf("Move disk from peg %c to peg %c.%n", start, goal); // Move bottom disk to goal
-        hanoiTowers_1(n - 1, temp, goal, start); // Recursive call: n-1 rings
-    }
 
     public boolean rotatedString(String orig, String rot) {
         if ((orig + orig).contains(rot)) return true;
@@ -252,46 +234,5 @@ public class CodeSamples {
         if (n % 2 != 0) System.out.println(a[(n - 1) / 2][(n - 1) / 2]);
     }
 
-    private String swap(String a, int i, int j) {
-        char temp;
-        char[] charArray = a.toCharArray();
-        temp = charArray[i];
-        charArray[i] = charArray[j];
-        charArray[j] = temp;
-        return String.valueOf(charArray);
-    }
-
-    public void stringPermutations(String str, int l, int r) {
-        if (l == r)
-            System.out.println(str);
-        else {
-            for (int i = l; i <= r; i++) {
-                str = swap(str, l, i);
-                stringPermutations(str, l + 1, r);
-                str = swap(str, l, i);
-            }
-        }
-    }
-
-    public void generateParenthesis(int n, int open, int close, String s, ArrayList<String> ans) {
-        // if the count of both open and close parentheses reaches n, it means we have generated a valid parentheses.
-        // So, we add the currently generated string s to the final ans and return.
-        if (open == n && close == n) {
-            ans.add(s);
-            return;
-        }
-
-        // At any index i in the generation of the string s, we can put an open parentheses only if its count
-        // until that time is less than n.
-        if (open < n) {
-            generateParenthesis(n, open + 1, close, s + "{", ans);
-        }
-
-        // At any index i in the generation of the string s, we can put a closed parentheses only if its count
-        // until that time is less than the count of open parentheses.
-        if (close < open) {
-            generateParenthesis(n, open, close + 1, s + "}", ans);
-        }
-    }
 
 }

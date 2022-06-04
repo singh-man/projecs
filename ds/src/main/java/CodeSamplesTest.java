@@ -23,7 +23,6 @@ public class CodeSamplesTest {
     private int startIndex, endIndex;
     private String testString;
     private Map charMapInString;
-    List<Integer[]> setList;
     private CodeSamples cs;
 
     @Before
@@ -47,7 +46,6 @@ public class CodeSamplesTest {
         testString = "abtc^^abc11451$rt$a^";
         charMapInString = new TreeMap();
 
-        setList = new ArrayList<Integer[]>();
     }
 
     @Test
@@ -78,14 +76,6 @@ public class CodeSamplesTest {
         while (it.hasNext()) {
             Object key = it.next();
             System.out.println(key + "    : " + charMapInString.get(key));
-        }
-    }
-
-    @Test
-    public void testArrangeNatualNumberSet() {
-        cs.arrangeNatualNumberSetN3(setList, 20);
-        for (Integer[] i : setList) {
-            System.out.println(i[0] + "," + i[1] + "," + i[2]);
         }
     }
 

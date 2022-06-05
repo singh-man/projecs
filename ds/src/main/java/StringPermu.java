@@ -1,24 +1,23 @@
 import org.junit.Test;
 
+/**
+ * abc
+ * swap
+ * 1st index    2nd index   3rd index
+ *             (swap b -> b)abc
+ * (swap a -> a)abc
+ *                          acb
+ * (swap a -> b)            bac
+ * abc          bac
+ *                          bca
+ * (swap a -> c)            cba
+ *              cba
+ *                          cab
+ */
 public class StringPermu {
-    private void permute(String str, int l, int r) {
-        if (l == r)
-            System.out.println(str);
-        else {
-            for (int i = l; i <= r; i++) {
-                str = swap(str, l, i);
-                permute(str, l + 1, r);
-                str = swap(str, l, i);
-            }
-        }
-    }
 
     /**
-     * Swap Characters at position
-     *
-     * @param a string value
-     * @param i position 1
-     * @param j position 2
+     * Swap Characters at position i and j
      * @return swapped string
      */
     public String swap(String a, int i, int j) {
@@ -30,9 +29,25 @@ public class StringPermu {
         return String.valueOf(charArray);
     }
 
+    /**
+     * in abc
+     * start with swapping a -> a than go on
+     */
+    private void permute(String str, int start, int end) {
+        if (start == end) System.out.println(str);
+        else {
+            for (int i = start; i <= end; i++) {
+                str = swap(str, start, i);
+                System.out.println("here :" + str);
+                permute(str, start + 1, end);
+//                str = swap(str, start, i);
+            }
+        }
+    }
+
     @Test
     public void test() {
-        String abc = "abc";
-        new StringPermu().permute(abc, 0, abc.length() - 1);
+        String text = "abc";
+        new StringPermu().permute(text, 0, text.length() - 1);
     }
 }

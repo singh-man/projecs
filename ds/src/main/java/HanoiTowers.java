@@ -15,11 +15,11 @@ public class HanoiTowers {
     /**
      * May be defective
      */
-    public void hanoiTowers_1(int n, char start, char goal, char temp) {
+    public void hanoiTowers_1(int n, char start, char temp, char goal) {
         if (n == 0) return;          // Base case
-        hanoiTowers_1(n - 1, start, temp, goal); // Recursive call: n-1 rings
+        hanoiTowers_1(n - 1, start, goal, temp); // Recursive call: n-1 rings
         System.out.printf("Move disk from peg %c to peg %c.%n", start, goal); // Move bottom disk to goal
-        hanoiTowers_1(n - 1, temp, goal, start); // Recursive call: n-1 rings
+        hanoiTowers_1(n - 1, temp, start, goal); // Recursive call: n-1 rings
     }
 
     @Test

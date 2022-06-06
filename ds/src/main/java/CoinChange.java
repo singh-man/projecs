@@ -1,7 +1,11 @@
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
+/**
+ * https://www.youtube.com/watch?v=jaNZ83Q3QGc
+ */
 public class CoinChange {
 
     private int count(int S[], int m, int n) {
@@ -30,6 +34,7 @@ public class CoinChange {
         for (int den : denominations) {
             for (int i = den; i < (amount + 1); ++i) {
                 solution[i] += solution[i - den];
+                System.out.println("for i="+ i +":" +Arrays.toString(solution));
             }
         }
         return solution[solution.length - 1];

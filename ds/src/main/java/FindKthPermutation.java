@@ -10,20 +10,21 @@ import java.util.stream.Collectors;
  * abc
  * swap
  * 1st index    2nd index   3rd index
- *             (swap b -> b)abc
+ * (swap b -> b)abc
  * (swap a -> a)abc
- *                          acb
+ * acb
  * (swap a -> b)            bac
  * abc          bac
- *                          bca
+ * bca
  * (swap a -> c)            cba
- *              cba
- *                          cab
+ * cba
+ * cab
  */
 public class FindKthPermutation {
 
     /**
      * Swap Characters at position i and j
+     *
      * @return swapped string
      */
     public String swap(String a, int i, int j) {
@@ -53,7 +54,7 @@ public class FindKthPermutation {
         Arrays.sort(arr);
         int smallest = 0, largest = 0;
         String x = "", y = "";
-        for(int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < arr.length; i++) {
             x += String.valueOf(arr[i]);
             y += String.valueOf(arr[arr.length - i - 1]);
         }
@@ -61,7 +62,7 @@ public class FindKthPermutation {
         largest = Integer.parseInt(y);
 
         List<Integer> res = new ArrayList<>();
-        while(smallest <= largest) {
+        while (smallest <= largest) {
             String tmp = smallest + "";
             char[] split = tmp.toCharArray();
             int[] n_tmp = new int[split.length];
@@ -69,7 +70,7 @@ public class FindKthPermutation {
                 n_tmp[i] = Integer.parseInt(String.valueOf(split[i]));
             }
             Arrays.sort(n_tmp);
-            if(Arrays.equals(n_tmp, arr))
+            if (Arrays.equals(n_tmp, arr))
                 res.add(smallest++);
             smallest++;
         }
@@ -81,7 +82,7 @@ public class FindKthPermutation {
         String text = "157";
         int kth = 3;
         List<String> list = new ArrayList<>();
-        new FindKthPermutation().permute(text, 0, text.length() - 1, list);
+        permute(text, 0, text.length() - 1, list);
         List<Integer> collect = list.stream().map(e -> Integer.parseInt(e)).sorted().collect(Collectors.toList());
         Assert.assertTrue(517 == collect.get(kth - 1));
         System.out.println("kth permutation is :: " + collect.get(kth - 1));
@@ -92,7 +93,7 @@ public class FindKthPermutation {
         int kth = 3;
         List<Integer> calc = calc(new int[]{1, 5, 7});
         Assert.assertTrue(517 == calc.get(kth - 1));
-        System.out.println("kth permutation is : " + calc.get(kth-1));
+        System.out.println("kth permutation is : " + calc.get(kth - 1));
 
     }
 }

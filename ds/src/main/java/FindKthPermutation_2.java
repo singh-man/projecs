@@ -1,85 +1,37 @@
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Vector;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class FindKthPermutation_2 {
 
-    // Function to find the index of
-    // number at first position of
-    // kth sequence of set of size n
-    int findFirstNumIndex(int k, int n) {
-        if (n == 1)
-            return 0;
-        n--;
-
-        int first_num_index;
-
-        // n_actual_fact = n!
-        int n_partial_fact = n;
-
-        while (k >= n_partial_fact && n > 1) {
-            n_partial_fact = n_partial_fact *
-                    (n - 1);
-            n--;
-        }
-
-        // First position of the
-        // kth sequence will be
-        // occupied by the number present
-        // at index = k / (n-1)!
-        first_num_index = k / n_partial_fact;
-
-        k = k % n_partial_fact;
-        return first_num_index;
+    int factorial(int n) {
+        if (n ==0 || n == 1) return 1;
+        return n * factorial(n - 1);
     }
 
-    // Function to find the
-    // kth permutation of n numbers
-    String findKthPermutation(int n, int k) {
-        // Store final answer
-        String ans = "";
+    String findKthPermutation(int n, int k, String str, List<Integer> list) {
+        int blockSize = factorial(n - 1); // no. of elements in each block
+        int idx = k / blockSize; // represents value in the list
 
-        HashSet<Integer> s = new HashSet<>();
+        if (k % blockSize == 0) idx--; // very important
 
-        // Insert all natural number
-        // upto n in set
-        for (int i = 1; i <= n; i++)
-            s.add(i);
-
-        Vector<Integer> v = new Vector<>();
-        v.addAll(s);
-
-        // Mark the first position
-        int itr = v.elementAt(0);
-
-        // Subtract 1 to
-        // get 0 based
-        // indexing
-        k = k - 1;
-
-        for (int i = 0; i < n; i++) {
-            int index = findFirstNumIndex(k, n - i);
-
-            // itr now points to the
-            // number at index in set s
-            if (index < v.size()) {
-                ans += ((v.elementAt(index).toString()));
-                v.remove(index);
-            } else
-                ans += String.valueOf(itr + 2);
-
-            // Remove current number
-            // from the set
-            itr = v.elementAt(0);
+        if(n == 1)  {
+            str += list.remove(0);
+        } else {
+            str += list.remove(idx);
+            k = k - blockSize * idx; // calculate new k value for upcoming block
+            str = findKthPermutation(n - 1, k, str, list);
         }
-        return ans;
+        return str;
     }
 
     @Test
     public void test() {
-        int n = 3, k = 4;
-        String kth_perm_seq = findKthPermutation(n, k);
-        System.out.print(kth_perm_seq + "\n");
+        int n = 3, k = 5;
+        List<Integer> collect = IntStream.rangeClosed(1, n).boxed().collect(Collectors.toList());
+        String kth_perm_seq = findKthPermutation(n, k, "", collect);
+        System.out.print(kth_perm_seq);
     }
 }

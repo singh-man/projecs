@@ -8,7 +8,7 @@ import java.util.function.Function;
 public class Number_DecimalToBinaryMisc {
 
     private int sumOfN(int num) {
-        if (num == 0) return num;
+        if (num <= 0) return 0;
         return num + sumOfN(num - 1);
     }
 

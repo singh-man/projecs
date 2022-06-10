@@ -3,6 +3,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 public class GenerateParenthesis {
+
     public void generateParenthesis(int n, int open, int close, String s, ArrayList<String> ans) {
         // if the count of both open and close parentheses reaches n, it means we have generated a valid parentheses.
         // So, we add the currently generated string s to the final ans and return.
@@ -28,7 +29,7 @@ public class GenerateParenthesis {
     }
 
     @Test
-    public void generateParant() {
+    public void testGenerateParenthesis() {
         ArrayList<String> ans = new ArrayList<>();
         new GenerateParenthesis().generateParenthesis(3, 0, 0, "", ans);
         ans.forEach(System.out::println);

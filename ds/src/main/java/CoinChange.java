@@ -27,7 +27,7 @@ public class CoinChange {
     }
 
     @Test
-    public void coinChange_2() {
+    public void testCount() {
         int[] denominations = new int[]{1, 2, 5};
         int amount = 12;
         int result = count(denominations, denominations.length, amount);
@@ -70,7 +70,7 @@ public class CoinChange {
     }
 
     @Test
-    public void testMinCoin() {
+    public void testMinCoinChange() {
         int amount = 11;
         int[] coins = {1, 2, 5};
         System.out.println(String.format("Min coins needed %d to get total amount of %d",

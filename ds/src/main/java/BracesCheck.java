@@ -28,6 +28,12 @@ public class BracesCheck {
         return true;
     }
 
+    @Test(expected = NullPointerException.class)
+    public void test_1() {
+        Assert.assertEquals(true, new BracesCheck().bracesWithText("[aa[[]]cc]"));
+        Assert.assertNotEquals(true, new BracesCheck().bracesWithText("[[[[}}[]]]"));// Null pointer
+    }
+
     /**
      * Input like [], [[]], [[[]]
      */
@@ -41,12 +47,6 @@ public class BracesCheck {
             return bracesOnly(text.substring(1, text.length() - 1));
         } else
             return false;
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void test_1() {
-        Assert.assertEquals(true, new BracesCheck().bracesWithText("[aa[[]]cc]"));
-        Assert.assertNotEquals(true, new BracesCheck().bracesWithText("[[[[}}[]]]"));// Null pointer
     }
 
     @Test

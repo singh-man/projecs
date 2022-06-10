@@ -5,7 +5,6 @@ import org.junit.Test;
  */
 public class ArrayLargestSumSubArray {
 
-
     public int maxSubArraySum(int a[]) {
         int size = a.length;
         int max_so_far = Integer.MIN_VALUE, max_ending_here = 0;

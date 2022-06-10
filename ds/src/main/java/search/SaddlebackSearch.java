@@ -1,4 +1,4 @@
-package org.search;
+package search;
 
 import java.util.Scanner;
 

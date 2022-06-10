@@ -12,6 +12,11 @@ public class HanoiTowers {
         }
     }
 
+    @Test
+    public void testHanoiTowers() {
+        hanoiTowers(3, 'A', 'B', 'C');
+    }
+
     /**
      * May be defective
      */
@@ -23,12 +28,7 @@ public class HanoiTowers {
     }
 
     @Test
-    public void testHanoiTowers() {
-        new HanoiTowers().hanoiTowers(3, 'A', 'B', 'C');
-    }
-
-    @Test
     public void testHanoiTowers_1() {
-        new HanoiTowers().hanoiTowers_1(3, 'A', 'B', 'C');
+        hanoiTowers_1(3, 'A', 'B', 'C');
     }
 }

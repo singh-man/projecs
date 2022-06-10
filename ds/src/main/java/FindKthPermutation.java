@@ -10,24 +10,23 @@ import java.util.stream.Collectors;
  * abc
  * swap
  * 1st index    2nd index   3rd index
- * (swap b -> b)abc
+ *             (swap b -> b)abc
  * (swap a -> a)abc
- * acb
+ *                          acb
  * (swap a -> b)            bac
  * abc          bac
- * bca
+ *                          bca
  * (swap a -> c)            cba
- * cba
- * cab
+ *              cba
+ *                          cab
  */
 public class FindKthPermutation {
 
     /**
      * Swap Characters at position i and j
-     *
      * @return swapped string
      */
-    public String swap(String a, int i, int j) {
+    private String swap(String a, int i, int j) {
         char temp;
         char[] charArray = a.toCharArray();
         temp = charArray[i];
@@ -49,6 +48,18 @@ public class FindKthPermutation {
             }
         }
     }
+
+    @Test
+    public void testPermute() {
+        String text = "157";
+        int kth = 3;
+        List<String> list = new ArrayList<>();
+        permute(text, 0, text.length() - 1, list);
+        List<Integer> collect = list.stream().map(e -> Integer.parseInt(e)).sorted().collect(Collectors.toList());
+        Assert.assertTrue(517 == collect.get(kth - 1));
+        System.out.println("kth permutation is :: " + collect.get(kth - 1));
+    }
+
 
     private List<Integer> calc(int[] arr) {
         Arrays.sort(arr);
@@ -75,17 +86,6 @@ public class FindKthPermutation {
             smallest++;
         }
         return res;
-    }
-
-    @Test
-    public void testPermute() {
-        String text = "157";
-        int kth = 3;
-        List<String> list = new ArrayList<>();
-        permute(text, 0, text.length() - 1, list);
-        List<Integer> collect = list.stream().map(e -> Integer.parseInt(e)).sorted().collect(Collectors.toList());
-        Assert.assertTrue(517 == collect.get(kth - 1));
-        System.out.println("kth permutation is :: " + collect.get(kth - 1));
     }
 
     @Test

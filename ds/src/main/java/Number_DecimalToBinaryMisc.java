@@ -3,6 +3,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class Number_DecimalToBinaryMisc {
 
@@ -11,10 +12,21 @@ public class Number_DecimalToBinaryMisc {
         return num + sumOfN(num - 1);
     }
 
+    @Test
+    public void testSumOfN() {
+        Assert.assertEquals(55, sumOfN(10));
+//        Function<Integer, Integer> sumN = i -> i == 0? i : i + sumN.apply(i -1);
+    }
+
     private String decimalToBinary(int num, String res) {
         if (num == 0) return res;
         String str = num % 2 + res;
         return decimalToBinary(num / 2, str);
+    }
+
+    @Test
+    public void testDecimalToBinary() {
+        Assert.assertEquals("1010", decimalToBinary(10, ""));
     }
 
     private int log(int b, int n) {
@@ -23,6 +35,12 @@ public class Number_DecimalToBinaryMisc {
         } else {
             return log(b, n / b) + 1;
         }
+    }
+
+    @Test
+    public void testLog() {
+        Assert.assertEquals(3, log(10, 1000));
+        Assert.assertEquals(2, log(2, 4));
     }
 
     /**
@@ -40,27 +58,11 @@ public class Number_DecimalToBinaryMisc {
     }
 
     @Test
-    public void testDecimalToBinary() {
-        Assert.assertEquals("1010", decimalToBinary(10, ""));
-    }
-
-    @Test
-    public void testSumOfN() {
-        Assert.assertEquals(55, sumOfN(10));
-    }
-
-    @Test
     public void testArrangeNatualNumberSet() {
         ArrayList<Integer[]> list = new ArrayList<>();
         arrangeNaturalNumberSetN3(list, 3);
         for (Integer[] i : list) {
             System.out.println(i[0] + "," + i[1] + "," + i[2]);
         }
-    }
-
-    @Test
-    public void testLog() {
-        Assert.assertEquals(3, log(10, 1000));
-        Assert.assertEquals(2, log(2, 4));
     }
 }

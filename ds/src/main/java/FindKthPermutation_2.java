@@ -15,7 +15,8 @@ public class FindKthPermutation_2 {
         int blockSize = factorial(n - 1); // no. of elements in each block
         int idx = k / blockSize; // represents value in the list
 
-        if (k % blockSize == 0) idx--; // very important
+        // very important boundary check because wer are starting from 0 and this is the boundary value.
+        if (k % blockSize == 0) idx--;
 
         if(n == 1)  {
             str += list.remove(0);

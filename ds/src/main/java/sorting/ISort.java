@@ -1,4 +1,4 @@
-package org.sorting;
+package sorting;
 
 import org.junit.Assert;
 import org.utils.timer.StopWatch;

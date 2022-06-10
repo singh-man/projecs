@@ -3,6 +3,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class Number_DecimalToBinaryMisc {
@@ -12,10 +13,13 @@ public class Number_DecimalToBinaryMisc {
         return num + sumOfN(num - 1);
     }
 
+    // Functional Style Recursion
+    final Function<Integer, Integer> sumN = i -> i == 0 ? i : i + this.sumN.apply(i -1);
+
     @Test
     public void testSumOfN() {
         Assert.assertEquals(55, sumOfN(10));
-//        Function<Integer, Integer> sumN = i -> i == 0? i : i + sumN.apply(i -1);
+        Assert.assertEquals(Integer.valueOf(55), sumN.apply(10));
     }
 
     private String decimalToBinary(int num, String res) {
@@ -24,9 +28,12 @@ public class Number_DecimalToBinaryMisc {
         return decimalToBinary(num / 2, str);
     }
 
+    BiFunction<Integer, String, String> toBinary = (n, s) ->  n == 0 ? s : this.toBinary.apply(n / 2, n % 2 + s);
+
     @Test
     public void testDecimalToBinary() {
         Assert.assertEquals("1010", decimalToBinary(10, ""));
+        Assert.assertEquals("1010", toBinary.apply(10, ""));
     }
 
     private int log(int b, int n) {

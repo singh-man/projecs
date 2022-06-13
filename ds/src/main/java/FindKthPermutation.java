@@ -94,6 +94,5 @@ public class FindKthPermutation {
         List<Integer> calc = calc(new int[]{1, 5, 7});
         Assert.assertTrue(517 == calc.get(kth - 1));
         System.out.println("kth permutation is : " + calc.get(kth - 1));
-
     }
 }

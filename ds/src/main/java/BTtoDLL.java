@@ -10,9 +10,6 @@ public class BTtoDLL {
     // calls
     static BTNode prev = null;
 
-    // A simple recursive function to convert a given Binary tree
-    // to Doubly Linked List
-    // root --> Root of Binary Tree
     void BinaryTree2DoubleLinkedList(BTNode root) {
 
         // Base case

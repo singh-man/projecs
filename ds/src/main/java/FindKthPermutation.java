@@ -6,20 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * abc
- * swap
- * 1st index    2nd index   3rd index
- *             (swap b -> b)abc
- * (swap a -> a)abc
- *                          acb
- * (swap a -> b)            bac
- * abc          bac
- *                          bca
- * (swap a -> c)            cba
- *              cba
- *                          cab
- */
+
 public class FindKthPermutation {
 
     /**
@@ -37,6 +24,11 @@ public class FindKthPermutation {
 
     /**
      * Use String permutations technique!!
+     * 1st             ABC
+     *            a/a  a|b   a\c
+     * 2nd     ABC     BAC     CBA
+     *        /  \     / \     /  \
+     * 3rd   ABC ACB BAC BCA CBA CAB
      */
     private void permute(String str, int start, int end, List<String> result) {
         if (start == end) result.add(str);
@@ -61,6 +53,11 @@ public class FindKthPermutation {
     }
 
 
+    /**
+     * 1. Calculate all numbers from given arr min to max
+     * 2. Sort each number and check with sorted arr
+     * 3. Keep the one we want.
+     */
     private List<Integer> calc(int[] arr) {
         Arrays.sort(arr);
         int smallest = 0, largest = 0;

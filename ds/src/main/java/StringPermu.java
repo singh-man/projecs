@@ -1,18 +1,11 @@
 import org.junit.Test;
 
 /**
- * abc
- * swap
- * 1st index    2nd index   3rd index
- *             (swap b -> b)abc
- * (swap a -> a)abc
- *                          acb
- * (swap a -> b)            bac
- * abc          bac
- *                          bca
- * (swap a -> c)            cba
- *              cba
- *                          cab
+ * 1st             ABC
+ *            a/a  a|b   a\c
+ * 2nd     ABC     BAC     CBA
+ *        /  \     / \     /  \
+ * 3rd   ABC ACB BAC BCA CBA CAB
  */
 public class StringPermu {
 
@@ -48,6 +41,8 @@ public class StringPermu {
     @Test
     public void test() {
         String text = "abc";
-        new StringPermu().permute(text, 0, text.length() - 1);
+        permute(text, 0, text.length() - 1);
+        text = "abcd";
+        permute(text, 0, text.length() - 1);
     }
 }

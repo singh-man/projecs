@@ -17,21 +17,61 @@ public class BracesCheck {
         Stack<Character> open = new Stack<>();
         Queue<Character> close = new ArrayDeque<>();
         for (char c : x) {
-            if (c == '[') open.push(c);
-            if (c == ']') close.add(c);
+            if (c == '[' || c == '{' || c == '(') open.push(c);
+            if (c == ']' || c == '}' || c == ')') close.add(c);
         }
         int size = open.size();
         for (int i = 0; i < size; i++) {
-            if ((open.pop().toString() + close.poll().toString()).equals("[]")) continue;
+            String brks = open.pop().toString() + close.poll().toString();
+            if (brks.equals("[]") || brks.equals("{}") || brks.equals("()") )
+                continue;
             else return false;
         }
         return true;
     }
 
-    @Test(expected = NullPointerException.class)
-    public void test_1() {
-        Assert.assertEquals(true, new BracesCheck().bracesWithText("[aa[[]]cc]"));
-        Assert.assertNotEquals(true, new BracesCheck().bracesWithText("[[[[}}[]]]"));// Null pointer
+    @Test
+    public void testBracesWithText() {
+        Assert.assertEquals(true, bracesWithText("[aa[[]]cc]"));
+        Assert.assertEquals(false, bracesWithText("[a{]c]"));
+        Assert.assertEquals(false, bracesWithText("[[[[}}[]]]"));
+    }
+
+    /**
+     * This can handle text in between as well
+     */
+    public boolean bracesWithTextUsingStack(String text) {
+        if (text.length() % 2 != 0) return false;
+        char[] x = text.toCharArray();
+        Stack<Character> open = new Stack<>();
+        for (char c : x) {
+            if (c == '[' || c == '{' || c == '(') {
+                open.push(c);
+                continue;
+            }
+            if (c == ']' || c == '}' || c == ')') {
+                Character pop = open.pop();
+                switch (c) {
+                    case ']':
+                        if (pop == '[') break;
+                        return false;
+                    case '}':
+                        if (pop == '{') break;
+                        return false;
+                    case ')':
+                        if (pop == '(') break;
+                        return false;
+                }
+            }
+        }
+        return open.isEmpty() ? true : false;
+    }
+
+    @Test
+    public void testBracesWithTextUsingStack() {
+        Assert.assertEquals(true, bracesWithTextUsingStack("[aa[[]]cc]"));
+        Assert.assertEquals(false, bracesWithTextUsingStack("[a{]c]"));
+        Assert.assertEquals(false, bracesWithTextUsingStack("[[[[}}[]]]"));
     }
 
     /**
@@ -50,9 +90,10 @@ public class BracesCheck {
     }
 
     @Test
-    public void test_2() {
-        Assert.assertNotEquals(true, new BracesCheck().bracesOnly("[aa[[]]cc]"));
-        Assert.assertEquals(true, new BracesCheck().bracesOnly("[[[]]]"));
-        Assert.assertNotEquals(true, new BracesCheck().bracesOnly("[[[[]]]"));
+    public void testBracesOnly() {
+        Assert.assertNotEquals(true, bracesOnly("[aa[[]]cc]"));
+        Assert.assertEquals(true, bracesOnly("[[[]]]"));
+        Assert.assertEquals(false, bracesOnly("[{]]"));
+        Assert.assertNotEquals(true, bracesOnly("[[[[]]]"));
     }
 }

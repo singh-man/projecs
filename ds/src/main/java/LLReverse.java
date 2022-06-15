@@ -9,8 +9,8 @@ public class LLReverse {
     public Node reverse(Node head) {
         if (head == null || head.next == null) return head;
         Node rev = reverse(head.next);
-        head.next.next = head; // on final stack 5.6.next = 5
-        head.next = null;
+        head.next.next = head; // on final stack 5 -> 6 -> = 5
+        head.next = null; // and 5 -> 6 to 5 -> null
         return rev;
     }
 

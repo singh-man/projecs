@@ -36,21 +36,20 @@ public class BracesCheck {
         Assert.assertEquals(false, bracesWithText("[a{]c]"));
         Assert.assertEquals(false, bracesWithText("[[[[}}[]]]"));
         Assert.assertEquals(false, bracesWithText("[{}()]")); // can not cover this
+        Assert.assertEquals(false, bracesWithTextUsingStack("[{}]}"));
     }
 
     /**
      * This can handle text in between as well
      */
     public boolean bracesWithTextUsingStack(String text) {
-        if (text.length() % 2 != 0) return false;
         char[] x = text.toCharArray();
         Stack<Character> open = new Stack<>();
         for (char c : x) {
             if (c == '[' || c == '{' || c == '(') {
                 open.push(c);
-                continue;
-            }
-            if (c == ']' || c == '}' || c == ')') {
+            } else if (c == ']' || c == '}' || c == ')') {
+                if (open.isEmpty()) return false;// close bracket without open
                 Character pop = open.pop();
                 switch (c) {
                     case ']':
@@ -74,6 +73,7 @@ public class BracesCheck {
         Assert.assertEquals(false, bracesWithTextUsingStack("[a{]c]"));
         Assert.assertEquals(false, bracesWithTextUsingStack("[[[[}}[]]]"));
         Assert.assertEquals(true, bracesWithTextUsingStack("[{}()]")); // can cover this
+        Assert.assertEquals(false, bracesWithTextUsingStack("[{}]}"));
     }
 
     /**
@@ -98,5 +98,6 @@ public class BracesCheck {
         Assert.assertEquals(false, bracesOnly("[{]]"));
         Assert.assertEquals(false, bracesOnly("[{}()]")); // can not cover this
         Assert.assertNotEquals(true, bracesOnly("[[[[]]]"));
+        Assert.assertEquals(false, bracesWithTextUsingStack("[{}]}"));
     }
 }

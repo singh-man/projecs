@@ -35,6 +35,7 @@ public class BracesCheck {
         Assert.assertEquals(true, bracesWithText("[aa[[]]cc]"));
         Assert.assertEquals(false, bracesWithText("[a{]c]"));
         Assert.assertEquals(false, bracesWithText("[[[[}}[]]]"));
+        Assert.assertEquals(false, bracesWithText("[{}()]")); // can not cover this
     }
 
     /**
@@ -72,6 +73,7 @@ public class BracesCheck {
         Assert.assertEquals(true, bracesWithTextUsingStack("[aa[[]]cc]"));
         Assert.assertEquals(false, bracesWithTextUsingStack("[a{]c]"));
         Assert.assertEquals(false, bracesWithTextUsingStack("[[[[}}[]]]"));
+        Assert.assertEquals(true, bracesWithTextUsingStack("[{}()]")); // can cover this
     }
 
     /**
@@ -94,6 +96,7 @@ public class BracesCheck {
         Assert.assertNotEquals(true, bracesOnly("[aa[[]]cc]"));
         Assert.assertEquals(true, bracesOnly("[[[]]]"));
         Assert.assertEquals(false, bracesOnly("[{]]"));
+        Assert.assertEquals(false, bracesOnly("[{}()]")); // can not cover this
         Assert.assertNotEquals(true, bracesOnly("[[[[]]]"));
     }
 }

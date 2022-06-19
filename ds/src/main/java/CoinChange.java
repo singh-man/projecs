@@ -1,37 +1,68 @@
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 /**
  * https://www.youtube.com/watch?v=jaNZ83Q3QGc
  */
 public class CoinChange {
 
-    private int count(int S[], int m, int n) {
-
-        // If n is 0 then there is 1 solution
-        // (do not include any coin)
-        if (n == 0) return 1;
-
-        // If n is less than 0 then no solution exists
-        if (n < 0) return 0;
-
-        // If there are no coins and n
-        // is greater than 0, then no
-        // solution exist
-        if (m <= 0 && n >= 1) return 0;
-
-        // count is sum of solutions (i)
-        // including S[m-1] (ii) excluding S[m-1]
-        return count(S, m - 1, n) + count(S, m, n - S[m - 1]);
+    private int minCoinNeed(int amt, int coins[]) {
+        if (amt == 0) return 0;
+        int min = Integer.MAX_VALUE;
+        for(int coin : coins) {
+            if(amt - coin >= 0) {
+                int subAns = minCoinNeed(amt - coin, coins);
+                if(subAns + 1 < min) {// +1 to compensate for first deduction in previous step
+                    min = subAns + 1;
+                }
+            }
+        }
+        return min;
     }
 
     @Test
-    public void testCount() {
-        int[] denominations = new int[]{1, 2, 5};
-        int amount = 12;
-        int result = count(denominations, denominations.length, amount);
-        System.out.println("SolveCoinChange(" + Arrays.toString(denominations) + ", " + amount + ") = " + result);
+    public void testMinCoinNeedNoDP() {
+        int amount = 18;
+        int[] coins = {1, 5, 7};
+        Assert.assertEquals(4, minCoinNeed(amount, coins));
+    }
+
+    /**
+     * https://www.youtube.com/watch?v=-NTaXJ7BBXs
+     */
+    private int minCoinNeed(int amt, int coins[], int dp[]) {
+        if (amt == 0) return 0;
+        int min = Integer.MAX_VALUE;
+        for(int coin : coins) {
+            if(amt - coin >= 0) {
+                int subAns = 0;
+                if(dp[amt - coin] != -1) {
+                    subAns = dp[amt - coin]; // if already present use it
+                } else
+                    subAns = minCoinNeed(amt - coin, coins, dp);
+                if(subAns + 1 < min) {// +1 to compensate for first deduction in previous step
+                    min = subAns + 1;
+                }
+            }
+        }
+        dp[amt] = min; // put the find min in dp
+        return min;
+    }
+
+    @Test
+    public void testMinCoinNeed() {
+        int amount = 18;
+        int[] coins = {1, 5, 7};
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, -1);dp[0] = 0;
+        Assert.assertEquals(4, minCoinNeed(amount, coins, dp));
+        Stream.of(dp).forEach(System.out::println);
+        amount = 11; coins = new int[]{1, 2, 5}; Arrays.fill(dp, -1);dp[0] = 0;
+        Assert.assertEquals(3, minCoinNeed(amount, coins, dp));
+        Stream.of(dp).forEach(System.out::println);
     }
 
     public int allCombPossible(int[] coins, int finalAmount) {
@@ -55,25 +86,4 @@ public class CoinChange {
         System.out.println("AllCombPossible(" + Arrays.toString(denominations) + ", " + amount + ") = " + result);
     }
 
-    int minCoinChange(int[] coins, int amount) {
-        int[] dp = new int[amount + 1];
-        Arrays.fill(dp, amount + 1);
-        dp[0] = 0;
-        for (int i = 0; i <= amount; i++) {
-            for(int j = 0; j < coins.length; j++) {
-                if(coins[j] <= i) {
-                    dp[i] = Math.min(dp[i], 1 + dp[i - coins[j]]);
-                }
-            }
-        }
-        return dp[amount] > amount ? -1 : dp[amount];
-    }
-
-    @Test
-    public void testMinCoinChange() {
-        int amount = 11;
-        int[] coins = {1, 2, 5};
-        System.out.println(String.format("Min coins needed %d to get total amount of %d",
-                minCoinChange(coins, amount), amount));
-    }
 }

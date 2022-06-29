@@ -8,17 +8,23 @@ repositories {
 }
 
 dependencies {
-   implementation project(':utils')
-   implementation group: 'commons-cli', name: 'commons-cli', version: '1.2'
-   implementation group: 'junit', name: 'junit', version: '4.+'
-   implementation group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4.9'
-   implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5'
-   implementation group: 'org.eclipse', name: 'swt', version: '3.3.0-v3346'
-   implementation group: 'swt', name: 'swt-win32', version: '3.0m8'
-   implementation group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
-   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.2'
+    implementation project(':utils')
+    implementation group: 'ca.juliusdavies', name: 'not-yet-commons-ssl', version: '0.3.9'
+    implementation group: 'commons-cli', name: 'commons-cli', version: '1.2'
+    implementation group: 'junit', name: 'junit', version: '4.+'
+    implementation group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4.9'
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5'
+    implementation group: 'org.eclipse', name: 'swt', version: '3.3.0-v3346'
+    implementation group: 'swt', name: 'swt-win32', version: '3.0m8'
+    implementation group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.2'
+//   implementation group: 'com.sun.jdmk', name: 'jmxtools', version: '1.2.1'
+    implementation group: 'com.betfair.net.java.opendmk', name: 'core', version: '1.0-b02'
+    implementation group: 'org.openjsse', name: 'openjsse', version: '1.1.1'
+// Thanks for using https://jar-download.com
 
-   // implementation group: 'javax.management', name: 'jmx', version: '1.2.1'
-   // testImplementation group: 'junit', name: 'junit', version: '4.+'
+
+    // implementation group: 'javax.management', name: 'jmx', version: '1.2.1'
+    // testImplementation group: 'junit', name: 'junit', version: '4.+'
 }
 

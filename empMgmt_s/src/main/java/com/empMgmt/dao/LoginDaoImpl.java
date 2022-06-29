@@ -1,22 +1,16 @@
 package com.empMgmt.dao;
 
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Time;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.empMgmt.db.DbMsgs;
+import com.empMgmt.entity.Employee;
+import com.empMgmt.entity.LoginDetails;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
-import com.empMgmt.db.DbMsgs;
-import com.empMgmt.dto.EmployeeDto;
-import com.empMgmt.entity.Employee;
-import com.empMgmt.entity.LoginDetails;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Time;
 
 public class LoginDaoImpl implements LoginDao {
 

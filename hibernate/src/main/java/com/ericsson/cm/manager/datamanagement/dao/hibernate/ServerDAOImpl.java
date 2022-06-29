@@ -75,7 +75,6 @@ public class ServerDAOImpl implements ServerDAO {
 	/**
 	 * use NULL if all the servers need to be fetched.
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	@Transactional(readOnly=true)
 	public <T extends AbstractServerDTO<T>> List<T> getAllServers(Class<T> glass) {

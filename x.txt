@@ -1,5 +1,0 @@
-> Task :empMgmt_s:compileJava FAILED
-> Task :guiMVC:compileJava FAILED
-> Task :hibernate:compileJava FAILED
-> Task :thinkDataStructures:compileJava FAILED
-> Task :z:compileJava FAILED

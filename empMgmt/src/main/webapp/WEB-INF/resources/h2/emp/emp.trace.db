@@ -1,6 +1,0 @@
-11-18 16:04:37 jdbc[2]: exception
-org.h2.jdbc.JdbcSQLException: Table "LOGIN_DETAILS" not found; SQL statement:
-DROP TABLE login_details [42102-161]
-11-18 16:04:37 jdbc[2]: exception
-org.h2.jdbc.JdbcSQLException: Table "EMPLOYEE" not found; SQL statement:
-DROP TABLE employee [42102-161]

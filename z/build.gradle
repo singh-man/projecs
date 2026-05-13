@@ -3,12 +3,15 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
+group = 'org.example.z'
+version = '1.0.0'
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation project(':utils')
+    implementation 'org.example.utils:utils:1.0.0'
     implementation group: 'ca.juliusdavies', name: 'not-yet-commons-ssl', version: '0.3.9'
     implementation group: 'commons-cli', name: 'commons-cli', version: '1.2'
     implementation group: 'junit', name: 'junit', version: '4.+'

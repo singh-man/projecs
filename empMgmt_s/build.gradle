@@ -3,6 +3,9 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
+group = 'org.example.empMgmt_s'
+version = '1.0.0'
+
 repositories {
     mavenCentral()
 }

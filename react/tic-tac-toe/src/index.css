@@ -1,0 +1,50 @@
+:root {
+  --bg-color: #1a1a2e;
+  --text-color: #e94560;
+  --board-bg: #16213e;
+  --square-bg: #0f3460;
+  --square-hover: #533483;
+  --x-color: #e94560;
+  --o-color: #00fff5;
+  --history-bg: rgba(255, 255, 255, 0.05);
+  --font-main: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  background-color: var(--bg-color);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  border: none;
+  outline: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+h1 {
+  font-size: 3rem;
+  background: linear-gradient(to right, var(--x-color), var(--o-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: 0;
+}

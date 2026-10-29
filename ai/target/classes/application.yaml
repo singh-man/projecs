@@ -1,8 +1,0 @@
-spring:
-  application:
-    name: ai
-  ai:
-    ollama:
-      chat:
-        options:
-          model: smollm:135m
